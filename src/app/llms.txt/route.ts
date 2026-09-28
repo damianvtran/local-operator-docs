@@ -32,7 +32,8 @@ export function GET(): Response {
 	lines.push(
 		"## Notes",
 		"",
-		"- Every page above is available as raw markdown at `/raw/<slug>` — e.g. `/raw/getting-started/install`.",
+		"- The full text of every page above, in one file, is at `/llms-full.txt`.",
+		"- Every page above is also available as raw markdown at `/raw/<slug>` — e.g. `/raw/getting-started/install`.",
 		"- The site search index is a static file at `/search-index.json`.",
 		"- Local Operator itself lives at https://github.com/damianvtran/local-operator (MIT).",
 		"",

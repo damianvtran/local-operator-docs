@@ -86,7 +86,13 @@
 	/* Sans is deliberately the OS UI font (the app's own decision: bundling a
 	   webfont to restate the platform choice adds weight for nothing). Mono is
 	   a real webfont because machine voice is the product's voice: Geist Mono,
-	   loaded through next/font. */
+	   loaded through next/font.
+
+	   CONSTRAINT: this declaration lives at :root, and its var() reference is
+	   resolved where it is computed — at the root element. The class that
+	   publishes --font-geist-mono must therefore sit on <html> (layout.tsx);
+	   a body-scoped class leaves this mapping invalid and every font-mono
+	   surface silently renders in the sans stack (round-1 D1/Q1). */
 	--font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 	--font-mono:
 		var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;

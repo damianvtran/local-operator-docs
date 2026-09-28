@@ -22,18 +22,36 @@ export const SITE = {
 	marketing: "https://local-operator.com",
 	downloads: "https://local-operator.com/download",
 
+	/**
+	 * The default social card, rendered once into `public/og.png` (1200x630).
+	 * Referenced by the root metadata and by every docs page, so a shared link
+	 * never falls back to no image at all.
+	 */
+	ogImage: {
+		path: "/og.png",
+		width: 1200,
+		height: 630,
+		alt: "Local Operator Docs — run agents where your work lives.",
+	},
+
 	/** The canonical terminal install; the hero chip copies exactly this. */
 	installCommand: "pip install local-operator",
 
 	/**
-	 * The Local Operator release these docs were written against (recon of
-	 * 2026-09-28 read v0.64.1 from the runtime's pyproject.toml, and the
-	 * surface facts in these pages — mesh, wakes, sessions — landed through
-	 * v0.63.x–v0.64.x). The top-bar version chip is informational; bump this
-	 * in a release sweep when documented behaviour moves, not on every
-	 * runtime tag.
+	 * The LAST-KNOWN runtime version — a fallback, not the source. The live
+	 * value comes from `public/versions.json` (written by
+	 * `scripts/generate-versions.ts` at build: GitHub Releases → PyPI → this
+	 * constant) and is refreshed in the browser between deploys by
+	 * `use-version-refresh.ts`. No release sweep needs to touch this; see
+	 * AGENTS.md, "Versions".
 	 */
 	productVersion: "0.64.1",
+
+	/**
+	 * The desktop app's last-known version — the `ui` fallback in the same
+	 * chain (GitHub Releases → this constant; the app is not on PyPI).
+	 */
+	uiVersion: "0.31.13",
 } as const;
 
 /** Route for a content slug, e.g. `getting-started/install` -> `/getting-started/install`. */

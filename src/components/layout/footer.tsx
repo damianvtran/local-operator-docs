@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { LogoMark } from "@/components/ui/logo-mark";
+import { buildVersions } from "@/lib/built-versions";
 import { SITE } from "@/lib/site";
+import { VersionNote } from "./version-chip";
 
 /**
  * Footer: identity, the working links, and the "agent-readable" note the
@@ -113,7 +115,7 @@ export function Footer() {
 			<div className="border-t border-hairline">
 				<div className="mx-auto flex w-full max-w-[96rem] items-center justify-between gap-4 px-4 py-4 text-meta text-ink-dim">
 					<span>MIT-licensed, like the runtime.</span>
-					<span className="font-mono">docs for v{SITE.productVersion}</span>
+					<VersionNote initial={buildVersions().backend} />
 				</div>
 			</div>
 		</footer>

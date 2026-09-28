@@ -3,9 +3,11 @@ import { SearchTrigger } from "@/components/search/search-trigger";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { GitHubMark } from "@/components/ui/github-mark";
 import { LogoMark } from "@/components/ui/logo-mark";
+import { buildVersions } from "@/lib/built-versions";
 import { SITE } from "@/lib/site";
 import { MobileNav } from "./mobile-nav";
 import type { SidebarGroup } from "./sidebar";
+import { VersionChip } from "./version-chip";
 
 /**
  * The top bar: identity, search, theme, GitHub, and the mobile nav trigger.
@@ -29,15 +31,7 @@ export function TopBar({ groups }: { groups: SidebarGroup[] }) {
 				</Link>
 
 				<div className="ml-auto flex items-center gap-2">
-					<Link
-						href={SITE.githubReleases}
-						target="_blank"
-						rel="noreferrer"
-						className="hidden items-center rounded-sm border border-hairline px-2 py-1 font-mono text-mono-sm text-ink-dim transition-colors duration-fast hover:border-control hover:text-ink sm:inline-flex"
-						title={`Local Operator v${SITE.productVersion} release notes`}
-					>
-						v{SITE.productVersion}
-					</Link>
+					<VersionChip initial={buildVersions().backend} />
 					<SearchTrigger />
 					<ThemeToggle />
 					<a

@@ -83,7 +83,9 @@ describe("Diagram tag renderer", () => {
 				caption: "One runtime, every surface.",
 			}),
 		);
-		expect(markup).toContain('class="lo-bleed"');
+		expect(markup).not.toContain("lo-bleed");
+		/* No `lo-bleed`: the figure sits in the article's content track with the
+		 * prose (see `tests/figure-alignment.test.ts` for the rule's own guard). */
 		expect(markup).toContain("border-hairline");
 		expect(markup).toContain("<figcaption");
 		expect(appears(markup, "One runtime, every surface.")).toBe(true);

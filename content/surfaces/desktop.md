@@ -41,7 +41,7 @@ Then the window opens on an empty chat. The rail on the left is the map:
 - **Browser** — a browser in the app the agent can drive
 - **Agent hub** — community agents you can pull into your own setup
 
-{% figure src="/shots/ui/app-shell-chat-light.webp" alt="The desktop app showing a chat beside the run details pane, which lists two running subagents and a to-do list." caption="A chat with the run details pane open: subagents at work, the current to-dos, and the conversation in the middle." /%}
+{% figure src="/shots/ui/app-shell-chat-light.webp" alt="The desktop app: the sidebar's navigation (New chat, Search, Agents, Schedules, Browser, Agent hub) above its agents, teams and recent chats; the chat shows a request, its tool receipts and the reply; a follow-up is drafted in the composer; run details lists two running subagents and the session's to-dos." caption="A working session: the conversation with its tool receipts, a drafted follow-up in the composer, and run details with the subagents and to-dos alongside." /%}
 
 ## Chat and run details
 

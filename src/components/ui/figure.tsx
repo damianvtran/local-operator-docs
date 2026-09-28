@@ -8,6 +8,17 @@ import { cn } from "@/lib/utils";
  * figure tag that silently renders nothing is how captions drift away from
  * the pages that claim to have figures — the placeholder keeps the slot
  * honest and visible.
+ *
+ * Width: a figure stays in the article's CONTENT track — the same 46rem
+ * reading column its prose sits in — and deliberately does not take
+ * `lo-bleed`. It used to: every screenshot rendered 6rem wider on each side
+ * than the text beside it, which is the one property a figure must not have
+ * (an image nothing lines up with reads as overflowing the page). Code
+ * blocks and tables keep the wide track; they are data, and their width is
+ * earned.
+ *
+ * The placeholder branch carries the same constraint as the image branch:
+ * a missing screenshot must not be the only frame that lines up.
  */
 export function Figure({
 	src,
@@ -38,13 +49,13 @@ export function Figure({
 }) {
 	if (!src) {
 		return (
-			<figure className="lo-bleed flex min-h-32 items-center justify-center rounded-lg border border-dashed border-hairline p-8 text-center text-body-sm text-ink-dim">
+			<figure className="flex min-h-32 items-center justify-center rounded-lg border border-dashed border-hairline p-8 text-center text-body-sm text-ink-dim">
 				{caption ?? "Figure"}
 			</figure>
 		);
 	}
 	return (
-		<figure className="lo-bleed">
+		<figure>
 			{/* Plain <img>, deliberately: content images are static files in
           /public with a known width, so next/image's runtime is not earned;
           switch when real screenshots land with unknown dimensions. */}
