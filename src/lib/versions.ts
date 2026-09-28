@@ -96,7 +96,10 @@ export function parseSemver(
  * `-1 | 0 | 1` for two version strings.
  *
  * A value that does not parse orders BEFORE anything that does, so the
- * fallback constant never outranks a real release in a `newestOf` fold.
+ * fallback constant never outranks a real release in a `newestOf` fold. On
+ * equal numeric triples a prerelease orders BEFORE its release (semver §11),
+ * so `0.65.0` supersedes `0.65.0-rc.1` instead of tying with it — a tie
+ * would let whichever arrived first survive a fold, right by accident only.
  */
 export function compareSemver(a: string, b: string): number {
 	const parsedA = parseSemver(a);
@@ -107,7 +110,15 @@ export function compareSemver(a: string, b: string): number {
 	for (let i = 0; i < 3; i++) {
 		if (parsedA[i] !== parsedB[i]) return parsedA[i] < parsedB[i] ? -1 : 1;
 	}
+	const preA = isPrerelease(a);
+	const preB = isPrerelease(b);
+	if (preA !== preB) return preA ? -1 : 1;
 	return 0;
+}
+
+/** Whether a version string carries a `-suffix` (a semver prerelease tag). */
+function isPrerelease(raw: string): boolean {
+	return /^[vV]?\d+\.\d+\.\d+-/.test(raw.trim());
 }
 
 /**
@@ -257,7 +268,13 @@ export async function resolveVersions(options: {
 	let backend = await latestFromGitHub(GITHUB_REPOS.backend, fetchImpl);
 	if (!backend) {
 		backend = await latestFromPyPI(fetchImpl);
-		if (!backend) {
+		if (backend) {
+			// A rescue is not a silent one: the build log must let a reader
+			// tell a GitHub-won build from a PyPI-rescued one.
+			note(
+				`GitHub failed for ${GITHUB_REPOS.backend}; using PyPI v${backend} instead.`,
+			);
+		} else {
 			note(
 				`GitHub and PyPI both failed for ${GITHUB_REPOS.backend}; using the committed fallback v${FALLBACK_VERSIONS.backend}.`,
 			);

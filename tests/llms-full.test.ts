@@ -8,9 +8,11 @@ import { SITE } from "@/lib/site";
  *
  * Mirrors the search-index completeness test in `tests/nav.test.ts`: the
  * artifact is rebuilt from the real loader and checked against the same
- * published/draft partition every other public surface uses. If a page is
- * added, moved, published or drafted, one of these fails before the site can
- * ship a full-text file that disagrees with the pages it claims to contain.
+ * published/draft partition every other public surface uses. What it pins is
+ * the artifact↔loader boundary — a page added to or dropped from the build, a
+ * draft leaking in, a source line that no longer matches the navigation. A
+ * pure content edit correctly cannot fail it: both sides move together by
+ * construction, which is the property the artifact exists to keep.
  */
 
 describe("llms-full completeness", () => {
@@ -42,12 +44,30 @@ describe("llms-full completeness", () => {
 		}
 	});
 
-	it("lists no drafts", () => {
-		const drafts = getAllPages().filter((page) => page.draft);
-		expect(drafts.length).toBeGreaterThan(0);
-		for (const page of drafts) {
-			expect(text.includes(`Source: ${SITE.url}${page.href}`)).toBe(false);
+	it("lists no drafts, and nothing the navigation does not publish", () => {
+		/*
+		 * The loop is deliberately unconditional: with a zero-draft tree it is
+		 * vacuous by construction (publishing the last draft is a legitimate
+		 * content change, not a defect), and the set equality below still pins
+		 * the partition — a leaked draft produces a Source line outside the
+		 * published set and fails there (round-1 review, MINOR).
+		 */
+		for (const page of getAllPages().filter((page) => page.draft)) {
+			expect(
+				text.includes(`Source: ${SITE.url}${page.href}`),
+				`draft ${page.slug} leaked into llms-full.txt`,
+			).toBe(false);
 		}
+
+		const sourceLines = text
+			.split("\n")
+			.filter((line) => line.startsWith("Source: "));
+		const publishedLines = getResolvedNav()
+			.flatMap((group) => group.items)
+			.filter((item) => item.status === "published")
+			.map((item) => `Source: ${SITE.url}${item.href}`);
+		expect(sourceLines.length).toBe(publishedLines.length);
+		expect(new Set(sourceLines)).toEqual(new Set(publishedLines));
 	});
 
 	it("opens with the site title and description llms.txt opens with", () => {

@@ -67,6 +67,16 @@ describe("semver parsing and ordering", () => {
 		expect(compareSemver("not-a-version", "0.64.1")).toBe(-1);
 	});
 
+	it("orders a prerelease before its release on equal triples", () => {
+		expect(compareSemver("0.65.0-rc.1", "0.65.0")).toBe(-1);
+		expect(compareSemver("0.65.0", "0.65.0-rc.1")).toBe(1);
+		expect(compareSemver("v0.65.0-rc.1", "v0.65.0")).toBe(-1);
+		// The release supersedes the same-numbered prerelease in either order,
+		// rather than tying and letting arrival order decide.
+		expect(newestOf("0.65.0-rc.1", "0.65.0")).toBe("0.65.0");
+		expect(newestOf("0.65.0", "0.65.0-rc.1")).toBe("0.65.0");
+	});
+
 	it("newestOf takes the newest parseable value, first-wins on ties", () => {
 		expect(newestOf("0.64.1", "0.64.0", "0.63.9")).toBe("0.64.1");
 		expect(newestOf("0.64.1", "0.65.0")).toBe("0.65.0");
@@ -166,7 +176,10 @@ describe("resolveVersions (the builder side)", () => {
 		});
 		expect(versions.backend).toBe("0.64.0");
 		expect(versions.ui).toBe(FALLBACK_VERSIONS.ui);
-		// The downgrade to the fallback constant is announced, never silent.
+		// The PyPI rescue is announced (a reader must be able to tell a
+		// GitHub-won build from a rescued one)...
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining("PyPI"));
+		// ...and so is the downgrade to the fallback constant for the app.
 		expect(warn).toHaveBeenCalledWith(
 			expect.stringContaining(FALLBACK_VERSIONS.ui),
 		);

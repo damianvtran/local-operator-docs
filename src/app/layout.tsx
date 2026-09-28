@@ -18,7 +18,13 @@ import "./globals.css";
  *   - the nav data is computed on the server from the registry x content and
  *     handed to the client top bar / sidebar as plain data;
  *   - SearchProvider owns every global key (⌘K, /, ?, g-chords) and the
- *     palette, so no component has to know where they live.
+ *     palette, so no component has to know where they live;
+ *   - the mono font variable class sits on <html>, NOT <body>: `--font-mono`
+ *     in globals.css references it from `:root`, and a var() reference is
+ *     resolved where its custom property is COMPUTED — a body-scoped class
+ *     leaves the mapping invalid for every inheriting element, which is how
+ *     the whole site silently rendered in the sans fallback until round-1
+ *     D1/Q1 (fonts.ts states the same constraint).
  */
 export const metadata: Metadata = {
 	metadataBase: new URL(SITE.url),
@@ -79,7 +85,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html
 			lang="en"
-			className="dark"
+			className={`${monoFont.variable} dark`}
 			data-theme="localOperatorDark"
 			suppressHydrationWarning
 		>
@@ -87,9 +93,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				{/* biome-ignore lint/security/noDangerouslySetInnerHtml: a static, dependency-free string from lib/theme.ts */}
 				<script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
 			</head>
-			<body
-				className={`${monoFont.variable} min-h-dvh bg-canvas font-sans text-body text-ink antialiased`}
-			>
+			<body className="min-h-dvh bg-canvas font-sans text-body text-ink antialiased">
 				<a href="#main" className="lo-skip-link">
 					Skip to content
 				</a>
