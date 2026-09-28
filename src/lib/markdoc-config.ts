@@ -4,6 +4,7 @@ import Markdoc, {
 } from "@markdoc/markdoc";
 import type { ReactNode } from "react";
 import * as React from "react";
+import { Diagram } from "@/components/diagrams";
 import { Callout } from "@/components/ui/callout";
 import { Card, Cards } from "@/components/ui/cards";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -185,6 +186,16 @@ export const markdocConfig: Config = {
 		},
 		kbd: { render: "Kbd" },
 		command: { render: "CommandChip" },
+		diagram: {
+			render: "Diagram",
+			attributes: {
+				// The frozen diagram name from src/components/diagrams/index.tsx.
+				// Unknown names render a labelled fallback frame and warn at render
+				// time (which is build time for the statically rendered pages).
+				name: { type: String, required: true },
+				caption: { type: String },
+			},
+		},
 	},
 };
 
@@ -204,6 +215,7 @@ export const markdocComponents = {
 	Figure,
 	Kbd,
 	CommandChip,
+	Diagram,
 };
 
 /** Transforms a validated page's AST into renderable content. */
