@@ -54,6 +54,8 @@ and credentials live under `~/.local-operator/` (`config.yml`, `auth.db`).
 {% /step %}
 {% /steps %}
 
+{% figure src="/shots/tui/welcome.png" alt="The welcome screen: brand mark, version, working directory, the command-picker hint, and a composer waiting for a first prompt." caption="First launch: the command picker hint (`/`), `/help`, and a composer ready for your first task." /%}
+
 ## Prefer a local model?
 
 A 7–14B model needs roughly 10–16 GB of RAM or VRAM. Start
