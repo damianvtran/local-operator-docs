@@ -1,0 +1,29 @@
+# https://nixpacks.com/docs/configuration/file
+#
+# Railway builds this repo with nixpacks. The Node version is pinned to the
+# same 22.13.1 as .nvmrc; `pnpm install --frozen-lockfile` fails the build if
+# the lockfile and package.json disagree rather than silently resolving
+# something new.
+
+[variables]
+    NPM_CONFIG_UPDATE_NOTIFIER = 'false'
+    NPM_CONFIG_FUND = 'false'
+    NODE_VERSION = '22.13.1'
+
+[phases.setup]
+    nixPkgs = [
+        "nodejs_22",
+        "pnpm"
+    ]
+
+[phases.install]
+    dependsOn = ['setup']
+    cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+    dependsOn = ['install']
+    cmds = ["pnpm build"]
+
+[start]
+    dependsOn = ["build"]
+    cmd = 'pnpm start'

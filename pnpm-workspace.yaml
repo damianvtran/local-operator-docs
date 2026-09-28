@@ -1,0 +1,10 @@
+# pnpm >= 10 reads build-script approval from this file rather than
+# package.json. These are the only dependencies with postinstall/build
+# scripts; approving exactly them keeps `pnpm install` deterministic (an
+# un-approved script is a hard error here, not a warning, on pnpm 12).
+allowBuilds:
+  "@biomejs/biome": true
+  "@tailwindcss/oxide": true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true

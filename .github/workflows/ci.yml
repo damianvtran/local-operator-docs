@@ -1,0 +1,30 @@
+# The gate the quality bar names: format/lint + design-system rules,
+# typecheck, unit tests, and a production build. `pnpm build` itself runs
+# the search-index generation and the design-system check as prebuild steps.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Reads `packageManager` from package.json, so CI installs the exact
+      # pnpm the repo pins.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm check-types
+      - run: pnpm test
+      - run: pnpm build
