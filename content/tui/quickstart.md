@@ -21,6 +21,8 @@ That is the whole command. If no provider is configured, the welcome state
 walks you through `/login`; a headless or piped run prints the exact
 commands to configure hosting, model and a key instead.
 
+{% figure src="/shots/tui/welcome.png" alt="The welcome screen: the local operator mark, the version and working directory, and a composer ready for a first prompt" caption="The launch state — the composer takes a first prompt; `/` opens the command picker." /%}
+
 ## The screen
 
 - **Transcript** — streamed responses, expandable tool cards, and one-line
@@ -30,6 +32,8 @@ commands to configure hosting, model and a key instead.
 - **Status line** — current step, token usage, and cost.
 - **Approval prompts** — when a tool needs sign-off, the prompt shows the
   exact command before anything touches your system.
+
+{% figure src="/shots/tui/approval.png" alt="An approval prompt showing the exact command about to run, with Allow, Deny and Allow all options" caption="An approval prompt — the exact command first, then allow once, deny, or allow for the session." /%}
 
 ## Keys worth knowing
 
@@ -59,6 +63,8 @@ commands to configure hosting, model and a key instead.
 - `/team`, `/skills`, `/mcp` — launch a saved team; list loaded skills; list
   MCP servers.
 
+{% figure src="/shots/tui/command-picker.png" alt="The slash-command picker open in the composer, filtering a list of commands" caption="Type `/` to filter the command list — `/help` shows the full table in-app." /%}
+
 ## Sessions and resume
 
 Transcripts persist — come back with `/resume` and pick from a list of
@@ -66,10 +72,14 @@ recent conversations with titles and ages. In a terminal multiplexer (tmux,
 wezterm, cmux), `lop` also publishes a per-pane crash-restore binding, so a
 killed terminal does not take the session with it.
 
+{% figure src="/shots/tui/resume-picker.png" alt="The resume picker listing recent conversations with titles and ages" caption="`/resume` — recent conversations with titles and ages; type to filter." /%}
+
 ## Themes
 
 `/theme` previews each registered theme live as you arrow through; the
 chosen theme is stored as `tui.theme` in `~/.local-operator/config.yml`.
+
+{% figure src="/shots/tui/themes-list.png" alt="The theme picker with the registered themes, descriptions and a live preview as the selection moves" caption="`/theme` — every registered theme, previewed live as you move." /%}
 
 {% cards %}
 {% card title="Exec mode" href="/build/exec-mode" icon="terminal-square" %}
