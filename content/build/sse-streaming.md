@@ -21,7 +21,7 @@ control plane — and reconnects are a protocol feature, not something you
 build.
 {% /callout %}
 
-<!-- diagram: SseSequence -->
+{% diagram name="SseSequence" caption="Subscribe, keep the last event id, reconnect with Last-Event-ID" /%}
 
 ## The endpoint
 

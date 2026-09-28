@@ -49,7 +49,7 @@ server-side before it appears. The same command updates or repoints an agent
 you already published, and refusals are specific — a taken name, a reserved
 name, or a moderation failure each says which.
 
-<!-- diagram: HubPublishFlow -->
+{% diagram name="HubPublishFlow" caption="Push through moderation, then pull anywhere with no key" /%}
 
 ## Share privately with a team
 

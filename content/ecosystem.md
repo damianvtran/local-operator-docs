@@ -11,7 +11,7 @@ ecosystem you can plug into — providers to run the models, tools and knowledge
 to give the agent, a place to publish what it learns, and surfaces to reach it
 from. This page is the map.
 
-<!-- diagram: EcosystemMap -->
+{% diagram name="EcosystemMap" caption="Providers, tools, sharing, and the surfaces that reach it" /%}
 
 ## Model providers
 

@@ -29,7 +29,7 @@ inviting side shows before confirming. An agent can drive the joining side
 up to that compare — no agent path can complete a pairing, and that is a
 designed interlock, not a gap.
 
-<!-- diagram: MeshPairingFlow -->
+{% diagram name="MeshPairingFlow" caption="A token, a code, and a person comparing the two" /%}
 
 {% figure src="/shots/tui/mesh-panel.png" alt="The mesh panel after pairing: this device, two networks with roles and member counts, peers with reachability, and a running relay." caption="Paired: networks with their roles, peer reachability, and relay health in one panel." /%}
 
