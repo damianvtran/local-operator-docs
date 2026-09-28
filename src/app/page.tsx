@@ -190,8 +190,8 @@ export default function HomePage() {
 							darkSrc="/shots/ui/app-shell-chat-dark.webp"
 							width={1280}
 							height={900}
-							alt="The desktop app with a chat beside the run details pane, which lists two running subagents and the session's to-dos."
-							caption="A working session in the desktop app: subagents running beside the conversation, with the to-dos in view."
+							alt="The desktop app running a session: the sidebar's agents, teams and recent chats, the conversation with its tool receipts, a drafted follow-up in the composer, and run details listing two running subagents and the session's to-dos."
+							caption="A working session in the desktop app: tool receipts in the conversation, a follow-up drafted in the composer, and two subagents running beside the to-dos."
 						/>
 					</div>
 				</div>
