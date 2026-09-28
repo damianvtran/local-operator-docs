@@ -10,6 +10,7 @@ import {
 	useState,
 } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Kbd } from "@/components/ui/kbd";
 import { nearestPages, search } from "@/lib/search/engine";
 import { tokenizeQuery } from "@/lib/search/tokenizer";
 import type { ScoredEntry } from "@/lib/search/types";
@@ -409,9 +410,7 @@ export function SearchPalette({
 						aria-label="Search the docs"
 						className="h-11 w-full bg-transparent text-body text-ink placeholder:text-ink-disabled"
 					/>
-					<kbd className="shrink-0 rounded-xs border border-hairline bg-surface px-1.5 py-0.5 font-mono text-mono-sm text-ink-dim">
-						esc
-					</kbd>
+					<Kbd className="shrink-0">esc</Kbd>
 				</div>
 
 				<span role="status" aria-live="polite" className="sr-only">
@@ -622,21 +621,19 @@ export function SearchPalette({
 
 				<div className="flex items-center gap-3 border-t border-hairline px-3 py-2 text-mono-sm text-ink-dim">
 					<span className="flex items-center gap-1">
-						<kbd className="rounded-xs border border-hairline px-1">↑</kbd>
-						<kbd className="rounded-xs border border-hairline px-1">↓</kbd>{" "}
-						navigate
+						<Kbd>↑</Kbd>
+						<Kbd>↓</Kbd> navigate
 					</span>
 					<span className="flex items-center gap-1">
-						<kbd className="rounded-xs border border-hairline px-1">tab</kbd>{" "}
-						groups
+						<Kbd>tab</Kbd> groups
 					</span>
 					<span className="flex items-center gap-1">
-						<kbd className="rounded-xs border border-hairline px-1">↵</kbd> open
+						<Kbd>↵</Kbd> open
 					</span>
 					<button
 						type="button"
 						onClick={onOpenShortcuts}
-						className="ml-auto rounded-xs border border-hairline px-1.5 py-0.5 font-mono transition-colors duration-fast hover:border-control hover:text-ink"
+						className="ml-auto rounded-xs border border-hairline px-2 py-0.5 font-mono transition-colors duration-fast hover:border-control hover:text-ink"
 					>
 						? shortcuts
 					</button>
