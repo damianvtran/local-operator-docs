@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Kbd } from "@/components/ui/kbd";
 
 /**
  * 404. Deliberately quiet: the site's search is one keystroke away, so the
@@ -12,11 +13,8 @@ export default function NotFound() {
 			</p>
 			<h1 className="text-display text-ink">That page does not exist.</h1>
 			<p className="max-w-[52ch] text-body text-ink-muted">
-				It may have moved, or it may not be written yet. Press{" "}
-				<kbd className="rounded-xs border border-hairline bg-surface px-1.5 py-0.5 font-mono text-mono-sm">
-					⌘K
-				</kbd>{" "}
-				to search, or start from one of these:
+				It may have moved, or it may not be written yet. Press <Kbd>⌘K</Kbd> to
+				search, or start from one of these:
 			</p>
 			<div className="mt-2 flex flex-wrap gap-3">
 				<Link

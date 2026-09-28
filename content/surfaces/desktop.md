@@ -36,12 +36,14 @@ which picks a model for each step and saves a Pass on your machine.
 Then the window opens on an empty chat. The rail on the left is the map:
 
 - **New chat** (⌘N) and **Search** (⌘K)
+- **Aida** — the built-in chief of staff
 - **Agents** and **Projects** — reusable agents, and durable workstreams
 - **Schedules** — wakes with their cadence and run history
 - **Browser** — a browser in the app the agent can drive
 - **Agent hub** — community agents you can pull into your own setup
+- **Mesh** — the devices you have paired
 
-{% figure src="/shots/ui/app-shell-chat-light.webp" alt="The desktop app: the sidebar's navigation (New chat, Search, Agents, Schedules, Browser, Agent hub) above its agents, teams and recent chats; the chat shows a request, its tool receipts and the reply; a follow-up is drafted in the composer; run details lists two running subagents and the session's to-dos." caption="A working session: the conversation with its tool receipts, a drafted follow-up in the composer, and run details with the subagents and to-dos alongside." /%}
+{% figure src="/shots/ui/app-shell-chat-light.webp" alt="The desktop app: the sidebar's navigation (New chat, Search, Aida, Agents, Projects, Schedules, Browser, Agent hub, Mesh) above its agents, teams and recent chats; the chat shows a request, its tool receipts and the reply; a follow-up is drafted in the composer; run details lists two running subagents and the session's to-dos." caption="A working session: the conversation with its tool receipts, a drafted follow-up in the composer, and run details with the subagents and to-dos alongside." /%}
 
 ## Chat and run details
 

@@ -9,7 +9,12 @@
  */
 export const SITE = {
 	name: "Local Operator",
-	title: "Local Operator docs",
+	/* Capital "Docs": this is the home page's <title> and the og:site_name, so
+	   the lowercase spelling it used to carry read like a draft in every tab
+	   and share card (round-3 operator finding). Subpage titles append
+	   "· Local Operator Docs" through the layout template, which already
+	   capitalised it. */
+	title: "Local Operator Docs",
 	description:
 		"Guides for the Local Operator agent runtime: the terminal UI, the desktop app, workflow automations, remote access, and building on top of it.",
 

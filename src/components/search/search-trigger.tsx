@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Kbd } from "@/components/ui/kbd";
 import { useSearch } from "./search-provider";
 
 /**
@@ -41,9 +42,13 @@ export function SearchTrigger() {
 			>
 				<Search className="size-3.5" aria-hidden="true" />
 				<span>Search</span>
-				<kbd className="ml-auto rounded-xs border border-hairline bg-canvas px-1.5 py-0.5 font-mono text-mono-sm">
-					{hint}
-				</kbd>
+				{/*
+				 * The cap keeps the page ground (`bg-canvas`), the one documented
+				 * difference from the shared style: this field is the site's only
+				 * filled control, and a cap recessed into it reads as a key where a
+				 * same-ground cap would read as loose text.
+				 */}
+				<Kbd className="ml-auto bg-canvas">{hint}</Kbd>
 			</button>
 			<button
 				type="button"

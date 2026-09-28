@@ -39,6 +39,25 @@ export const metadata: Metadata = {
 	 * the wrong route - this is the one page that relies on the default.
 	 */
 	alternates: { canonical: "/" },
+	/*
+	 * The icon set, mirrored from the marketing site's own <head> (its
+	 * index.html is the source of these four sizes plus the shortcut and
+	 * apple links), and served from `public/` so there is ONE convention -
+	 * a second location (`src/app/favicon.ico`) would double up on the
+	 * emitted links. The files are the marketing set, copied byte-for-byte,
+	 * so the two sites show the same browser mark.
+	 */
+	icons: {
+		icon: [
+			{ url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+			{ url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+			{ url: "/favicon-192x192.png", type: "image/png", sizes: "192x192" },
+			{ url: "/favicon-512x512.png", type: "image/png", sizes: "512x512" },
+		],
+		shortcut: "/favicon.ico",
+		apple: [{ url: "/favicon-180x180.png", sizes: "180x180" }],
+	},
+	manifest: "/manifest.json",
 	openGraph: {
 		title: SITE.title,
 		description: SITE.description,

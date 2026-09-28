@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site";
 import { useBackendVersion } from "@/lib/use-version-refresh";
+import { cn } from "@/lib/utils";
 
 /**
  * The runtime version, as the top bar shows it.
@@ -23,7 +24,16 @@ export function VersionChip({ initial }: { initial: string }) {
 			href={SITE.githubReleases}
 			target="_blank"
 			rel="noreferrer"
-			className="hidden items-center rounded-sm border border-hairline px-2 py-1 font-mono text-mono-sm text-ink-dim transition-colors duration-fast hover:border-control hover:text-ink sm:inline-flex"
+			className={cn(
+				"hidden items-center rounded-sm border border-hairline px-2 font-mono text-mono-sm text-ink-dim transition-colors duration-fast hover:border-control hover:text-ink sm:inline-flex",
+				/*
+				 * `h-9` is the top bar's control height, not a per-control choice: the
+				 * search field beside it and the theme/GitHub buttons are all 36px, so
+				 * the chip matches them rather than sizing to its own text (round-3
+				 * operator finding: the chip sat 27.4px against the field's 36px).
+				 */
+				"h-9",
+			)}
 			title={`Local Operator v${version} release notes`}
 		>
 			v{version}

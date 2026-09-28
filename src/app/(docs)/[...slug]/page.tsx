@@ -36,6 +36,13 @@ export async function generateMetadata({
 			title: page.title,
 			description: page.description,
 			url: page.href,
+			/*
+			 * The site name is restated because a page-level `openGraph` REPLACES
+			 * the root one rather than merging into it - without this line the
+			 * docs pages emitted no `og:site_name` at all, which is the field
+			 * that names the site on a share card.
+			 */
+			siteName: SITE.title,
 			type: "article",
 			images: [
 				{
