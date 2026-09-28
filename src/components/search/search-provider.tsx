@@ -43,6 +43,27 @@ export function useSearch(): SearchContextValue {
 
 /** Chord map: key -> destination. `""` slug means the home page. */
 
+/**
+ * The registered search control — the fallback focus target for a close whose
+ * opening chain began with focus on <body> (⌘K or `?` on a fresh page). There
+ * is no opener to hand focus back to, and Radix's own default lands on <body>,
+ * which restarts the next Tab from the skip link. Trade-off: for those chains
+ * focus travels to the top bar even if the user's attention was elsewhere — a
+ * fixed, visible control is the most sensible reconstruction once focus left
+ * the page, and it beats a close that leaves the keyboard nowhere to go
+ * (QA round 2, Q3).
+ */
+function searchTriggerElement(): HTMLElement | null {
+	const candidates = Array.from(
+		document.querySelectorAll<HTMLElement>("[data-search-trigger]"),
+	);
+	return (
+		candidates.find((element) => element.getBoundingClientRect().width > 0) ??
+		candidates[0] ??
+		null
+	);
+}
+
 function isTypingTarget(target: EventTarget | null): boolean {
 	if (!(target instanceof HTMLElement)) return false;
 	const tag = target.tagName;
@@ -208,19 +229,25 @@ export function SearchProvider({
 					router.push(href);
 				}}
 				toast={showToast}
-				returnFocus={() => paletteReturn.current}
+				returnFocus={() =>
+					paletteReturn.current?.isConnected
+						? paletteReturn.current
+						: searchTriggerElement()
+				}
 			/>
 			<ShortcutsDialog
 				open={shortcutsOpen}
 				onOpenChange={setShortcutsOpen}
-				returnFocus={() =>
+				returnFocus={() => {
 					// Opened from the palette, its own remembered control is the
 					// palette's button, which is already unmounted — fall back to
-					// whatever opened the palette.
-					shortcutsReturn.current?.isConnected
-						? shortcutsReturn.current
-						: paletteReturn.current
-				}
+					// whatever opened the palette, then to the search trigger.
+					const fromPalette = shortcutsReturn.current;
+					if (fromPalette?.isConnected) return fromPalette;
+					const opener = paletteReturn.current;
+					if (opener?.isConnected) return opener;
+					return searchTriggerElement();
+				}}
 			/>
 			{/* Chord feedback while a target is not navigable yet. */}
 			<div

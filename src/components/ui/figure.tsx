@@ -15,6 +15,8 @@ export function Figure({
 	alt = "",
 	caption,
 	frame = false,
+	width,
+	height,
 }: {
 	src?: string;
 	/** Optional second file for the dark theme. Both are in the DOM and the
@@ -25,6 +27,14 @@ export function Figure({
 	alt?: string;
 	caption?: string;
 	frame?: boolean;
+	/** Intrinsic pixel size of the asset (both theme variants must share it),
+	 *  when known. Renders as width/height so the browser reserves the box
+	 *  before the file arrives: the home hero is above the fold, and without
+	 *  the reservation the page shifted ~250px on load (CLS 0.288 desktop /
+	 *  0.074 mobile; UX round 2, U9). Omitted for figures whose true size
+	 *  nobody has measured — a wrong reservation shifts too, just earlier. */
+	width?: number;
+	height?: number;
 }) {
 	if (!src) {
 		return (
@@ -42,6 +52,8 @@ export function Figure({
 			<img
 				src={src}
 				alt={alt}
+				width={width}
+				height={height}
 				loading="lazy"
 				className={cn(
 					"w-full rounded-lg border border-hairline",
@@ -54,6 +66,8 @@ export function Figure({
 				<img
 					src={darkSrc}
 					alt={alt}
+					width={width}
+					height={height}
 					loading="lazy"
 					className={cn(
 						"lo-theme-dark w-full rounded-lg border border-hairline",

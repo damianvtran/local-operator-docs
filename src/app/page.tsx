@@ -188,6 +188,8 @@ export default function HomePage() {
 						<Figure
 							src="/shots/ui/app-shell-chat-light.webp"
 							darkSrc="/shots/ui/app-shell-chat-dark.webp"
+							width={1280}
+							height={900}
 							alt="The desktop app with a chat beside the run details pane, which lists two running subagents and the session's to-dos."
 							caption="A working session in the desktop app: subagents running beside the conversation, with the to-dos in view."
 						/>

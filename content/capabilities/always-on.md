@@ -114,7 +114,7 @@ day.
 Pausing is the everyday control — the receipt below is what you get back,
 and `/aida resume` re-arms the cadence.
 
-{% figure src="/shots/tui/aida-paused.png" alt="The /aida pause receipt: Aida paused — no proactive check-ins. /aida resume re-arms them." caption="/aida pause: no proactive check-ins until you resume." /%}
+{% figure src="/shots/tui/aida-paused.png" alt="The /aida pause receipt: Aida: paused — no proactive check-ins. /aida resume re-arms them." caption="/aida pause: no proactive check-ins until you resume." /%}
 
 To turn Aida off entirely, either switch works — and it is a zero-footprint
 switch: no session is created, no state file is written, no wake is armed:
