@@ -69,6 +69,9 @@ npx local-operator-ui              # download and run in one command
 npm install -g local-operator-ui   # or install it globally
 ```
 
+The [desktop app guide](/surfaces/desktop) covers the app in full — what it
+adds on top of the runtime, and how the two work together.
+
 ## Docker and Nix
 
 ```bash

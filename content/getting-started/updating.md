@@ -27,6 +27,9 @@ same conversation — streamed output and unanswered prompts included.
 | uv | `uv tool upgrade local-operator` |
 | Desktop app | Updates itself from GitHub Releases; reinstall from the [downloads page](https://local-operator.com/download) if needed |
 
+The [desktop app guide](/surfaces/desktop) covers the app's own update and
+settings flows.
+
 ## Checking your version
 
 ```bash
