@@ -134,16 +134,38 @@ export function actionTokens(action: PaletteAction): string[] {
 	);
 }
 
-/** Every query token must prefix-match somewhere in the action. */
+/** How many query tokens prefix-match somewhere in the action. */
+export function actionMatchScore(
+	action: PaletteAction,
+	queryTokens: string[],
+): number {
+	if (queryTokens.length === 0) return 0;
+	const haystack = actionTokens(action);
+	return queryTokens.filter((token) =>
+		haystack.some(
+			(candidate) => candidate === token || candidate.startsWith(token),
+		),
+	).length;
+}
+
+/**
+ * Every query token must prefix-match somewhere in the action — or the query
+ * misses by exactly one token. Natural questions carry words the action
+ * vocabulary does not ("set up my phone" keeps "set"), and strict all-token
+ * matching dropped the one row that answered the question; the near miss keeps
+ * it, and the palette ranks strict matches first so a partial fit never
+ * outranks an exact one (UX round 1, U2).
+ */
 export function actionMatches(
 	action: PaletteAction,
 	queryTokens: string[],
 ): boolean {
 	if (queryTokens.length === 0) return true;
-	const haystack = actionTokens(action);
-	return queryTokens.every((token) =>
-		haystack.some(
-			(candidate) => candidate === token || candidate.startsWith(token),
-		),
+	const matched = actionMatchScore(action, queryTokens);
+	if (matched === queryTokens.length) return true;
+	return (
+		queryTokens.length >= 2 &&
+		matched >= 1 &&
+		queryTokens.length - matched === 1
 	);
 }

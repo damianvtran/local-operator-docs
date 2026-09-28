@@ -11,11 +11,17 @@ import { cn } from "@/lib/utils";
  */
 export function Figure({
 	src,
+	darkSrc,
 	alt = "",
 	caption,
 	frame = false,
 }: {
 	src?: string;
+	/** Optional second file for the dark theme. Both are in the DOM and the
+	 *  `data-theme` attribute picks one (`.lo-theme-*` in globals.css), so the
+	 *  swap follows the site toggle rather than the OS preference and needs
+	 *  no JS. */
+	darkSrc?: string;
 	alt?: string;
 	caption?: string;
 	frame?: boolean;
@@ -40,8 +46,21 @@ export function Figure({
 				className={cn(
 					"w-full rounded-lg border border-hairline",
 					frame && "bg-surface p-2",
+					darkSrc && "lo-theme-light",
 				)}
 			/>
+			{darkSrc ? (
+				// biome-ignore lint/performance/noImgElement: static content files in /public; next/image arrives when real screenshots have known dimensions
+				<img
+					src={darkSrc}
+					alt={alt}
+					loading="lazy"
+					className={cn(
+						"lo-theme-dark w-full rounded-lg border border-hairline",
+						frame && "bg-surface p-2",
+					)}
+				/>
+			) : null}
 			{caption ? (
 				<figcaption className="mt-2 text-center text-body-sm text-ink-dim">
 					{caption}

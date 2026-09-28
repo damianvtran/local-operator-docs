@@ -68,6 +68,34 @@ export function SearchProvider({
 	const chordTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const pendingChord = useRef(false);
 
+	/**
+	 * What had focus when each overlay opened, so closing hands it back. Radix
+	 * restores focus to a DialogTrigger, and these overlays have no trigger:
+	 * they open from the top-bar buttons, from `/` and ⌘K, from the footer,
+	 * and from the palette itself (UX round 1, U5 — close used to drop focus
+	 * to <body> and Tab restarted from the skip link).
+	 */
+	const paletteReturn = useRef<HTMLElement | null>(null);
+	const shortcutsReturn = useRef<HTMLElement | null>(null);
+	/** Mirrors `paletteOpen` for the key handler, which must know whether ⌘K
+	 *  is opening (capture) or closing (do not capture) a fresh element. */
+	const paletteOpenRef = useRef(false);
+
+	useEffect(() => {
+		paletteOpenRef.current = paletteOpen;
+	}, [paletteOpen]);
+
+	const rememberOverlayFocus = useCallback(
+		(target: { current: HTMLElement | null }) => {
+			const active = document.activeElement;
+			target.current =
+				active instanceof HTMLElement && active !== document.body
+					? active
+					: null;
+		},
+		[],
+	);
+
 	const available = useMemo(() => new Set(availableSlugs), [availableSlugs]);
 
 	const showToast = useCallback((message: string) => {
@@ -89,7 +117,8 @@ export function SearchProvider({
 			// toggling search while typing is the whole point of the shortcut.
 			if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
 				event.preventDefault();
-				setPaletteOpen((open) => !open);
+				if (!paletteOpenRef.current) rememberOverlayFocus(paletteReturn);
+				setPaletteOpen(!paletteOpenRef.current);
 				return;
 			}
 			if (typing) return;
@@ -101,12 +130,14 @@ export function SearchProvider({
 				!event.altKey
 			) {
 				event.preventDefault();
+				rememberOverlayFocus(paletteReturn);
 				setPaletteOpen(true);
 				return;
 			}
 
 			if (event.key === "?") {
 				event.preventDefault();
+				rememberOverlayFocus(shortcutsReturn);
 				setShortcutsOpen(true);
 				return;
 			}
@@ -143,14 +174,22 @@ export function SearchProvider({
 
 		window.addEventListener("keydown", onKeyDown);
 		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [available, router, showToast]);
+	}, [available, router, showToast, rememberOverlayFocus]);
+
+	const openPalette = useCallback(() => {
+		rememberOverlayFocus(paletteReturn);
+		setPaletteOpen(true);
+	}, [rememberOverlayFocus]);
 
 	const value = useMemo<SearchContextValue>(
 		() => ({
-			openPalette: () => setPaletteOpen(true),
-			openShortcuts: () => setShortcutsOpen(true),
+			openPalette,
+			openShortcuts: () => {
+				rememberOverlayFocus(shortcutsReturn);
+				setShortcutsOpen(true);
+			},
 		}),
-		[],
+		[openPalette, rememberOverlayFocus],
 	);
 
 	return (
@@ -161,6 +200,7 @@ export function SearchProvider({
 				onOpenChange={setPaletteOpen}
 				onOpenShortcuts={() => {
 					setPaletteOpen(false);
+					rememberOverlayFocus(shortcutsReturn);
 					setShortcutsOpen(true);
 				}}
 				navigate={(href) => {
@@ -168,8 +208,20 @@ export function SearchProvider({
 					router.push(href);
 				}}
 				toast={showToast}
+				returnFocus={() => paletteReturn.current}
 			/>
-			<ShortcutsDialog open={shortcutsOpen} onOpenChange={setShortcutsOpen} />
+			<ShortcutsDialog
+				open={shortcutsOpen}
+				onOpenChange={setShortcutsOpen}
+				returnFocus={() =>
+					// Opened from the palette, its own remembered control is the
+					// palette's button, which is already unmounted — fall back to
+					// whatever opened the palette.
+					shortcutsReturn.current?.isConnected
+						? shortcutsReturn.current
+						: paletteReturn.current
+				}
+			/>
 			{/* Chord feedback while a target is not navigable yet. */}
 			<div
 				role="status"

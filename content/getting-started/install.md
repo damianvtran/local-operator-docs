@@ -41,7 +41,7 @@ The install provides two equivalent entry points: `lop` (used throughout
 these docs) and `local-operator`.
 
 Optional features live behind extras. `pip install "local-operator[all]"`
-brings everything below except `lsp`:
+brings every extra listed below:
 
 | Extra | Adds |
 | --- | --- |
@@ -51,7 +51,7 @@ brings everything below except `lsp`:
 | `tokenizer` | Exact BPE token counting (estimated otherwise) |
 | `fetch` | Markdownify renderer for `web_fetch` |
 | `lsp` | Jedi-backed Python navigation for the `lsp` tool |
-| `all` | Everything above except `lsp` |
+| `all` | Every extra above, `lsp` included |
 
 If a feature's extra is missing, the agent tells you which one to install
 instead of failing with an import error.

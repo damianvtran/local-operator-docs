@@ -267,7 +267,16 @@
 		grid-template-columns: minmax(0, 1fr);
 	}
 
-	.docs-article > * {
+	/* The single-track fallback drops the named lines the bleed/full
+	   placements above reference. Those two rules are (0,2,0) and outrank
+	   `.docs-article > *`, so without this they survive into a grid whose
+	   lines no longer exist, resolve as implicit tracks, and starve the 1fr
+	   track to 0px — every ordinary child then spans 0px of it and the page
+	   reads one word per line (design round 1, D1 / UX U1: below 1024px every
+	   article collapsed). */
+	.docs-article > *,
+	.docs-article > .lo-bleed,
+	.docs-article > .lo-full {
 		grid-column: 1 / -1;
 	}
 }
@@ -340,12 +349,17 @@ mark {
    focus while invisible), revealed on hover/focus, always faintly visible on
    touch where hover does not exist. The anchor is a sibling of the heading
    inside the `.lo-heading` wrapper, positioned in the measure track's left
-   margin. */
+   margin. The box is 24x24 (the touch-target floor) around the glyph's own
+   spot, so the hit area grew without moving the mark. */
 .lo-heading-anchor {
 	position: absolute;
-	left: -1.4rem;
-	top: 0.25rem;
-	width: 1.2rem;
+	left: -1.85rem;
+	top: 0.2rem;
+	display: flex;
+	width: 1.5rem;
+	height: 1.5rem;
+	align-items: center;
+	justify-content: center;
 	color: var(--color-ink-disabled);
 	text-decoration: none;
 	opacity: 0;
@@ -377,6 +391,31 @@ mark {
 	to {
 		opacity: 1;
 	}
+}
+
+/* -------------------------------------------------------------------------
+ * Theme-paired figures.
+ *
+ * Both files are in the DOM and `data-theme` — written before first paint by
+ * the layout script, and by lib/theme.ts after a toggle — picks which one
+ * paints: the image follows the same attribute the palettes and Shiki do, so
+ * it cannot flash or lag the rest of the page. display, not opacity: the
+ * hidden variant stays out of the layout and out of the accessibility tree.
+ * ---------------------------------------------------------------------- */
+.lo-theme-light {
+	display: block;
+}
+
+.lo-theme-dark {
+	display: none;
+}
+
+[data-theme="localOperatorDark"] .lo-theme-light {
+	display: none;
+}
+
+[data-theme="localOperatorDark"] .lo-theme-dark {
+	display: block;
 }
 
 @keyframes lo-pop-in {

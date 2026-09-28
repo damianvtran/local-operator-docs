@@ -17,7 +17,7 @@ same sessions and read the same `~/.local-operator/` configuration.
 | Mobile relay | Your phone | `lop mobile install` | You want to check on, steer, or start sessions from the sofa |
 | Browser extension | Your browser | `lop browser install` | You want the agent to drive the browser you already use, with the pages visible |
 | Exec mode | Scripts, CI, cron | bundled with the runtime | You want one task, headless: `lop exec "..."`, `--json`, `--background` |
-| Python SDK | Your own Python code | in development | You want to embed Local Operator in an application — watch the repo for it |
+| Python SDK | Your own Python code | ships inside the `local-operator` package | You want to embed Local Operator in an application |
 
 ## A note on mixing
 

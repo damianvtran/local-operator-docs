@@ -63,5 +63,4 @@ designed interlock, not a gap.
 - **Compare what you can see** — never type a pairing code you did not see
   on the other device's screen, and never print an invite token.
 
-Until the full guide lands, `lop network --help` (and `lop mesh --help`, if
-your build spells it that way) is the reference.
+Until the full guide lands, `lop network --help` is the reference.

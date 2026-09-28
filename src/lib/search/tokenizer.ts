@@ -20,16 +20,36 @@
  * exception set, and the behaviour is pinned by tests.
  */
 
+/**
+ * Function words dropped from prose queries and prose tokens.
+ *
+ * The auxiliaries (do/does/did, can/could/should/would/might/must, the be
+ * forms) matter more than their size suggests: "how do I connect my phone"
+ * kept "do", every-token action matching then failed on the one action whose
+ * keywords happened to prefix-match it, and the natural question surfaced no
+ * action row at all (UX round 1, U2). They carry no topic in a query, so text
+ * mode drops them; code mode keeps them (`tokenizeCode`), where "do" can be an
+ * identifier.
+ */
 const STOPWORDS = new Set([
 	"a",
+	"am",
 	"an",
 	"and",
 	"are",
 	"as",
 	"at",
 	"be",
+	"been",
+	"being",
 	"but",
 	"by",
+	"can",
+	"cannot",
+	"could",
+	"did",
+	"do",
+	"does",
 	"for",
 	"from",
 	"how",
@@ -42,12 +62,16 @@ const STOPWORDS = new Set([
 	"its",
 	"may",
 	"me",
+	"might",
+	"must",
 	"my",
 	"no",
 	"not",
 	"of",
 	"on",
 	"or",
+	"shall",
+	"should",
 	"so",
 	"that",
 	"the",
@@ -61,6 +85,7 @@ const STOPWORDS = new Set([
 	"us",
 	"was",
 	"we",
+	"were",
 	"what",
 	"when",
 	"where",
@@ -68,6 +93,7 @@ const STOPWORDS = new Set([
 	"who",
 	"will",
 	"with",
+	"would",
 	"you",
 	"your",
 ]);

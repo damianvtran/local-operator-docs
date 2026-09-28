@@ -15,7 +15,7 @@ type IndexState =
 	| { status: "idle" }
 	| { status: "loading" }
 	| { status: "ready"; index: SearchIndex }
-	| { status: "error"; message: string };
+	| { status: "error"; message: string; hint: string };
 
 let cached: SearchIndex | null = null;
 let inflight: Promise<SearchIndex> | null = null;
@@ -41,6 +41,29 @@ function loadIndex(): Promise<SearchIndex> {
 	return inflight;
 }
 
+/**
+ * Designed copy for a failed load — never the thrown value's own text. The
+ * browser's "Failed to fetch" is a TypeError message, not a sentence, and an
+ * anonymous throw used to render "(unknown error)": a parenthetical that said
+ * nothing (design round 1, D5; UX round 1, U8). An HTTP status is the one
+ * detail worth keeping, because it separates "the server answered wrong"
+ * from "the request never arrived".
+ */
+function describeFailure(error: unknown): { message: string; hint: string } {
+	const status =
+		error instanceof Error ? /^HTTP (\d+)$/.exec(error.message) : null;
+	if (status) {
+		return {
+			message: `The search index didn't load (HTTP ${status[1]}).`,
+			hint: "Retry, and if it keeps happening, reload the page.",
+		};
+	}
+	return {
+		message: "Search couldn't load.",
+		hint: "Check your connection, then retry.",
+	};
+}
+
 export function useSearchIndex(enabled: boolean) {
 	const [state, setState] = useState<IndexState>(
 		cached ? { status: "ready", index: cached } : { status: "idle" },
@@ -53,10 +76,7 @@ export function useSearchIndex(enabled: boolean) {
 		loadIndex()
 			.then((index) => setState({ status: "ready", index }))
 			.catch((error: unknown) =>
-				setState({
-					status: "error",
-					message: error instanceof Error ? error.message : "unknown error",
-				}),
+				setState({ status: "error", ...describeFailure(error) }),
 			);
 	}, [enabled, state.status]);
 

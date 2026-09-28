@@ -11,6 +11,11 @@ import { cn } from "@/lib/utils";
  * changing an icon: a screen-reader user pressing the button otherwise gets
  * no confirmation at all. The reset timer is tracked in a ref so unmount or a
  * second press cannot leave a stale "Copied" showing.
+ *
+ * The control keeps a 24px minimum hit area (WCAG 2.5.8) even where a caller
+ * strips its padding for layout — the home hero renders it borderless inside
+ * the install chip, and at 14x22 it was the smallest touch target on the page
+ * (UX round 1, U6).
  */
 type CopyState = "idle" | "copied" | "error";
 
@@ -58,7 +63,7 @@ export function CopyButton({
 			onClick={copy}
 			aria-label={ariaLabel}
 			className={cn(
-				"inline-flex items-center gap-1.5 rounded-sm border border-hairline bg-surface px-2 py-1 font-mono text-mono-sm text-ink-muted transition-colors duration-fast ease-out-quart",
+				"inline-flex min-h-6 min-w-6 items-center justify-center gap-1.5 rounded-sm border border-hairline bg-surface px-2 py-1 font-mono text-mono-sm text-ink-muted transition-colors duration-fast ease-out-quart",
 				"hover:border-control hover:text-ink",
 				state === "error" && "border-danger-border text-danger",
 				className,

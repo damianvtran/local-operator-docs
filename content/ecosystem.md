@@ -23,7 +23,7 @@ differences out of your way:
   (`lop login`, or `/login` in the TUI). Multiple accounts on one provider pool
   and rotate; failover follows a chain you can edit in `config.yml`.
 - **API keys** — Gemini, DeepSeek, Mistral, OpenRouter and Radient are set with
-  a masked prompt and stay on your machine (`~/.local-operator/credentials.env`).
+  a masked prompt and stay on your machine (`~/.local-operator/auth.db`).
 - **Local servers** — LM Studio, Ollama, vLLM and llama.cpp run models on your
   own hardware; anything speaking the OpenAI API can be added by URL, so a
   proxy or a homegrown gateway fits too.
