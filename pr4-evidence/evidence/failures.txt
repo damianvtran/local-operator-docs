@@ -1,0 +1,46 @@
+# Failure-path cleanup — before/after (review round 1, minor 2)
+
+Every historical observation below is from this session's shell; `$TMPDIR` is the
+per-user macOS tmpdir (`/var/folders/…/T/`) — note my first two leak checks
+looked in `/tmp` and wrongly found nothing; `os.tmpdir()` is not `/tmp`.
+
+## BEFORE (at the round-1 base, c4920b2) — the leak, measured
+
+After exercising the failure repros (a hook-failing fake site, a mid-run
+SIGINT) plus the day's other failed invocations:
+
+```
+$ ls -d "$TMPDIR"/lo-docs-chrome-* "$TMPDIR"/lo-og-* 2>/dev/null
+/var/folders/…/T/lo-docs-chrome-8qZt17
+/var/folders/…/T/lo-docs-chrome-Hekha9
+/var/folders/…/T/lo-docs-chrome-NuZDV5
+/var/folders/…/T/lo-docs-chrome-RFflR1
+/var/folders/…/T/lo-docs-chrome-RsNrrn
+/var/folders/…/T/lo-docs-chrome-l2lFu7      <- 6 profiles
+/var/folders/…/T/lo-og-QiZGVR               <- 1 work dir
+
+$ ps aux | grep "[l]o-docs-chrome" … Chrome browser processes: 4
+```
+
+Cause, in code: `fail()` calls `process.exit`, and the only `close()` lives on
+the happy path — every post-launch failure exits above it. Cleaned up by hand
+before fixing (all 6 profiles + work dir removed, all 4 browsers killed).
+
+## AFTER (at b94ccf1) — same failure class, nothing left behind
+
+```
+$ node scripts/generate-og-images.mjs http://localhost:3871     # hook-failing fake site
+origin:  http://localhost:3871
+routes:  2 (from /sitemap.xml)
+generate-og-images: / no longer exposes meta[name=description], header brand link, link[rel=canonical].
+… (fail() path) …
+
+$ ls -d "$TMPDIR"/lo-docs-chrome-* "$TMPDIR"/lo-og-* 2>/dev/null | wc -l
+0
+$ ps eo pid,command | awk '$2 ~ /^\/Applications\/Google/ && /lo-docs-/ {print $1}' | wc -l
+0        # the SIGKILLed browser’s helpers were still draining at +0s (2), gone at +5s
+```
+
+The mechanism: an `exit` hook + SIGINT/SIGTERM handlers call a synchronous
+`kill()` (SIGKILL + profile rm, retry-on-ENOTEMPTY) on the browser handle;
+`close()` keeps its graceful path for the success case.
