@@ -34,7 +34,6 @@ const COLUMNS: Array<{
 		title: "Community",
 		links: [
 			{ label: "GitHub", href: SITE.github, external: true },
-			{ label: "Discord", href: SITE.discord, external: true },
 			{ label: "Releases", href: SITE.githubReleases, external: true },
 			{ label: "local-operator.com", href: SITE.marketing, external: true },
 		],

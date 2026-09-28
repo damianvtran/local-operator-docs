@@ -18,7 +18,6 @@ export const SITE = {
 
 	github: "https://github.com/damianvtran/local-operator",
 	githubReleases: "https://github.com/damianvtran/local-operator/releases",
-	discord: "https://discord.gg/cSXBfBMd",
 	email: "contact@local-operator.com",
 	marketing: "https://local-operator.com",
 	downloads: "https://local-operator.com/download",
@@ -28,11 +27,12 @@ export const SITE = {
 
 	/**
 	 * The Local Operator release these docs were written against (recon of
-	 * 2026-09-27 read v0.61.9 from the runtime's pyproject.toml). The top-bar
-	 * version chip is informational; bump this in a release sweep when
-	 * documented behaviour moves, not on every runtime tag.
+	 * 2026-09-27 read v0.61.9 from the runtime's pyproject.toml, and the
+	 * surface facts in these pages — mesh, wakes, sessions — landed through
+	 * v0.63.x). The top-bar version chip is informational; bump this in a
+	 * release sweep when documented behaviour moves, not on every runtime tag.
 	 */
-	productVersion: "0.61.9",
+	productVersion: "0.63.12",
 } as const;
 
 /** Route for a content slug, e.g. `getting-started/install` -> `/getting-started/install`. */
