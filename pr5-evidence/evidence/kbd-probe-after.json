@@ -1,0 +1,65 @@
+{
+  "budget1440": {
+    "viewport": 1440,
+    "measure": "46rem",
+    "toc": "14rem",
+    "wrapper": {
+      "x": 288,
+      "right": 1424,
+      "w": 1136,
+      "maxW": "1192px"
+    },
+    "article": {
+      "x": 288,
+      "right": 1160,
+      "w": 872,
+      "tracks": "736px"
+    },
+    "tocBox": {
+      "x": 1200,
+      "right": 1424,
+      "w": 224
+    },
+    "gap": "40px"
+  },
+  "kbdTopbar": {
+    "url": "/",
+    "kdbs": [
+      {
+        "text": "⌘K",
+        "w": 34.4,
+        "h": 23.4,
+        "fs": "12px",
+        "lh": "17.4px",
+        "padY": "2px",
+        "display": "block",
+        "parent": "BUTTON.hidden.h-9"
+      }
+    ]
+  },
+  "kbd404": {
+    "url": "/this-page-does-not-exist",
+    "kdbs": [
+      {
+        "text": "⌘K",
+        "w": 34.4,
+        "h": 23.4,
+        "fs": "12px",
+        "lh": "17.4px",
+        "padY": "2px",
+        "display": "block",
+        "parent": "BUTTON.hidden.h-9"
+      },
+      {
+        "text": "⌘K",
+        "w": 34.4,
+        "h": 23.4,
+        "fs": "12px",
+        "lh": "17.4px",
+        "padY": "2px",
+        "display": "inline-block",
+        "parent": "P.max-w-[52ch].text-body"
+      }
+    ]
+  }
+}
