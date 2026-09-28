@@ -1,0 +1,12 @@
+=== pnpm lint (folded head):
+check-design-system: og-cards-in-sync files present; fingerprint half skipped (no .next build)
+check-design-system: 88 files, all rules pass
+
+=== pnpm test:
+ Test Files  13 passed (13)
+      Tests  134 passed (134)
+
+=== pnpm build (prebuild + next build + postbuild):
+$ node scripts/check-design-system.mjs
+check-design-system: og-cards-in-sync 17 cards, fingerprints match the built pages
+check-design-system: 88 files, all rules pass

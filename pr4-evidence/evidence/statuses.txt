@@ -1,0 +1,17 @@
+200 image/png /og/about-faq.46a29337.png
+200 image/png /og/about-why.0e5ef34b.png
+200 image/png /og/build-exec-mode.a40faeeb.png
+200 image/png /og/build-python-sdk.74c2ef88.png
+200 image/png /og/build-sse-streaming.9b6c7f7e.png
+200 image/png /og/capabilities-agent-hub.f6ab9768.png
+200 image/png /og/capabilities-always-on.049733c3.png
+200 image/png /og/ecosystem.cd1b02a0.png
+200 image/png /og/getting-started-choose-your-surface.d8a0d0fd.png
+200 image/png /og/getting-started-install.b5611f2c.png
+200 image/png /og/getting-started-quickstart.1f000e37.png
+200 image/png /og/getting-started-updating.53dc9fe0.png
+200 image/png /og/getting-started-what-is-local-operator.3eef54a5.png
+200 image/png /og/home.f928e889.png
+200 image/png /og/surfaces-browser-extension.43e214a1.png
+200 image/png /og/surfaces-desktop.fd11728f.png
+200 image/png /og/tui-quickstart.da1baabd.png
