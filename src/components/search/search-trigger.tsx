@@ -12,6 +12,11 @@ import { useSearch } from "./search-provider";
  * The hint is written as ⌘K for Apple platforms and Ctrl K elsewhere, and it
  * is computed AFTER mount — rendering a platform-dependent string during SSR
  * would mismatch hydration.
+ *
+ * Both shapes carry `data-search-trigger`: the palette and shortcuts overlays
+ * fall back to the visible one when they close without an opener to return
+ * focus to (a ⌘K (or `?`) chain that started with focus on <body> — QA
+ * round 2, Q3).
  */
 export function SearchTrigger() {
 	const { openPalette } = useSearch();
@@ -29,6 +34,7 @@ export function SearchTrigger() {
 		<>
 			<button
 				type="button"
+				data-search-trigger
 				onClick={openPalette}
 				className="hidden h-9 w-56 items-center gap-2 rounded-sm border border-hairline bg-surface px-3 text-body-sm text-ink-dim transition-colors duration-fast ease-out-quart hover:border-control hover:text-ink sm:flex"
 				aria-label="Search docs"
@@ -41,6 +47,7 @@ export function SearchTrigger() {
 			</button>
 			<button
 				type="button"
+				data-search-trigger
 				onClick={openPalette}
 				aria-label="Search docs"
 				className="inline-flex size-9 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast hover:bg-surface hover:text-ink sm:hidden"
