@@ -1,17 +1,17 @@
-=== negative probe A (stale fingerprint must fail) ===
-$ node scripts/check-design-system.mjs   # after corrupting one source hash to deadbeefdead
+# The gate fires, both ways — re-run after the round-1 fingerprint change (same commands as before).
+
+$ sed -i '' 's/source: "b584600493a0"/source: "deadbeefdead"/' src/data/og-cards.ts   # tamper the home card's fingerprint
+$ node scripts/check-design-system.mjs; echo rc=$?
 check-design-system: 1 problem(s)
+
   - [og-cards-in-sync] / has moved since its card was rendered.
-    card: "deadbeefdead", page now: "f928e8899393" — title "Run agents where your work lives.", description "Guides for the Local Operator agent runtime: the terminal UI…", chip "Local-first agent runtime".
+    card: "deadbeefdead", page now: "b584600493a0" — title "Run agents where your work lives.", description "Guides for the Local Operator agent runtime: the terminal UI…", chip "Local-first agent runtime".
     Run `pnpm og` against a running `pnpm start` and commit the new card.
 rc=1
 
-=== negative probe B (published page without a card) ===
-$ node scripts/check-design-system.mjs   # after dropping the install entry from the module
+$ sed -i '' '/"\/getting-started\/install": {/,/^\t},$/d' src/data/og-cards.ts   # drop a published page's card
+$ node scripts/check-design-system.mjs; echo rc=$?
 check-design-system: 1 problem(s)
+
   - [og-cards-in-sync] /getting-started/install is published but has no card in src/data/og-cards.ts. Run `pnpm og`.
 rc=1
-
-=== idempotency (second `pnpm og` run, nothing changed) ===
-kept:    public/og/home.f928e889.png
-... 17 lines of `kept`, zero renders, module rewritten byte-identical

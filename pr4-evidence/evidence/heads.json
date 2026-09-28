@@ -1,121 +1,189 @@
-{
-  "/": {
-    "og": "https://docs.local-operator.com/og/home.f928e889.png",
-    "tw": "https://docs.local-operator.com/og/home.f928e889.png",
+[
+  {
+    "route": "/",
+    "title": "Local Operator Docs",
     "canonical": "https://docs.local-operator.com",
-    "alt": "Local Operator Docs. Run agents where your work lives.. Guides for the Local Operator agent runtime: the terminal UI, the desktop app, workflow automations, remote access, and building on top of it.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/home.b5846004.png",
+    "twitterImage": "https://docs.local-operator.com/og/home.b5846004.png",
+    "ogAlt": "Local Operator Docs. Run agents where your work lives. Guides for the Local Operator agent runtime: the terminal UI, the desktop app, workflow automations, remote access, and building on top of it.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/home.b5846004.png"
   },
-  "/getting-started/what-is-local-operator": {
-    "og": "https://docs.local-operator.com/og/getting-started-what-is-local-operator.3eef54a5.png",
-    "tw": "https://docs.local-operator.com/og/getting-started-what-is-local-operator.3eef54a5.png",
+  {
+    "route": "/getting-started/what-is-local-operator",
+    "title": "What is Local Operator? · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/getting-started/what-is-local-operator",
-    "alt": "Local Operator Docs. What is Local Operator?. Local Operator is an agent runtime that runs on your machine \u2014 one runtime every surface, from the terminal to your phone.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/getting-started-what-is-local-operator.a7bcdfbf.png",
+    "twitterImage": "https://docs.local-operator.com/og/getting-started-what-is-local-operator.a7bcdfbf.png",
+    "ogAlt": "Local Operator Docs. What is Local Operator? Local Operator is an agent runtime that runs on your machine — one runtime every surface, from the terminal to your phone.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/getting-started-what-is-local-operator.a7bcdfbf.png"
   },
-  "/getting-started/install": {
-    "og": "https://docs.local-operator.com/og/getting-started-install.b5611f2c.png",
-    "tw": "https://docs.local-operator.com/og/getting-started-install.b5611f2c.png",
+  {
+    "route": "/getting-started/install",
+    "title": "Install & first run · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/getting-started/install",
-    "alt": "Local Operator Docs. Install &amp; first run. Install the Local Operator runtime with pip, pipx, or uv, grab the desktop app, or run it with Docker or Nix \u2014 then verify the install.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/getting-started-install.033e618c.png",
+    "twitterImage": "https://docs.local-operator.com/og/getting-started-install.033e618c.png",
+    "ogAlt": "Local Operator Docs. Install & first run. Install the Local Operator runtime with pip, pipx, or uv, grab the desktop app, or run it with Docker or Nix — then verify the install.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/getting-started-install.033e618c.png"
   },
-  "/getting-started/quickstart": {
-    "og": "https://docs.local-operator.com/og/getting-started-quickstart.1f000e37.png",
-    "tw": "https://docs.local-operator.com/og/getting-started-quickstart.1f000e37.png",
+  {
+    "route": "/getting-started/quickstart",
+    "title": "Quickstart · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/getting-started/quickstart",
-    "alt": "Local Operator Docs. Quickstart. Sign in to a provider, launch the terminal UI, run your first task, and approve a tool call \u2014 the five-minute first-run path.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/getting-started-quickstart.497d8030.png",
+    "twitterImage": "https://docs.local-operator.com/og/getting-started-quickstart.497d8030.png",
+    "ogAlt": "Local Operator Docs. Quickstart. Sign in to a provider, launch the terminal UI, run your first task, and approve a tool call — the five-minute first-run path.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/getting-started-quickstart.497d8030.png"
   },
-  "/getting-started/choose-your-surface": {
-    "og": "https://docs.local-operator.com/og/getting-started-choose-your-surface.d8a0d0fd.png",
-    "tw": "https://docs.local-operator.com/og/getting-started-choose-your-surface.d8a0d0fd.png",
+  {
+    "route": "/getting-started/choose-your-surface",
+    "title": "Choose your surface · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/getting-started/choose-your-surface",
-    "alt": "Local Operator Docs. Choose your surface. TUI, desktop app, mobile relay, browser extension, exec mode, or the Python SDK \u2014 which surface to pick, and when.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/getting-started-choose-your-surface.e81f74fb.png",
+    "twitterImage": "https://docs.local-operator.com/og/getting-started-choose-your-surface.e81f74fb.png",
+    "ogAlt": "Local Operator Docs. Choose your surface. TUI, desktop app, mobile relay, browser extension, exec mode, or the Python SDK — which surface to pick, and when.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/getting-started-choose-your-surface.e81f74fb.png"
   },
-  "/getting-started/updating": {
-    "og": "https://docs.local-operator.com/og/getting-started-updating.53dc9fe0.png",
-    "tw": "https://docs.local-operator.com/og/getting-started-updating.53dc9fe0.png",
+  {
+    "route": "/getting-started/updating",
+    "title": "Updating Local Operator · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/getting-started/updating",
-    "alt": "Local Operator Docs. Updating Local Operator. Update the runtime with lop update or /update, upgrade an install by hand, and find release notes.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/getting-started-updating.2d66036b.png",
+    "twitterImage": "https://docs.local-operator.com/og/getting-started-updating.2d66036b.png",
+    "ogAlt": "Local Operator Docs. Updating Local Operator. Update the runtime with lop update or /update, upgrade an install by hand, and find release notes.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/getting-started-updating.2d66036b.png"
   },
-  "/tui/quickstart": {
-    "og": "https://docs.local-operator.com/og/tui-quickstart.da1baabd.png",
-    "tw": "https://docs.local-operator.com/og/tui-quickstart.da1baabd.png",
+  {
+    "route": "/tui/quickstart",
+    "title": "The terminal UI · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/tui/quickstart",
-    "alt": "Local Operator Docs. The terminal UI. Launch, read, and drive the terminal UI \u2014 the transcript, the keys worth knowing, and the slash commands that matter.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/tui-quickstart.ec4e39d4.png",
+    "twitterImage": "https://docs.local-operator.com/og/tui-quickstart.ec4e39d4.png",
+    "ogAlt": "Local Operator Docs. The terminal UI. Launch, read, and drive the terminal UI — the transcript, the keys worth knowing, and the slash commands that matter.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/tui-quickstart.ec4e39d4.png"
   },
-  "/surfaces/desktop": {
-    "og": "https://docs.local-operator.com/og/surfaces-desktop.fd11728f.png",
-    "tw": "https://docs.local-operator.com/og/surfaces-desktop.fd11728f.png",
+  {
+    "route": "/surfaces/desktop",
+    "title": "Desktop app · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/surfaces/desktop",
-    "alt": "Local Operator Docs. Desktop app. Install the desktop app, sign in, and learn the window \u2014 chat with run details, the tool trace, projects, schedules, themes, and the Agent hub inside the app.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/surfaces-desktop.bf0c07e2.png",
+    "twitterImage": "https://docs.local-operator.com/og/surfaces-desktop.bf0c07e2.png",
+    "ogAlt": "Local Operator Docs. Desktop app. Install the desktop app, sign in, and learn the window — chat with run details, the tool trace, projects, schedules, themes, and the Agent hub inside the app.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/surfaces-desktop.bf0c07e2.png"
   },
-  "/surfaces/browser-extension": {
-    "og": "https://docs.local-operator.com/og/surfaces-browser-extension.43e214a1.png",
-    "tw": "https://docs.local-operator.com/og/surfaces-browser-extension.43e214a1.png",
+  {
+    "route": "/surfaces/browser-extension",
+    "title": "Browser extension · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/surfaces/browser-extension",
-    "alt": "Local Operator Docs. Browser extension. Give the agent the browser you are already signed into \u2014 install from the Chrome Web Store, pair the bridge, and know exactly what it can and cannot do.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/surfaces-browser-extension.082c7f58.png",
+    "twitterImage": "https://docs.local-operator.com/og/surfaces-browser-extension.082c7f58.png",
+    "ogAlt": "Local Operator Docs. Browser extension. Give the agent the browser you are already signed into — install from the Chrome Web Store, pair the bridge, and know exactly what it can and cannot do.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/surfaces-browser-extension.082c7f58.png"
   },
-  "/capabilities/always-on": {
-    "og": "https://docs.local-operator.com/og/capabilities-always-on.049733c3.png",
-    "tw": "https://docs.local-operator.com/og/capabilities-always-on.049733c3.png",
+  {
+    "route": "/capabilities/always-on",
+    "title": "Always-on & proactive agents · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/capabilities/always-on",
-    "alt": "Local Operator Docs. Always-on &amp; proactive agents. Sessions that start their own turns \u2014 scheduled wakes that fire with every terminal closed, the supervisor that runs them, and Aida, the built-in chief of staff.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/capabilities-always-on.de2078fb.png",
+    "twitterImage": "https://docs.local-operator.com/og/capabilities-always-on.de2078fb.png",
+    "ogAlt": "Local Operator Docs. Always-on & proactive agents. Sessions that start their own turns — scheduled wakes that fire with every terminal closed, the supervisor that runs them, and Aida, the built-in chief of staff.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/capabilities-always-on.de2078fb.png"
   },
-  "/capabilities/agent-hub": {
-    "og": "https://docs.local-operator.com/og/capabilities-agent-hub.f6ab9768.png",
-    "tw": "https://docs.local-operator.com/og/capabilities-agent-hub.f6ab9768.png",
+  {
+    "route": "/capabilities/agent-hub",
+    "title": "Agent Hub · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/capabilities/agent-hub",
-    "alt": "Local Operator Docs. Agent Hub. Browse Radient&#x27;s community registry of agents, pull one into your setup, publish your own, and share privately with a team.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/capabilities-agent-hub.d24d2ef2.png",
+    "twitterImage": "https://docs.local-operator.com/og/capabilities-agent-hub.d24d2ef2.png",
+    "ogAlt": "Local Operator Docs. Agent Hub. Browse Radient's community registry of agents, pull one into your setup, publish your own, and share privately with a team.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/capabilities-agent-hub.d24d2ef2.png"
   },
-  "/build/exec-mode": {
-    "og": "https://docs.local-operator.com/og/build-exec-mode.a40faeeb.png",
-    "tw": "https://docs.local-operator.com/og/build-exec-mode.a40faeeb.png",
+  {
+    "route": "/build/exec-mode",
+    "title": "Exec mode · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/build/exec-mode",
-    "alt": "Local Operator Docs. Exec mode. Run Local Operator headless \u2014 one-shot prompts, JSON event streams, background jobs, goal loops, and CI usage.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/build-exec-mode.8ae47a0b.png",
+    "twitterImage": "https://docs.local-operator.com/og/build-exec-mode.8ae47a0b.png",
+    "ogAlt": "Local Operator Docs. Exec mode. Run Local Operator headless — one-shot prompts, JSON event streams, background jobs, goal loops, and CI usage.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/build-exec-mode.8ae47a0b.png"
   },
-  "/build/python-sdk": {
-    "og": "https://docs.local-operator.com/og/build-python-sdk.74c2ef88.png",
-    "tw": "https://docs.local-operator.com/og/build-python-sdk.74c2ef88.png",
+  {
+    "route": "/build/python-sdk",
+    "title": "Python SDK · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/build/python-sdk",
-    "alt": "Local Operator Docs. Python SDK. Drive sessions from Python \u2014 open or spawn one, deliver prompts, stream typed events, and collect results, with explicit roots and an approval policy.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/build-python-sdk.350828a7.png",
+    "twitterImage": "https://docs.local-operator.com/og/build-python-sdk.350828a7.png",
+    "ogAlt": "Local Operator Docs. Python SDK. Drive sessions from Python — open or spawn one, deliver prompts, stream typed events, and collect results, with explicit roots and an approval policy.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/build-python-sdk.350828a7.png"
   },
-  "/build/sse-streaming": {
-    "og": "https://docs.local-operator.com/og/build-sse-streaming.9b6c7f7e.png",
-    "tw": "https://docs.local-operator.com/og/build-sse-streaming.9b6c7f7e.png",
+  {
+    "route": "/build/sse-streaming",
+    "title": "SSE streaming · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/build/sse-streaming",
-    "alt": "Local Operator Docs. SSE streaming. Embed an agent runtime behind a Server-Sent Events stream \u2014 endpoint shape, event taxonomy, resuming with Last-Event-ID, keepalives, and working examples.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/build-sse-streaming.8c7bd95b.png",
+    "twitterImage": "https://docs.local-operator.com/og/build-sse-streaming.8c7bd95b.png",
+    "ogAlt": "Local Operator Docs. SSE streaming. Embed an agent runtime behind a Server-Sent Events stream — endpoint shape, event taxonomy, resuming with Last-Event-ID, keepalives, and working examples.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/build-sse-streaming.8c7bd95b.png"
   },
-  "/ecosystem": {
-    "og": "https://docs.local-operator.com/og/ecosystem.cd1b02a0.png",
-    "tw": "https://docs.local-operator.com/og/ecosystem.cd1b02a0.png",
+  {
+    "route": "/ecosystem",
+    "title": "What's in the ecosystem · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/ecosystem",
-    "alt": "Local Operator Docs. What&#x27;s in the ecosystem. The pieces around the runtime \u2014 model providers, Radient, MCP servers, skills, teams, the Agent Hub, and the browser extension.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/ecosystem.040c5df2.png",
+    "twitterImage": "https://docs.local-operator.com/og/ecosystem.040c5df2.png",
+    "ogAlt": "Local Operator Docs. What's in the ecosystem. The pieces around the runtime — model providers, Radient, MCP servers, skills, teams, the Agent Hub, and the browser extension.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/ecosystem.040c5df2.png"
   },
-  "/about/why": {
-    "og": "https://docs.local-operator.com/og/about-why.0e5ef34b.png",
-    "tw": "https://docs.local-operator.com/og/about-why.0e5ef34b.png",
+  {
+    "route": "/about/why",
+    "title": "Why Local Operator · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/about/why",
-    "alt": "Local Operator Docs. Why Local Operator. What Local Operator does differently \u2014 everything on your machine, one runtime for every surface, a mesh across your computers, and when a different tool fits better.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/about-why.f41fd30d.png",
+    "twitterImage": "https://docs.local-operator.com/og/about-why.f41fd30d.png",
+    "ogAlt": "Local Operator Docs. Why Local Operator. What Local Operator does differently — everything on your machine, one runtime for every surface, a mesh across your computers, and when a different tool fits better.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/about-why.f41fd30d.png"
   },
-  "/about/faq": {
-    "og": "https://docs.local-operator.com/og/about-faq.46a29337.png",
-    "tw": "https://docs.local-operator.com/og/about-faq.46a29337.png",
+  {
+    "route": "/about/faq",
+    "title": "FAQ · Local Operator Docs",
     "canonical": "https://docs.local-operator.com/about/faq",
-    "alt": "Local Operator Docs. FAQ. Short answers to the questions people ask first \u2014 privacy, accounts, models, cost, offline use, platforms and updates.",
-    "site_name": "Local Operator Docs"
+    "ogImage": "https://docs.local-operator.com/og/about-faq.e229afc1.png",
+    "twitterImage": "https://docs.local-operator.com/og/about-faq.e229afc1.png",
+    "ogAlt": "Local Operator Docs. FAQ. Short answers to the questions people ask first — privacy, accounts, models, cost, offline use, platforms and updates.",
+    "ogW": "1200",
+    "ogH": "630",
+    "moduleFile": "/og/about-faq.e229afc1.png"
   }
-}
+]

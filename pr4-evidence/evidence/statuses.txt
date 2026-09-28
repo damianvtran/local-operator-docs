@@ -1,17 +1,19 @@
-200 image/png /og/about-faq.46a29337.png
-200 image/png /og/about-why.0e5ef34b.png
-200 image/png /og/build-exec-mode.a40faeeb.png
-200 image/png /og/build-python-sdk.74c2ef88.png
-200 image/png /og/build-sse-streaming.9b6c7f7e.png
-200 image/png /og/capabilities-agent-hub.f6ab9768.png
-200 image/png /og/capabilities-always-on.049733c3.png
-200 image/png /og/ecosystem.cd1b02a0.png
-200 image/png /og/getting-started-choose-your-surface.d8a0d0fd.png
-200 image/png /og/getting-started-install.b5611f2c.png
-200 image/png /og/getting-started-quickstart.1f000e37.png
-200 image/png /og/getting-started-updating.53dc9fe0.png
-200 image/png /og/getting-started-what-is-local-operator.3eef54a5.png
-200 image/png /og/home.f928e889.png
-200 image/png /og/surfaces-browser-extension.43e214a1.png
-200 image/png /og/surfaces-desktop.fd11728f.png
-200 image/png /og/tui-quickstart.da1baabd.png
+# every card URL on the served build — GET status + content-type + bytes
+200 image/png http://localhost:3855/og/home.b5846004.png (50540 bytes)
+200 image/png http://localhost:3855/og/getting-started-what-is-local-operator.a7bcdfbf.png (43881 bytes)
+200 image/png http://localhost:3855/og/getting-started-install.033e618c.png (38668 bytes)
+200 image/png http://localhost:3855/og/getting-started-quickstart.497d8030.png (35617 bytes)
+200 image/png http://localhost:3855/og/getting-started-choose-your-surface.e81f74fb.png (43256 bytes)
+200 image/png http://localhost:3855/og/getting-started-updating.2d66036b.png (40937 bytes)
+200 image/png http://localhost:3855/og/tui-quickstart.ec4e39d4.png (36570 bytes)
+200 image/png http://localhost:3855/og/surfaces-desktop.bf0c07e2.png (42694 bytes)
+200 image/png http://localhost:3855/og/surfaces-browser-extension.082c7f58.png (46621 bytes)
+200 image/png http://localhost:3855/og/capabilities-always-on.de2078fb.png (51050 bytes)
+200 image/png http://localhost:3855/og/capabilities-agent-hub.d24d2ef2.png (37736 bytes)
+200 image/png http://localhost:3855/og/build-exec-mode.8ae47a0b.png (37817 bytes)
+200 image/png http://localhost:3855/og/build-python-sdk.350828a7.png (41904 bytes)
+200 image/png http://localhost:3855/og/build-sse-streaming.8c7bd95b.png (45901 bytes)
+200 image/png http://localhost:3855/og/ecosystem.040c5df2.png (45930 bytes)
+200 image/png http://localhost:3855/og/about-why.f41fd30d.png (47298 bytes)
+200 image/png http://localhost:3855/og/about-faq.e229afc1.png (34244 bytes)
+# 17/17 are 200 image/png

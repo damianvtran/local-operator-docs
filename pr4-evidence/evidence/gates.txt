@@ -1,12 +1,124 @@
-=== pnpm lint (folded head):
-check-design-system: og-cards-in-sync files present; fingerprint half skipped (no .next build)
-check-design-system: 88 files, all rules pass
+# Gates on b94ccf1 (remediation head) — full transcripts, in order.
 
-=== pnpm test:
- Test Files  13 passed (13)
-      Tests  134 passed (134)
-
-=== pnpm build (prebuild + next build + postbuild):
+===== pnpm lint =====
+$ pnpm lint
+$ biome check . && pnpm check-design-system
+Checked 116 files in 307ms. No fixes applied.
 $ node scripts/check-design-system.mjs
 check-design-system: og-cards-in-sync 17 cards, fingerprints match the built pages
 check-design-system: 88 files, all rules pass
+exit=0
+
+===== pnpm check-types =====
+$ pnpm check-types
+$ tsc --noEmit
+exit=0
+
+===== pnpm test =====
+$ pnpm test
+$ vitest run
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.2 /Users/damian/local-operator-docs-worktrees/og-cards
+
+ ✓ tests/frontmatter.test.ts (5 tests) 5ms
+ ✓ tests/tokenizer.test.ts (11 tests) 9ms
+ ✓ tests/structured-data.test.ts (5 tests) 7ms
+ ✓ tests/snippets.test.ts (8 tests) 14ms
+ ✓ tests/semantic-structure.test.ts (39 tests) 10ms
+ ✓ tests/versions.test.ts (16 tests) 17ms
+ ✓ tests/nav.test.ts (6 tests) 2017ms
+   ✓ nav registry x content (5)
+     ✓ validates cleanly today 1513ms
+   ✓ search index completeness (1)
+     ✓ indexes every content file, every section, and the home page 500ms
+ ✓ tests/llms-full.test.ts (4 tests) 122ms
+ ✓ tests/search.test.ts (11 tests) 2598ms
+   ✓ engine (7)
+     ✓ finds the install page first for 'install' against the real index 1141ms
+     ✓ finds a typo against the real index 578ms
+     ✓ finds 'lop exec' somewhere real 698ms
+ ✓ tests/diagrams.test.ts (17 tests) 1486ms
+   ✓ diagram registry (13)
+     ✓ SurfaceMap renders with a title, a desc and the declared geometry 329ms
+     ✓ SdkLifecycle renders with a title, a desc and the declared geometry 330ms
+ ✓ tests/palette-actions.test.ts (7 tests) 2012ms
+   ✓ engine against the real index (2)
+     ✓ ranks Mobile relay first for 'phone' 1767ms
+ ✓ tests/diagram-tag.test.ts (2 tests) 498ms
+   ✓ {% diagram %} through the markdoc pipeline (2)
+     ✓ warns and shows the fallback for an unknown name 479ms
+ ✓ tests/figure-alignment.test.ts (3 tests) 741ms
+   ✓ figure alignment (3)
+     ✓ renders a figure tag without the bleed track 434ms
+     ✓ renders a diagram without the bleed track 303ms
+
+ Test Files  13 passed (13)
+      Tests  134 passed (134)
+   Start at  16:09:16
+   Duration  19.29s (transform 57%, import 30%, tests 12%, worker 2%)
+
+  Transform  transforming modules took 46.76s · 57% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             on CI this only helps when the cache directory is persisted between runs
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=0
+
+===== pnpm build =====
+$ pnpm build
+$ pnpm generate-versions && pnpm generate-search-index && pnpm check-design-system
+$ tsx scripts/generate-versions.ts
+versions: backend v0.64.1, ui v0.31.13 -> public/versions.json
+$ tsx scripts/generate-search-index.ts
+search index: 121 entries (20 pages, 101 sections) -> public/search-index.json (220.5 KB)
+$ node scripts/check-design-system.mjs
+check-design-system: og-cards-in-sync 17 cards, fingerprints match the built pages
+check-design-system: 88 files, all rules pass
+$ next build
+   ▲ Next.js 15.5.26
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 45s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/46) ...
+   Generating static pages (11/46) 
+   Generating static pages (22/46) 
+   Generating static pages (34/46) 
+ ✓ Generating static pages (46/46)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    1.46 kB         118 kB
+├ ○ /_not-found                            138 B         103 kB
+├ ● /[...slug]                           3.72 kB         128 kB
+├   ├ /about/faq
+├   ├ /about/why
+├   ├ /build/exec-mode
+├   └ [+16 more paths]
+├ ○ /llms-full.txt                         138 B         103 kB
+├ ○ /llms.txt                              138 B         103 kB
+├ ● /raw/[...slug]                         138 B         103 kB
+├   ├ /raw/about/faq
+├   ├ /raw/about/why
+├   ├ /raw/build/exec-mode
+├   └ [+16 more paths]
+├ ○ /robots.txt                            138 B         103 kB
+└ ○ /sitemap.xml                           138 B         103 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/602a57ae-ac477c2757cb0862.js  54.2 kB
+  ├ chunks/857-fa8a30735eba58c8.js       46.5 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+$ node scripts/check-design-system.mjs
+check-design-system: og-cards-in-sync 17 cards, fingerprints match the built pages
+check-design-system: 88 files, all rules pass
+exit=0
