@@ -2,7 +2,7 @@
 
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { type SidebarGroup, SidebarNav } from "./sidebar";
 
@@ -17,6 +17,7 @@ import { type SidebarGroup, SidebarNav } from "./sidebar";
 export function MobileNav({ groups }: { groups: SidebarGroup[] }) {
 	const [open, setOpen] = useState(false);
 	const pathname = usePathname();
+	const triggerRef = useRef<HTMLButtonElement>(null);
 
 	// Close on navigation.
 	// biome-ignore lint/correctness/useExhaustiveDependencies: closing on pathname change is the point
@@ -27,6 +28,7 @@ export function MobileNav({ groups }: { groups: SidebarGroup[] }) {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<button
+				ref={triggerRef}
 				type="button"
 				onClick={() => setOpen(true)}
 				aria-label="Open navigation"
@@ -37,6 +39,13 @@ export function MobileNav({ groups }: { groups: SidebarGroup[] }) {
 			<DialogContent
 				className="left-0 top-0 h-dvh max-w-[18rem] translate-x-0 translate-y-0 rounded-none border-y-0 border-l-0 bg-canvas p-4"
 				aria-describedby={undefined}
+				onCloseAutoFocus={(event) => {
+					// Radix restores focus to a DialogTrigger; this sheet's trigger is
+					// the hamburger the component owns, so hand it back directly —
+					// without this, close dropped focus to <body> (UX round 1, U5).
+					event.preventDefault();
+					triggerRef.current?.focus();
+				}}
 			>
 				<div className="mb-4 flex items-center justify-between">
 					<DialogTitle className="text-heading text-ink">

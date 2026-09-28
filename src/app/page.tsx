@@ -35,7 +35,13 @@ const POPULAR: Array<{ label: string; id: string }> = [
 	{ label: "Pair another computer", id: "agent-mesh" },
 ];
 
-const START_HERE = ["install", "choose-your-surface", "quickstart", "updating"];
+const START_HERE = [
+	"what-is",
+	"install",
+	"choose-your-surface",
+	"quickstart",
+	"updating",
+];
 const BY_SURFACE = ["terminal", "desktop", "mobile-relay", "browser-extension"];
 const CAPABILITIES = [
 	"workflow-automations",
@@ -179,13 +185,18 @@ export default function HomePage() {
 					</div>
 
 					<div className="mt-10">
-						<Figure caption="A product visual lands here in a later phase — the slot is reserved so the layout is already sized for it." />
+						<Figure
+							src="/shots/ui/app-shell-chat-light.webp"
+							darkSrc="/shots/ui/app-shell-chat-dark.webp"
+							alt="The desktop app with a chat beside the run details pane, which lists two running subagents and the session's to-dos."
+							caption="A working session in the desktop app: subagents running beside the conversation, with the to-dos in view."
+						/>
 					</div>
 				</div>
 			</section>
 
 			<Band title="Start here">
-				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 					{START_HERE.map((id) => (
 						<Tile key={id} entry={item(id)} />
 					))}

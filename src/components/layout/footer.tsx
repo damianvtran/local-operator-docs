@@ -14,6 +14,10 @@ const COLUMNS: Array<{
 	{
 		title: "Get started",
 		links: [
+			{
+				label: "What is Local Operator?",
+				href: "/getting-started/what-is-local-operator",
+			},
 			{ label: "Install & first run", href: "/getting-started/install" },
 			{ label: "Quickstart", href: "/getting-started/quickstart" },
 			{
@@ -27,7 +31,12 @@ const COLUMNS: Array<{
 		title: "Surfaces",
 		links: [
 			{ label: "Terminal (TUI)", href: "/tui/quickstart" },
+			{ label: "Desktop app", href: "/surfaces/desktop" },
 			{ label: "Mobile relay", href: "/surfaces/mobile-relay" },
+			{
+				label: "Browser extension",
+				href: "/surfaces/browser-extension",
+			},
 		],
 	},
 	{
@@ -74,6 +83,8 @@ export function Footer() {
 							{column.title}
 						</h2>
 						<ul className="space-y-2">
+							{/* Link rows keep min-h-6 — 24px, the touch-target floor; at
+							    16px tall they were under it (UX round 1, U6). */}
 							{column.links.map((link) => (
 								<li key={link.label}>
 									{link.external ? (
@@ -81,14 +92,14 @@ export function Footer() {
 											href={link.href}
 											target="_blank"
 											rel="noreferrer"
-											className="text-body-sm text-ink-muted transition-colors duration-fast hover:text-ink"
+											className="inline-flex min-h-6 items-center text-body-sm text-ink-muted transition-colors duration-fast hover:text-ink"
 										>
 											{link.label}
 										</a>
 									) : (
 										<Link
 											href={link.href}
-											className="text-body-sm text-ink-muted transition-colors duration-fast hover:text-ink"
+											className="inline-flex min-h-6 items-center text-body-sm text-ink-muted transition-colors duration-fast hover:text-ink"
 										>
 											{link.label}
 										</Link>

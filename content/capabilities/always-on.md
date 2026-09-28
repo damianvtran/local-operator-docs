@@ -109,12 +109,12 @@ day.
 | `/aida pause` | Stop proactive check-ins; ordinary conversation still works |
 | `/aida resume` | Re-arm the schedule |
 
-{% figure src="/shots/tui/aida-status.png" alt="The /aida status receipt: Aida: active — next check-in 09:00 — extra check-ins today 0/2." caption="/aida status: her state, the next check-in, and the day's escalation budget." /%}
+{% figure src="/shots/tui/aida-status.png" alt="The /aida status receipt: Aida: active — next check-in 09:00 — extra check-ins used today: 0 of 2." caption="/aida status: her state, the next check-in, and the day's escalation budget." /%}
 
 Pausing is the everyday control — the receipt below is what you get back,
 and `/aida resume` re-arms the cadence.
 
-{% figure src="/shots/tui/aida-paused.png" alt="The /aida pause receipt: Aida paused — no proactive check-ins; /aida resume re-arms them." caption="/aida pause: no proactive check-ins until you resume." /%}
+{% figure src="/shots/tui/aida-paused.png" alt="The /aida pause receipt: Aida paused — no proactive check-ins. /aida resume re-arms them." caption="/aida pause: no proactive check-ins until you resume." /%}
 
 To turn Aida off entirely, either switch works — and it is a zero-footprint
 switch: no session is created, no state file is written, no wake is armed:

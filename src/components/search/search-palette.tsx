@@ -3,6 +3,7 @@
 import { Clock, CornerDownLeft, Search } from "lucide-react";
 import {
 	type KeyboardEvent,
+	useCallback,
 	useEffect,
 	useMemo,
 	useRef,
@@ -13,7 +14,12 @@ import { nearestPages, search } from "@/lib/search/engine";
 import { tokenizeQuery } from "@/lib/search/tokenizer";
 import type { ScoredEntry } from "@/lib/search/types";
 import { cn } from "@/lib/utils";
-import { actionMatches, buildActions, type PaletteAction } from "./actions";
+import {
+	actionMatches,
+	actionMatchScore,
+	buildActions,
+	type PaletteAction,
+} from "./actions";
 import { renderMarked, renderRanges } from "./highlight";
 import { useSearchIndex } from "./use-search-index";
 
@@ -90,12 +96,17 @@ export function SearchPalette({
 	onOpenShortcuts,
 	navigate,
 	toast,
+	returnFocus,
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	onOpenShortcuts: () => void;
 	navigate: (href: string) => void;
 	toast: (message: string) => void;
+	/** The control the palette was opened from, so closing can give focus
+	 *  back — Radix only restores it for a DialogTrigger, and this surface
+	 *  has several doors and no trigger (UX round 1, U5). */
+	returnFocus: () => HTMLElement | null;
 }) {
 	const [query, setQuery] = useState("");
 	const [recents, setRecents] = useState<string[]>([]);
@@ -103,6 +114,40 @@ export function SearchPalette({
 	const debounced = useDebounced(query, 120);
 	const { state, retry } = useSearchIndex(open);
 	const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
+	const [listOverflows, setListOverflows] = useState(false);
+	const listObserver = useRef<ResizeObserver | null>(null);
+
+	/**
+	 * The fold's answer, MEASURED from the elements: the content's height
+	 * against the scroller's box, the container's own padding included
+	 * because it scrolls with the content. `scrollHeight` cannot be the
+	 * input — the end spacer below would feed back into its own condition —
+	 * so the spacer sits outside the measured wrapper. A callback ref rather
+	 * than an effect: Radix defers the portal by one commit, so an effect
+	 * keyed on `open` runs before the nodes exist and never re-runs. Both
+	 * cuts are recorded in local-operator-ui docs/command-palette.md, whose
+	 * "the list fades at the fold, and only when there is a fold" this
+	 * implements (design round 1, D2).
+	 */
+	const observeList = useCallback((node: HTMLDivElement | null) => {
+		listObserver.current?.disconnect();
+		if (!node?.parentElement) return;
+		const list = node.parentElement;
+		const measure = () => {
+			const styles = getComputedStyle(list);
+			const padding =
+				Number.parseFloat(styles.paddingTop) +
+				Number.parseFloat(styles.paddingBottom);
+			setListOverflows(node.offsetHeight + padding > list.clientHeight + 1);
+		};
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(list);
+		observer.observe(node);
+		listObserver.current = observer;
+	}, []);
+
+	useEffect(() => () => listObserver.current?.disconnect(), []);
 
 	// Load recent searches when the palette opens; clear the query on close.
 	useEffect(() => {
@@ -189,9 +234,17 @@ export function SearchPalette({
 			return out;
 		}
 
-		const matchedActions = actions.filter((action) =>
-			actionMatches(action, queryTokens),
-		);
+		// Strict matches first, near misses after: a natural question keeps
+		// one word the action vocabulary does not have, and that partial fit
+		// must never outrank an action the query names exactly (UX U2).
+		const matchedActions = actions
+			.map((action) => ({
+				action,
+				matched: actionMatchScore(action, queryTokens),
+			}))
+			.filter(({ action }) => actionMatches(action, queryTokens))
+			.sort((a, b) => b.matched - a.matched)
+			.map(({ action }) => action);
 		if (matchedActions.length > 0) {
 			out.push({
 				id: "actions",
@@ -312,13 +365,32 @@ export function SearchPalette({
 		}
 	}
 
-	const resultCount = results.length;
+	const trimmedQuery = debounced.trim();
+	const shortQuery = trimmedQuery.length > 0 && trimmedQuery.length < 3;
+	// The empty state counts ROWS, not index results: with action rows on
+	// screen "No results" contradicted the list under it, and under three
+	// characters the index cannot answer yet — that state is "keep typing",
+	// not "nothing found" (UX round 1, U7).
 	const noResults =
-		Boolean(index) && debounced.trim() !== "" && resultCount === 0;
+		Boolean(index) && !shortQuery && trimmedQuery !== "" && flat.length === 0;
+	const showKeepTyping = Boolean(index) && shortQuery && flat.length === 0;
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="top-[12vh] p-0" aria-describedby={undefined}>
+			<DialogContent
+				className="top-[12vh] p-0"
+				aria-describedby={undefined}
+				onCloseAutoFocus={(event) => {
+					// Radix restores focus to a DialogTrigger; there is none here
+					// (several doors, no trigger), so the provider's remembered
+					// control takes it back (UX round 1, U5).
+					const target = returnFocus();
+					if (target?.isConnected) {
+						event.preventDefault();
+						target.focus();
+					}
+				}}
+			>
 				<DialogTitle className="sr-only">Search the docs</DialogTitle>
 				<div className="flex items-center gap-2 border-b border-hairline px-3">
 					<Search className="size-4 shrink-0 text-ink-dim" aria-hidden="true" />
@@ -345,178 +417,207 @@ export function SearchPalette({
 				<span role="status" aria-live="polite" className="sr-only">
 					{state.status === "loading"
 						? "Searching…"
-						: debounced.trim()
-							? resultCount === 0
-								? "No results"
-								: `${resultCount} results`
+						: trimmedQuery
+							? shortQuery
+								? "Keep typing — results start at three characters"
+								: flat.length === 0
+									? "No results"
+									: `${flat.length} results`
 							: ""}
 				</span>
 
-				<div
-					id="palette-list"
-					role="listbox"
-					aria-label="Results"
-					className="max-h-[60vh] overflow-y-auto p-2"
-				>
-					{state.status === "loading" ? (
-						<div className="flex h-24 items-center justify-center text-body-sm text-ink-dim">
-							<span className="animate-pulse-visible">
-								Building the search index…
-							</span>
-						</div>
+				{/* The list, and the fold. The wrapper is `relative` so the fade can
+				    be an OVERLAY — a sticky in-flow element would occupy layout and
+				    change every list that fits its content. The overlay and the end
+				    spacer (room for the last row to clear the fade) render only when
+				    the content actually overflows, measured in `observeList`. */}
+				<div className="relative">
+					{listOverflows ? (
+						<div
+							aria-hidden="true"
+							className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6 bg-linear-to-t from-elevated to-transparent"
+						/>
 					) : null}
+					<div
+						id="palette-list"
+						role="listbox"
+						aria-label="Results"
+						className="max-h-[60vh] overflow-y-auto p-2"
+					>
+						{/* The measured half: everything the scrollbar actually scrolls. */}
+						<div ref={observeList} role="presentation">
+							{state.status === "loading" ? (
+								<div className="flex h-24 items-center justify-center text-body-sm text-ink-dim">
+									<span className="animate-pulse-visible">
+										Building the search index…
+									</span>
+								</div>
+							) : null}
 
-					{state.status === "error" ? (
-						<div className="flex h-24 flex-col items-center justify-center gap-2 text-body-sm text-ink-dim">
-							<p className="text-danger">
-								Search is unavailable ({state.message}).
-							</p>
-							<p>Reload the page if this keeps happening.</p>
-							<button
-								type="button"
-								onClick={retry}
-								className="rounded-sm border border-control px-3 py-1 text-body-sm text-ink hover:bg-surface"
-							>
-								Retry
-							</button>
-						</div>
-					) : null}
+							{state.status === "error" ? (
+								<div className="flex h-24 flex-col items-center justify-center gap-2 text-body-sm text-ink-dim">
+									<p className="text-danger">{state.message}</p>
+									<p>{state.hint}</p>
+									<button
+										type="button"
+										onClick={retry}
+										className="rounded-sm border border-control px-3 py-1 text-body-sm text-ink hover:bg-surface"
+									>
+										Retry
+									</button>
+								</div>
+							) : null}
 
-					{noResults ? (
-						<div className="flex flex-col items-center gap-1 px-4 py-6 text-body-sm text-ink-dim">
-							<p className="text-ink-muted">
-								No results for “{debounced.trim()}”.
-							</p>
-							<p>Try fewer or shorter words.</p>
-						</div>
-					) : null}
+							{noResults ? (
+								<div className="flex flex-col items-center gap-1 px-4 py-6 text-body-sm text-ink-dim">
+									<p className="text-ink-muted">
+										No results for “{trimmedQuery}”.
+									</p>
+									<p>Try fewer or shorter words.</p>
+								</div>
+							) : null}
 
-					{state.status === "ready"
-						? groups.map((group, groupIndex) => (
-								// biome-ignore lint/a11y/useSemanticElements: role="group" is the ARIA pattern for grouped listbox options; no native element can sit inside a listbox
-								<div
-									key={group.id}
-									role="group"
-									aria-label={group.label}
-									className="mb-1 last:mb-0"
-								>
-									<div className="px-2 pb-1 pt-2 text-meta font-semibold uppercase tracking-wider text-ink-dim">
-										{group.label}
-									</div>
-									{group.rows.map((row, rowIndex) => {
-										const flatIndex = flat.findIndex(
-											(item) =>
-												item.group === groupIndex && item.rowIndex === rowIndex,
-										);
-										const isSelected = flatIndex === selected;
-										return (
-											<button
-												key={rowKey(row)}
-												ref={(element) => {
-													rowRefs.current[flatIndex] = element;
-												}}
-												type="button"
-												role="option"
-												id={`palette-row-${flatIndex}`}
-												aria-selected={isSelected}
-												onMouseEnter={() => setSelected(flatIndex)}
-												onClick={() => activate(row)}
-												className={cn(
-													"flex min-h-14 w-full items-center gap-3 rounded-sm px-3 py-2 text-left",
-													isSelected ? "bg-surface" : "bg-transparent",
-												)}
-											>
-												{row.kind === "action" ? (
-													<>
-														<row.action.icon
-															className="size-4 shrink-0 text-ink-muted"
-															aria-hidden="true"
-														/>
-														<span className="min-w-0 flex-1">
-															<span className="block text-body font-medium text-ink">
-																{row.action.title}
-															</span>
-															<span className="block truncate text-body-sm text-ink-muted">
-																{row.action.subtitle}
-															</span>
-														</span>
-														{isSelected ? (
-															<CornerDownLeft
-																className="size-3.5 shrink-0 text-ink-dim"
-																aria-hidden="true"
-															/>
-														) : null}
-													</>
-												) : null}
+							{showKeepTyping ? (
+								<div className="flex flex-col items-center gap-1 px-4 py-6 text-body-sm text-ink-dim">
+									<p className="text-ink-muted">
+										Keep typing — results start at three characters.
+									</p>
+								</div>
+							) : null}
 
-												{row.kind === "recent" ? (
-													<>
-														<Clock
-															className="size-4 shrink-0 text-ink-muted"
-															aria-hidden="true"
-														/>
-														<span className="min-w-0 flex-1 text-body text-ink">
-															{row.query}
-														</span>
-													</>
-												) : null}
-
-												{row.kind === "link" ? (
-													<span className="min-w-0 flex-1">
-														<span className="block text-body text-ink">
-															{row.title}
-														</span>
-														<span className="block truncate font-mono text-mono-sm text-ink-dim">
-															{row.href}
-														</span>
-													</span>
-												) : null}
-
-												{row.kind === "result" ? (
-													<span className="min-w-0 flex-1">
-														<span className="flex items-baseline gap-2 text-body text-ink">
-															<span className="truncate font-medium">
-																{renderRanges(
-																	row.result.entry.title,
-																	row.result.titleRanges,
-																)}
-															</span>
-															{row.result.entry.kind === "section" &&
-															row.result.entry.heading ? (
-																<>
-																	<span className="shrink-0 text-ink-dim">
-																		›
+							{state.status === "ready"
+								? groups.map((group, groupIndex) => (
+										// biome-ignore lint/a11y/useSemanticElements: role="group" is the ARIA pattern for grouped listbox options; no native element can sit inside a listbox
+										<div
+											key={group.id}
+											role="group"
+											aria-label={group.label}
+											className="mb-1 last:mb-0"
+										>
+											<div className="px-2 pb-1 pt-2 text-meta font-semibold uppercase tracking-wider text-ink-dim">
+												{group.label}
+											</div>
+											{group.rows.map((row, rowIndex) => {
+												const flatIndex = flat.findIndex(
+													(item) =>
+														item.group === groupIndex &&
+														item.rowIndex === rowIndex,
+												);
+												const isSelected = flatIndex === selected;
+												return (
+													<button
+														key={rowKey(row)}
+														ref={(element) => {
+															rowRefs.current[flatIndex] = element;
+														}}
+														type="button"
+														role="option"
+														id={`palette-row-${flatIndex}`}
+														aria-selected={isSelected}
+														onMouseEnter={() => setSelected(flatIndex)}
+														onClick={() => activate(row)}
+														className={cn(
+															"flex min-h-14 w-full items-center gap-3 rounded-sm px-3 py-2 text-left",
+															isSelected ? "bg-surface" : "bg-transparent",
+														)}
+													>
+														{row.kind === "action" ? (
+															<>
+																<row.action.icon
+																	className="size-4 shrink-0 text-ink-muted"
+																	aria-hidden="true"
+																/>
+																<span className="min-w-0 flex-1">
+																	<span className="block text-body font-medium text-ink">
+																		{row.action.title}
 																	</span>
-																	<span className="truncate">
+																	<span className="block truncate text-body-sm text-ink-muted">
+																		{row.action.subtitle}
+																	</span>
+																</span>
+																{isSelected ? (
+																	<CornerDownLeft
+																		className="size-3.5 shrink-0 text-ink-dim"
+																		aria-hidden="true"
+																	/>
+																) : null}
+															</>
+														) : null}
+
+														{row.kind === "recent" ? (
+															<>
+																<Clock
+																	className="size-4 shrink-0 text-ink-muted"
+																	aria-hidden="true"
+																/>
+																<span className="min-w-0 flex-1 text-body text-ink">
+																	{row.query}
+																</span>
+															</>
+														) : null}
+
+														{row.kind === "link" ? (
+															<span className="min-w-0 flex-1">
+																<span className="block text-body text-ink">
+																	{row.title}
+																</span>
+																<span className="block truncate font-mono text-mono-sm text-ink-dim">
+																	{row.href}
+																</span>
+															</span>
+														) : null}
+
+														{row.kind === "result" ? (
+															<span className="min-w-0 flex-1">
+																<span className="flex items-baseline gap-2 text-body text-ink">
+																	<span className="truncate font-medium">
 																		{renderRanges(
-																			row.result.entry.heading,
-																			row.result.headingRanges,
+																			row.result.entry.title,
+																			row.result.titleRanges,
 																		)}
 																	</span>
-																</>
-															) : null}
-															{row.result.entry.draft ? (
-																<span className="shrink-0 rounded-xs border border-hairline px-1 py-0.5 font-mono text-mono-sm text-ink-dim">
-																	Preview
+																	{row.result.entry.kind === "section" &&
+																	row.result.entry.heading ? (
+																		<>
+																			<span className="shrink-0 text-ink-dim">
+																				›
+																			</span>
+																			<span className="truncate">
+																				{renderRanges(
+																					row.result.entry.heading,
+																					row.result.headingRanges,
+																				)}
+																			</span>
+																		</>
+																	) : null}
+																	{row.result.entry.draft ? (
+																		<span className="shrink-0 rounded-xs border border-hairline px-1 py-0.5 font-mono text-mono-sm text-ink-dim">
+																			Preview
+																		</span>
+																	) : null}
 																</span>
-															) : null}
-														</span>
-														{row.result.snippet ? (
-															<span className="mt-0.5 line-clamp-2 block text-body-sm text-ink-muted">
-																{renderMarked(row.result.snippet)}
+																{row.result.snippet ? (
+																	<span className="mt-0.5 line-clamp-2 block text-body-sm text-ink-muted">
+																		{renderMarked(row.result.snippet)}
+																	</span>
+																) : null}
+																<span className="mt-0.5 block font-mono text-mono-sm text-ink-dim">
+																	{row.result.entry.breadcrumb}
+																</span>
 															</span>
 														) : null}
-														<span className="mt-0.5 block font-mono text-mono-sm text-ink-dim">
-															{row.result.entry.breadcrumb}
-														</span>
-													</span>
-												) : null}
-											</button>
-										);
-									})}
-								</div>
-							))
-						: null}
+													</button>
+												);
+											})}
+										</div>
+									))
+								: null}
+						</div>
+						{/* The end spacer: room to scroll the last row clear of the fade.
+						    Only when the list overflows, and OUTSIDE the measured wrapper
+						    so its own height cannot feed back into that answer. */}
+						{listOverflows ? <div aria-hidden="true" className="h-6" /> : null}
+					</div>
 				</div>
 
 				<div className="flex items-center gap-3 border-t border-hairline px-3 py-2 text-mono-sm text-ink-dim">

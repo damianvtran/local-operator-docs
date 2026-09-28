@@ -45,13 +45,27 @@ function Row({ keys, what }: { keys: string; what: string }) {
 export function ShortcutsDialog({
 	open,
 	onOpenChange,
+	returnFocus,
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	/** The control the overlay was opened from, restored on close — Radix
+	 *  only restores focus for a DialogTrigger, and this one has none
+	 *  (UX round 1, U5). */
+	returnFocus: () => HTMLElement | null;
 }) {
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent aria-describedby={undefined}>
+			<DialogContent
+				aria-describedby={undefined}
+				onCloseAutoFocus={(event) => {
+					const target = returnFocus();
+					if (target?.isConnected) {
+						event.preventDefault();
+						target.focus();
+					}
+				}}
+			>
 				<div className="border-b border-hairline px-4 py-3">
 					<DialogTitle className="text-heading text-ink">
 						Keyboard shortcuts

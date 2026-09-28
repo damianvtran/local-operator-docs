@@ -13,6 +13,14 @@ export type ResolvedTheme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "lop-docs-theme";
 
+/**
+ * Fired after `setPreference` persists and applies a preference, so every
+ * view that mirrors it re-reads (the top-bar menu's icon/title; the palette's
+ * "Toggle theme" action writes through this module, and without the event the
+ * header only caught up on reload — QA round 1, Q1).
+ */
+export const THEME_CHANGE_EVENT = "lop:theme-change";
+
 /** Applied before first paint, inline in <head>. Kept dependency-free. */
 export const THEME_SCRIPT = `(function(){try{var s=localStorage.getItem("${THEME_STORAGE_KEY}");var d=s==="light"?false:s==="dark"?true:window.matchMedia("(prefers-color-scheme: dark)").matches;var r=document.documentElement;r.classList.toggle("dark",d);r.dataset.theme=d?"localOperatorDark":"localOperatorLight";}catch(e){}})();`;
 
@@ -48,5 +56,6 @@ export function setPreference(preference: ThemePreference): ResolvedTheme {
 	window.localStorage.setItem(THEME_STORAGE_KEY, preference);
 	const resolved = resolveTheme(preference);
 	applyTheme(resolved);
+	window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT));
 	return resolved;
 }

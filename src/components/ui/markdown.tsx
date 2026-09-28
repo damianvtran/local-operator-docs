@@ -215,6 +215,13 @@ export function MarkdownTable({
 	children: ReactNode;
 	section?: string;
 } & HTMLAttributes<HTMLTableElement>) {
+	// The first column is the row's key (a flag, a path, a setting) and must
+	// keep a min-content floor of its longest token. Inline code carries
+	// `overflow-wrap:anywhere` (which removes that floor), and in a squeezing
+	// auto-layout table it broke tokens mid-word at 390px instead of letting
+	// ScrollRegion scroll: `--resume [SESSION_ID]` came out across five lines
+	// (QA round 1, Q2). The key column is nowrap; wide keys push the table
+	// into the region's horizontal scroll, which is what it exists for.
 	return (
 		<ScrollRegion label={section ? `Table: ${section}` : "Table"}>
 			<table className="w-full border-collapse text-body-sm">{children}</table>
@@ -227,6 +234,7 @@ export function MarkdownTableHead({ children }: { children: ReactNode }) {
 		<thead
 			className={cn(
 				"[&_th]:bg-surface [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:align-top [&_th]:font-mono [&_th]:text-mono-sm [&_th]:uppercase [&_th]:tracking-wider [&_th]:text-ink-dim",
+				"[&_th:first-child]:whitespace-nowrap",
 				"[&_tr]:border-b [&_tr]:border-control",
 			)}
 		>
@@ -241,6 +249,7 @@ export function MarkdownTableBody({ children }: { children: ReactNode }) {
 			className={cn(
 				"[&_tr]:border-b [&_tr]:border-hairline [&_tr:last-child]:border-0 [&_tr:hover]:bg-surface",
 				"[&_td]:px-3 [&_td]:py-2 [&_td]:align-top [&_td]:text-ink-muted",
+				"[&_td:first-child]:whitespace-nowrap",
 				"[&_tr]:transition-colors [&_tr]:duration-fast",
 			)}
 		>

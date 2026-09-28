@@ -13,6 +13,7 @@ import {
 	readPreference,
 	resolveTheme,
 	setPreference,
+	THEME_CHANGE_EVENT,
 	type ThemePreference,
 } from "@/lib/theme";
 
@@ -41,13 +42,21 @@ export function ThemeToggle() {
 
 	useEffect(() => {
 		setCurrent(readPreference());
+		// The palette's "Toggle theme" writes through lib/theme.ts, not through
+		// this menu, so re-read on the event it fires — otherwise the icon and
+		// title describe the previous preference until reload (QA round 1, Q1).
+		const onPreferenceChange = () => setCurrent(readPreference());
+		window.addEventListener(THEME_CHANGE_EVENT, onPreferenceChange);
 		// Keep "system" honest while the OS preference changes underneath us.
 		const media = window.matchMedia("(prefers-color-scheme: dark)");
 		const onChange = () => {
 			if (readPreference() === "system") applyTheme(resolveTheme("system"));
 		};
 		media.addEventListener("change", onChange);
-		return () => media.removeEventListener("change", onChange);
+		return () => {
+			media.removeEventListener("change", onChange);
+			window.removeEventListener(THEME_CHANGE_EVENT, onPreferenceChange);
+		};
 	}, []);
 
 	function choose(next: ThemePreference) {
