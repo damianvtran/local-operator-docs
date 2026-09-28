@@ -185,6 +185,35 @@ export async function launchChrome(chromePath, { windowSize } = {}) {
 	return {
 		send,
 		socket,
+		/**
+		 * Synchronous teardown, safe to call from an `exit` handler: kill the
+		 * browser and remove its profile directory. `close()` is the graceful
+		 * sibling (it asks the browser to exit first); this is the net for
+		 * every abnormal path. A crashed generator left live headless browsers
+		 * and their profiles behind (review round 1, minor 2), and an `exit`
+		 * hook cannot await anything, so the kill is the signal itself.
+		 */
+		kill() {
+			try {
+				chrome.kill("SIGKILL");
+			} catch {
+				// Already gone.
+			}
+			// SIGKILL is asynchronous: the helpers are still draining while the
+			// first rm runs, which surfaced as ENOTEMPTY on macOS. maxRetries /
+			// retryDelay is the rm race knob; the catch is the last belt — a
+			// leftover profile under the caller's tmpdir is the OS's to reap.
+			try {
+				rmSync(profile, {
+					recursive: true,
+					force: true,
+					maxRetries: 10,
+					retryDelay: 100,
+				});
+			} catch {
+				// Chrome died mid-write; the profile is a tmpdir.
+			}
+		},
 		async close() {
 			try {
 				await send("Browser.close");
@@ -192,9 +221,8 @@ export async function launchChrome(chromePath, { windowSize } = {}) {
 				// The socket drops as the browser exits; the kill below is the
 				// belt to this braces either way.
 			}
-			chrome.kill("SIGKILL");
+			this.kill();
 			await sleep(250);
-			rmSync(profile, { recursive: true, force: true });
 		},
 	};
 }

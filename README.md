@@ -83,11 +83,13 @@ pnpm og                            # in another
 - `pnpm og` reads each published page's `<h1>`, `<meta name="description">`,
   breadcrumb section and brand lockup off the running site — the page list is
   the site's own `/sitemap.xml` — so a card cannot drift from its page.
-- The filename carries a hash of the strings the card was made of, and a card
-  whose file already exists is skipped. `--force` re-renders all of them; use
-  it after changing the card template, together with a bump of
-  `CARD_TEMPLATE_VERSION` in `scripts/lib/og-card-template.mjs` (the bump is
-  what re-addresses every card).
+- The filename carries a hash of what the card was made of — the page
+  strings, the canonical host, the palette it paints with — and a card whose
+  file already exists is skipped. `pnpm og --force` re-renders all of them
+  (the flag may sit before or after the origin); use it after changing the
+  card template, together with a bump of `CARD_TEMPLATE_VERSION` in
+  `scripts/lib/og-card-template.mjs` (the bump is what re-addresses every
+  card).
 - `scripts/check-design-system.mjs` (`og-cards-in-sync`) fails `pnpm lint`, the
   prebuild and the postbuild when a published page has moved on and its card
   has not. Old cards are never deleted by the sweep; it only removes local

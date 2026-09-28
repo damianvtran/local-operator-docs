@@ -100,10 +100,19 @@ import { CARD_TEMPLATE_VERSION } from "./lib/og-card-template.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC_OG = join(ROOT, "public", "og");
 const MODULE = join(ROOT, "src", "data", "og-cards.ts");
-const origin = (process.argv[2] ?? "http://localhost:3855").replace(/\/$/, "");
+const args = process.argv.slice(2);
 
-/** `--force` re-renders cards whose files already exist (template iterations). */
-const FORCE = process.argv.includes("--force");
+/**
+ * The first argument that is not a flag is the origin; `--force` may sit
+ * before or after it. Reading `argv[2]` blindly made the flag itself the
+ * origin — `pnpm og --force` crashed with `ERR_INVALID_URL:
+ * '--force/sitemap.xml'` (QA round 1, Q1), while pnpm forwards the flag
+ * positionally and the README advertises the flag as-is.
+ */
+const FORCE = args.includes("--force");
+const origin = (
+	args.find((arg) => !arg.startsWith("-")) ?? "http://localhost:3855"
+).replace(/\/$/, "");
 
 /** The card, in CSS pixels. Also the numbers the metadata declares. */
 const CARD = { width: 1200, height: 630 };
@@ -114,6 +123,32 @@ const fail = (message, code = 2) => {
 	console.error(`generate-og-images: ${message}`);
 	process.exit(code);
 };
+
+// A failed run must not leave a browser or a temp dir behind. `fail()` calls
+// process.exit, which skips the happy path's `close()` — measured: a crashed
+// run left a live headless Chrome, its profile under the caller's tmpdir, and
+// the ffmpeg work dir (review round 1, minor 2 — six profiles and four live
+// browsers had accumulated across three failed runs). The `exit` hook runs on
+// every path that exits through Node, and the signal handlers cover Ctrl-C.
+let browser = null;
+let work = null;
+const teardown = () => {
+	if (browser) {
+		browser.kill();
+		browser = null;
+	}
+	if (work) {
+		rmSync(work, { recursive: true, force: true });
+		work = null;
+	}
+};
+process.on("exit", teardown);
+for (const signal of ["SIGINT", "SIGTERM"]) {
+	process.on(signal, () => {
+		teardown();
+		process.exit(130);
+	});
+}
 
 // `spawnSync` returns `status: null` when the binary is missing entirely, so
 // this tests for "exited zero" rather than for a truthy error.
@@ -161,7 +196,7 @@ const slugFor = (pathname) =>
 // Read every page.
 // ---------------------------------------------------------------------------
 
-const browser = await launchChrome(chromePath, {
+browser = await launchChrome(chromePath, {
 	windowSize: { width: CARD.width, height: CARD.height },
 });
 const reader = await openPage(browser);
@@ -248,6 +283,7 @@ const READ_PAGE = `(() => {
 			inkMuted: token('--lo-ink-muted'),
 			inkDim: token('--lo-ink-dim'),
 			borderControl: token('--lo-border-control'),
+			accent: token('--lo-accent'),
 			accentActive: token('--lo-accent-active'),
 			accentWash: token('--lo-accent-wash'),
 		},
@@ -382,6 +418,10 @@ const cardHtml = (page) => {
   .chip {
     align-self: flex-start;
     border-radius: 2px;
+    /* The pill's fill (accent-wash) is 1.019:1 against the canvas, so with no
+       edge the tag had no legible boundary; --lo-accent against the wash is
+       4.78:1 (design round 1, D1). */
+    border: 1px solid ${t.accent};
     background: ${t.accentWash};
     padding: 8px 12px;
     font-family: "Card Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -507,16 +547,36 @@ const tagSrgb = (png) => {
 
 mkdirSync(PUBLIC_OG, { recursive: true });
 mkdirSync(join(ROOT, "src", "data"), { recursive: true });
-const work = mkdtempSync(join(tmpdir(), "lo-og-"));
+work = mkdtempSync(join(tmpdir(), "lo-og-"));
 
 const cards = {};
 for (const page of pages) {
 	/**
 	 * The card's identity, computed before anything is rendered: the strings
-	 * the card will show, plus the template version. The filename and the
-	 * drift fingerprint are two slices of one hash, so they can never
-	 * disagree about what this card was made of.
+	 * the card will show, the host it will print, the palette it will paint
+	 * with, plus the template version. The filename and the drift fingerprint
+	 * are two slices of one hash, so they can never disagree about what this
+	 * card was made of.
+	 *
+	 * The palette and the host are in the hash on purpose (review round 1,
+	 * minor 1): a token move or a domain move re-addresses every card instead
+	 * of shipping stale ones under a gate that never fired.
+	 * `check-design-system.mjs` recomputes this exact list — same names, same
+	 * order — from `palettes.css` and the built canonical link; keep the two
+	 * lists identical or the check will (correctly) fail on every run.
 	 */
+	const palette = [
+		["--lo-canvas", page.tokens.canvas],
+		["--lo-ink", page.tokens.ink],
+		["--lo-ink-muted", page.tokens.inkMuted],
+		["--lo-ink-dim", page.tokens.inkDim],
+		["--lo-border-control", page.tokens.borderControl],
+		["--lo-accent", page.tokens.accent],
+		["--lo-accent-active", page.tokens.accentActive],
+		["--lo-accent-wash", page.tokens.accentWash],
+	]
+		.map(([name, value]) => `${name}=${value}`)
+		.join("\n");
 	const source = createHash("sha256")
 		.update(
 			[
@@ -525,15 +585,25 @@ for (const page of pages) {
 				page.chip,
 				page.brand.name,
 				page.brand.suffix,
+				page.host,
+				palette,
 				String(CARD_TEMPLATE_VERSION),
 			].join("\n"),
 		)
 		.digest("hex");
 	const filename = `${page.slug}.${source.slice(0, 8)}.png`;
 
+	// Titles may already end in terminal punctuation ("Run agents where your
+	// work lives.", "What is Local Operator?"): the separator adapts rather
+	// than stacking a second mark ("lives.. Guides…" — design D2 / review
+	// NIT 1).
+	const alt = `Local Operator Docs. ${page.title}${
+		/[.!?]$/.test(page.title) ? "" : "."
+	} ${page.description}`;
+
 	cards[page.pathname] = {
 		file: `/og/${filename}`,
-		alt: `Local Operator Docs. ${page.title}. ${page.description}`,
+		alt,
 		source: source.slice(0, 12),
 	};
 
@@ -614,7 +684,9 @@ for (const page of pages) {
 }
 
 await browser.close();
-rmSync(work, { recursive: true, force: true });
+browser = null;
+// Removes the ffmpeg work dir; the exit hook then has nothing left to do.
+teardown();
 
 // ---------------------------------------------------------------------------
 // Sweep, then write the module.

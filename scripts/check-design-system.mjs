@@ -229,14 +229,64 @@ for (const file of walk(SRC)) {
 			].map((match) => text(match[1]));
 			if (spans.length < 2) return null;
 
+			// The canonical link: the card prints its host and the fingerprint
+			// covers it, so a domain move must re-address the cards.
+			const canonical = html.match(
+				/<link(?=[\s>])[^>]*rel="canonical"[^>]*href="([^"]+)"/i,
+			);
+			if (!canonical) return null;
+			let host = "";
+			try {
+				host = new URL(canonical[1]).host;
+			} catch {
+				// A relative canonical would fingerprint as "" and fail against
+				// the generator's host — which is the desired loud failure.
+			}
+
 			return {
 				title: text(h1[1]),
 				description: decode(meta[1]),
 				chip,
 				brandName: spans[0],
 				brandSuffix: spans[1],
+				host,
 			};
 		};
+
+		/**
+		 * The card's palette, read from the file the theme itself reads: the light
+		 * block of `palettes.css`. The generator reads the same eight values off
+		 * the live page's computed styles; this list must stay identical to the
+		 * generator's — same names, same order (review round 1, minor 1: a
+		 * palette move must fail this gate, not ship stale cards silently).
+		 */
+		const PALETTE_TOKENS = [
+			"--lo-canvas",
+			"--lo-ink",
+			"--lo-ink-muted",
+			"--lo-ink-dim",
+			"--lo-border-control",
+			"--lo-accent",
+			"--lo-accent-active",
+			"--lo-accent-wash",
+		];
+		const palette = (() => {
+			const css = readFileSync(
+				path.join(SRC, "styles", "palettes.css"),
+				"utf8",
+			);
+			// Anchored at line start: the file's header comment also names
+			// `localOperatorLight`, and splitting on the bare string picked the
+			// dark block up from after the comment.
+			const match = css.match(
+				/^\[data-theme="localOperatorLight"\]\s*\{([\s\S]*?)\}/m,
+			);
+			const scope = match ? match[1] : "";
+			return PALETTE_TOKENS.map((name) => {
+				const token = scope.match(new RegExp(`${name}:\\s*([^;]+);`));
+				return `${name}=${token ? token[1].trim() : ""}`;
+			}).join("\n");
+		})();
 
 		const fingerprint = (page) =>
 			createHash("sha256")
@@ -247,6 +297,8 @@ for (const file of walk(SRC)) {
 						page.chip,
 						page.brandName,
 						page.brandSuffix,
+						page.host,
+						palette,
 						String(CARD_TEMPLATE_VERSION),
 					].join("\n"),
 				)
@@ -297,7 +349,7 @@ for (const file of walk(SRC)) {
 			const page = readPage(readFileSync(htmlPath, "utf8"));
 			if (!page) {
 				ogProblems.push(
-					`[og-cards-in-sync] could not read the title, description, chip or brand lockup out of ${file}.\n` +
+					`[og-cards-in-sync] could not read the title, description, chip, brand lockup or canonical link out of ${file}.\n` +
 						"    The generator reads the same hooks off the live page, so it is about to fail as well. Fix the selectors in both places.",
 				);
 				continue;

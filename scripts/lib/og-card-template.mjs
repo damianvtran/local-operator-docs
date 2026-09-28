@@ -17,4 +17,8 @@
 // in a way that should re-address every card, and the next `pnpm og` renders
 // all of them under new names. The drift check compares page STRINGS via the
 // same hash inputs, so this number participates in both sides equally.
-export const CARD_TEMPLATE_VERSION = 1;
+//
+// 2 — chip gains its 1px accent edge (design round 1, D1) and the fingerprint
+//     starts covering the resolved palette and the canonical host (review
+//     round 1, minor 1).
+export const CARD_TEMPLATE_VERSION = 2;
