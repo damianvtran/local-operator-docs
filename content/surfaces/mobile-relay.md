@@ -30,7 +30,7 @@ and start new sessions. Approval prompts from phone-started sessions are
 answered on the phone — sessions started at the terminal still answer at
 the terminal.
 
-<!-- diagram: RelayFlow -->
+{% diagram name="RelayFlow" caption="From the phone to a loopback-only daemon, through a path you put in front" /%}
 
 The relay is loopback-only by design: for access away from home, put a
 tunnel in front of it (a Cloudflare Tunnel with Access, or Tailscale) and

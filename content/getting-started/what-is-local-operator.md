@@ -33,7 +33,7 @@ One install is one pool of sessions, and several front ends drive it:
 - **Python SDK.** `local_operator.sdk` embeds the runtime in your own
   Python code.
 
-<!-- diagram: SurfaceMap -->
+{% diagram name="SurfaceMap" caption="One runtime, every surface" /%}
 
 Sessions are shared, not siloed: a conversation started in the terminal shows
 up in the desktop app's list, the sidebar, and the phone relay — because all
@@ -54,7 +54,7 @@ of them read the same local session store.
   start one on the always-on box, prompt it from the laptop, and move a
   conversation between machines — transcript and all — when you move.
 
-<!-- diagram: SessionHandoff -->
+{% diagram name="SessionHandoff" caption="A conversation moving between machines — transcript and all" /%}
 
 - **Work continues when you walk away.** Sessions schedule their own future
   turns, and a small supervisor wakes them even if the terminal that

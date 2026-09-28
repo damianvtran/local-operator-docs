@@ -12,7 +12,7 @@ draft: true
 ship today; the guide will cover each one end to end.
 {% /callout %}
 
-<!-- diagram: SchedulePipeline -->
+{% diagram name="SchedulePipeline" caption="A scheduled wake, fired with or without a terminal open" /%}
 
 - **Scheduled wakes that survive a closed terminal.** The agent's `wake`
   tool schedules a future turn ("check the build again in 30 minutes").

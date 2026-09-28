@@ -31,7 +31,7 @@ lop exec "summarize the failures in ./test.log"
   any surface, or deliver further work to it (the [Python SDK](/build/python-sdk)
   is the typed way in).
 
-<!-- diagram: ExecPipeline -->
+{% diagram name="ExecPipeline" caption="One command in, one headless run out — stdout, stderr, exit code" /%}
 
 ## Flags
 

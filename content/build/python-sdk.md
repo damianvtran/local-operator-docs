@@ -26,7 +26,7 @@ from local_operator.sdk import (
 )
 ```
 
-<!-- diagram: SdkLifecycle -->
+{% diagram name="SdkLifecycle" caption="Spec, roots and approvals; open, subscribe, prompt, close" /%}
 
 ## Quickstart: a session in your own process
 

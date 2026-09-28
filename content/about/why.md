@@ -68,7 +68,7 @@ another device with its transcript, tools and todos intact, and it can come
 home again — or be recovered from the last synced copy if the machine
 holding it is gone.
 
-<!-- diagram: SessionHandoff -->
+{% diagram name="SessionHandoff" caption="Handing a session to another device, and bringing it home again" /%}
 
 Pairing is human on both ends: one device mints a single-use invite, the
 joining side shows a code and a fingerprint, and a person compares them

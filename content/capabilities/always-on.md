@@ -78,7 +78,7 @@ subagents, wakes) works normally.
 
 {% figure src="/shots/tui/resume-picker.png" alt="The resume picker with Aida pinned first, above two ordinary sessions." caption="Aida is pinned first in the resume picker — she is one conversation, kept at the top." /%}
 
-<!-- diagram: AidaCadence -->
+{% diagram name="AidaCadence" caption="One check-in a day, plus a bounded allowance of extras" /%}
 
 Once a day she wakes herself and reviews what is in flight — sessions,
 projects, scheduled wakes, usage signals — then reports **only what needs
