@@ -52,12 +52,7 @@ export function Callout({
 	const variant = VARIANTS[type] ?? VARIANTS.note;
 	const Icon = variant.icon;
 	return (
-		<div
-			className={cn(
-				"lo-bleed flex gap-3 rounded-md border p-4",
-				variant.className,
-			)}
-		>
+		<div className={cn("flex gap-3 rounded-md border p-4", variant.className)}>
 			<Icon className="mt-0.5 size-4 shrink-0 text-ink" aria-hidden="true" />
 			<div className="min-w-0 text-body text-ink-muted [&_a]:text-ink [&_code]:bg-surface [&_p]:text-ink-muted">
 				<span className="sr-only">{variant.label}: </span>

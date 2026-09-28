@@ -39,7 +39,7 @@ export function ScrollRegion({
 	return (
 		<div
 			ref={ref}
-			className={cn("lo-bleed overflow-x-auto", className)}
+			className={cn("overflow-x-auto", className)}
 			{...(overflows
 				? { role: "region", tabIndex: 0, "aria-label": label }
 				: {})}

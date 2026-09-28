@@ -116,14 +116,16 @@ previous deployment stays live.
   re-highlighting.
 - **Fonts.** Sans is deliberately the OS UI stack; mono is Geist Mono via
   `next/font` (`src/app/fonts.ts`).
-- **The article grid** (`src/app/globals.css`, `.docs-article`): five tracks —
-  `full` (edge to edge), `bleed` (58rem, ~6rem wider each side than the
-  measure) and `content` (the 46rem reading column). Children default to
-  `content`; `.lo-bleed` takes the wide track; `.lo-full` the full width.
-  **Figures and diagrams sit in `content` with the prose** — the alignment
-  rule, enforced by `tests/figure-alignment.test.ts`: an image must never be
-  wider than the text it sits beside. `lo-bleed` is for data objects (code
-  blocks, tables) and for block furniture (callouts, steps, tab panels).
+- **The article grid** (`src/app/globals.css`, `.docs-article`): ONE measure —
+  every direct child (prose, headings, code blocks, callouts, steps, tabs,
+  tables, figures) renders in the same `var(--container-measure)` reading
+  column, left and right edges flush. There is deliberately no wider
+  `bleed`/`full` track: a component that takes a second measure is the defect
+  this layout removed (fix/content-measure — code, callouts and tables
+  rendered 6rem wider than the prose on each side). Content that cannot fit
+  scrolls inside the column (`ScrollRegion` for tables). The alignment rule
+  is enforced in `tests/figure-alignment.test.ts` (figures, diagrams, and the
+  other content components), on the rendered markup.
 - **The home page** is banded marketing (full-width containers by design):
   the hero figure spans its band, aligned with the tile grids below it.
 

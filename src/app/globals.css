@@ -212,36 +212,33 @@
 }
 
 /* -------------------------------------------------------------------------
- * The docs article: a five-track grid.
+ * The docs article: ONE measure.
  *
- * measure = the 46rem reading column; bleed = measure + 6rem each side (the
- * 58rem that wide tables and code blocks take); full = edge to edge. Track
- * assignment is by direct-child class, never by wrapper divs, so Markdoc's
- * rendered elements stay in the grid's scope.
+ * Every block — prose, headings, code, callouts, steps, tab panels, table
+ * scroll wrappers, figures — sits in the same reading column with the same
+ * left and right edges. This replaced a five-track grid (full / bleed /
+ * content) whose `.lo-bleed` children took a 58rem track: code blocks,
+ * callouts, steps, tabs and tables all rendered 6rem wider than the text on
+ * each side, so nothing lined up with the prose beside it (operator finding,
+ * fix/content-measure). Wide content does not get a wider track — a table
+ * that overflows scrolls INSIDE the column (`ScrollRegion`), which is the
+ * one sanctioned way to show more than the measure.
+ *
+ * The single capped track plus `justify-content: center` is what the old
+ * grid's collapse media query existed to emulate below 64rem — and that
+ * query was a specificity trap (design round 1, D1 / UX U1: the `.lo-bleed`
+ * placement outranked the fallback and starved the article to zero width).
+ * A one-track grid has no second track to get wrong.
  * ---------------------------------------------------------------------- */
 .docs-article {
 	display: grid;
-	grid-template-columns:
-		[full-start] minmax(0, 1fr)
-		[bleed-start] 6rem
-		[content-start] minmax(0, var(--container-measure))
-		[content-end] 6rem
-		[bleed-end] minmax(0, 1fr)
-		[full-end];
+	grid-template-columns: minmax(0, var(--container-measure));
+	justify-content: center;
 	min-width: 0;
 }
 
 .docs-article > * {
-	grid-column: content;
 	min-width: 0;
-}
-
-.docs-article > .lo-bleed {
-	grid-column: bleed;
-}
-
-.docs-article > .lo-full {
-	grid-column: full;
 }
 
 /* Vertical rhythm: one flow step between blocks, more before a section
@@ -266,25 +263,6 @@
 
 .docs-article > :first-child {
 	margin-top: 0;
-}
-
-@media (max-width: 64rem) {
-	.docs-article {
-		grid-template-columns: minmax(0, 1fr);
-	}
-
-	/* The single-track fallback drops the named lines the bleed/full
-	   placements above reference. Those two rules are (0,2,0) and outrank
-	   `.docs-article > *`, so without this they survive into a grid whose
-	   lines no longer exist, resolve as implicit tracks, and starve the 1fr
-	   track to 0px — every ordinary child then spans 0px of it and the page
-	   reads one word per line (design round 1, D1 / UX U1: below 1024px every
-	   article collapsed). */
-	.docs-article > *,
-	.docs-article > .lo-bleed,
-	.docs-article > .lo-full {
-		grid-column: 1 / -1;
-	}
 }
 
 /* -------------------------------------------------------------------------

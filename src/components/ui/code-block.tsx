@@ -28,7 +28,7 @@ export async function CodeBlock({
 	const html = await highlightCode(code, language ?? undefined);
 
 	return (
-		<div className="lo-codeblock lo-bleed">
+		<div className="lo-codeblock">
 			{language_ ? (
 				<div className="lo-codeblock__head">
 					<span className="font-mono text-mono-sm uppercase tracking-wider text-ink-dim">

@@ -9,13 +9,14 @@ import { cn } from "@/lib/utils";
  * the pages that claim to have figures — the placeholder keeps the slot
  * honest and visible.
  *
- * Width: a figure stays in the article's CONTENT track — the same 46rem
- * reading column its prose sits in — and deliberately does not take
- * `lo-bleed`. It used to: every screenshot rendered 6rem wider on each side
- * than the text beside it, which is the one property a figure must not have
- * (an image nothing lines up with reads as overflowing the page). Code
- * blocks and tables keep the wide track; they are data, and their width is
- * earned.
+ * Width: a figure stays in the article's reading column — the same measure
+ * its prose sits in — and never opts into a wider track. Figures used to take
+ * the 6rem-wider track: every screenshot rendered 6rem wider on each side of
+ * the text beside it, which is the one property a figure must not have (an
+ * image nothing lines up with reads as overflowing the page). Code blocks and
+ * tables used to claim that same wider track; they now share the prose
+ * measure too (fix/content-measure), with overflow scrolling INSIDE the
+ * column.
  *
  * The placeholder branch carries the same constraint as the image branch:
  * a missing screenshot must not be the only frame that lines up.
