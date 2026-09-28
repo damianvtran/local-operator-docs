@@ -107,7 +107,9 @@ export function getDiagram(name: string | undefined): DiagramEntry | undefined {
  *
  * The frame deliberately matches the Figure component's shape (rounded,
  * hairline border, caption in muted small type) so a diagram and a screenshot
- * read as the same kind of object. An unknown name is a content bug, so it
+ * read as the same kind of object — including its width: a diagram sits in the
+ * article's CONTENT track with the prose, never the bleed track (see
+ * `figure.tsx` for why). An unknown name is a content bug, so it
  * is not silent: the fallback names the missing diagram on the page, and the
  * warning lands in the build log when Next renders the page statically.
  */
@@ -126,7 +128,7 @@ export function Diagram({
 			);
 		}
 		return (
-			<figure className="lo-bleed flex min-h-32 flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-hairline p-8 text-center text-body-sm text-ink-dim">
+			<figure className="flex min-h-32 flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-hairline p-8 text-center text-body-sm text-ink-dim">
 				<span className="text-ink-muted">
 					{name ? `Missing diagram: ${name}` : "Missing diagram"}
 				</span>
@@ -136,7 +138,7 @@ export function Diagram({
 	}
 	const Component = entry.Component;
 	return (
-		<figure className="lo-bleed">
+		<figure>
 			<div className="rounded-lg border border-hairline bg-surface p-4 sm:p-6">
 				<Component
 					title={entry.title}
