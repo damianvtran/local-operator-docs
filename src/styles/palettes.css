@@ -1,0 +1,82 @@
+/*
+ * GENERATED-VALUE FILE — values copied verbatim from the app's
+ * `local-operator-ui/src/renderer/src/styles/themes.generated.css`
+ * ([data-theme="localOperatorDark"] / [data-theme="localOperatorLight"]),
+ * which is itself generated from the app's ThemePalette objects and guarded
+ * by its contrast contract.
+ *
+ * This is the ONE place raw colour values may appear in this repo (the
+ * design-system check enforces the boundary): every component reads role
+ * variables through the Tailwind mapping in globals.css, never these hexes.
+ *
+ * `:root` carries the brand dark palette as the pre-script default; the
+ * inline script in app/layout.tsx swaps `data-theme` before first paint.
+ */
+:root,
+[data-theme="localOperatorDark"] {
+	color-scheme: dark;
+	--lo-canvas: #16130e;
+	--lo-surface: #1e1a14;
+	--lo-elevated: #282318;
+	--lo-sunken: #0f0c08;
+	--lo-ink: #f1eee6;
+	--lo-ink-muted: #b5afa2;
+	--lo-ink-dim: #918b7d;
+	--lo-ink-disabled: #5f5a4e;
+	--lo-hairline: #353022;
+	--lo-border-control: #837c6d;
+	--lo-accent: #38c96a;
+	--lo-accent-hover: #5ad584;
+	--lo-accent-active: #2bb25c;
+	--lo-chart-bar-hover: #85dea3;
+	--lo-accent-wash: #16281d;
+	--lo-on-accent: #16130e;
+	--lo-success: #57c785;
+	--lo-success-wash: #16281d;
+	--lo-success-border: #417557;
+	--lo-warning: #e0b04b;
+	--lo-warning-wash: #2a2213;
+	--lo-warning-border: #857036;
+	--lo-danger: #ef8078;
+	--lo-danger-wash: #2e1b18;
+	--lo-danger-border: #9e5a51;
+	--lo-info: #86b3f2;
+	--lo-info-wash: #192332;
+	--lo-info-border: #5475a2;
+	--lo-overlay-shadow: 0 12px 32px -12px rgb(0 0 0 / 0.6);
+	--lo-scrim: rgb(0 0 0 / 0.6);
+}
+
+[data-theme="localOperatorLight"] {
+	color-scheme: light;
+	--lo-canvas: #f5f0e6;
+	--lo-surface: #faf8f1;
+	--lo-elevated: #fffefb;
+	--lo-sunken: #efe9db;
+	--lo-ink: #211e18;
+	--lo-ink-muted: #565147;
+	--lo-ink-dim: #6c675c;
+	--lo-ink-disabled: #9a9488;
+	--lo-hairline: #ddd8ce;
+	--lo-border-control: #857f70;
+	--lo-accent: #147842;
+	--lo-accent-hover: #116036;
+	--lo-accent-active: #0c4b2a;
+	--lo-chart-bar-hover: #0f5a31;
+	--lo-accent-wash: #e7f1e8;
+	--lo-on-accent: #f6faf8;
+	--lo-success: #1a774a;
+	--lo-success-wash: #e6f1ea;
+	--lo-success-border: #3e6b4e;
+	--lo-warning: #8a5800;
+	--lo-warning-wash: #f5ecd9;
+	--lo-warning-border: #7a5a1e;
+	--lo-danger: #b23a31;
+	--lo-danger-wash: #f7e7e4;
+	--lo-danger-border: #96544c;
+	--lo-info: #2368a8;
+	--lo-info-wash: #e9ebef;
+	--lo-info-border: #486893;
+	--lo-overlay-shadow: 0 12px 32px -12px rgb(20 17 12 / 0.25);
+	--lo-scrim: rgb(20 17 12 / 0.35);
+}

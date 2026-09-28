@@ -1,0 +1,48 @@
+{
+	"name": "local-operator-docs",
+	"version": "0.1.0",
+	"private": true,
+	"packageManager": "pnpm@12.6.0",
+	"engines": {
+		"npm": "please-use-pnpm",
+		"node": ">=22.13.1"
+	},
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"predev": "pnpm generate-search-index",
+		"build": "next build",
+		"prebuild": "pnpm generate-search-index && pnpm check-design-system",
+		"start": "next start",
+		"generate-search-index": "tsx scripts/generate-search-index.ts",
+		"check-design-system": "node scripts/check-design-system.mjs",
+		"lint": "biome check . && pnpm check-design-system",
+		"lint:fix": "biome check --write .",
+		"check-types": "tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"@markdoc/markdoc": "0.5.10",
+		"class-variance-authority": "0.7.1",
+		"clsx": "2.1.1",
+		"geist": "1.7.2",
+		"lucide-react": "1.48.0",
+		"next": "15.5.26",
+		"radix-ui": "1.6.7",
+		"react": "19.3.0",
+		"react-dom": "19.3.0",
+		"shiki": "4.4.3",
+		"tailwind-merge": "3.7.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.14",
+		"@tailwindcss/postcss": "4.3.3",
+		"@types/node": "22.20.4",
+		"@types/react": "19.3.0",
+		"@types/react-dom": "19.3.0",
+		"tailwindcss": "4.3.3",
+		"tsx": "4.23.15",
+		"typescript": "5.9.3",
+		"vitest": "5.0.2"
+	}
+}
