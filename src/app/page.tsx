@@ -139,7 +139,16 @@ export default function HomePage() {
 			<JsonLd data={softwareApplicationSchema(versions.backend)} />
 			<section className="border-b border-hairline">
 				<div className="mx-auto w-full max-w-[96rem] px-4 py-16 sm:py-20">
-					<p className="flex items-center gap-2 font-mono text-mono-sm uppercase tracking-wider text-accent">
+					{/*
+					 * `id` is a generator hook, not styling: `scripts/generate-og-images.mjs`
+					 * reads the eyebrow off the live page as the home card's section chip,
+					 * the same contract as the marketing site's `#hero-heading` hooks. A
+					 * renamed hook is a loud failure there, not a silently stale card.
+					 */}
+					<p
+						id="home-eyebrow"
+						className="flex items-center gap-2 font-mono text-mono-sm uppercase tracking-wider text-accent"
+					>
 						<Sparkles className="size-3.5" aria-hidden="true" />
 						Local-first agent runtime
 					</p>

@@ -29,9 +29,9 @@ gates run. Read it before changing anything structural.
 | `src/lib/search/` | The search engine: tokenizer, scorer, snippets, synonyms. |
 | `src/app/` | App Router routes: `(docs)/[...slug]` content pages, `page.tsx` home, `llms.txt` + `llms-full.txt` + `raw/[...slug]` route handlers, `sitemap.ts`, `robots.ts`, `layout.tsx` (shell, metadata, pre-paint theme script). |
 | `src/components/` | `layout/` (top bar, sidebar, footer, TOC, pager, breadcrumbs, version chip), `ui/` (figure, code block, callout, …), `search/`, `diagrams/`, `theme/`. |
-| `scripts/` | `generate-search-index.ts`, `generate-versions.ts`, `check-design-system.mjs`. |
+| `scripts/` | `generate-search-index.ts`, `generate-versions.ts`, `generate-og-images.mjs`, `check-design-system.mjs`. |
 | `tests/` | Vitest: content/nav consistency, search, llms-full completeness, semantic structure (H1 + heading order), structured data, versions, figure alignment. |
-| `public/` | Committed assets (`public/shots/**` screenshots, `public/og.png` social card). `search-index.json` and `versions.json` are generated and gitignored. |
+| `public/` | Committed assets (`public/shots/**` screenshots, `public/og/**` per-page social cards, plus the legacy `og.png`). `search-index.json` and `versions.json` are generated and gitignored. |
 
 Stack notes that shape expectations: **Next.js 15 App Router** with fully
 static rendering (no server data at request time); **Markdoc** for content
@@ -83,7 +83,8 @@ before any H3); keep descriptions unique across pages.
 | `/raw/<slug>` | `src/app/raw/[...slug]/route.ts` (the page's markdown source) | build (static) | "Copy page" button; `curl /raw/getting-started/install` |
 | `/sitemap.xml`, `/robots.txt` | `src/app/sitemap.ts`, `src/app/robots.ts` | build (static) | `curl`; sitemap lists published pages only and deliberately carries no `lastmod` (content has no dates, and filesystem mtimes change on every checkout) |
 | JSON-LD (`WebSite` + `SoftwareApplication` on home; `TechArticle` + `BreadcrumbList` on docs pages) | `src/lib/structured-data.ts`, rendered via `src/components/ui/json-ld.tsx` | build | `tests/structured-data.test.ts`; parse the emitted `<script type="application/ld+json">` blocks |
-| `public/og.png` (1200×630 social card) | Rendered once from a small HTML card via headless Chrome; committed | by hand, when branding changes | `curl -I /og.png`; check in a social preview debugger |
+| `public/og/<slug>.<hash>.png` + `src/data/og-cards.ts` | `pnpm og` (`scripts/generate-og-images.mjs`) against a running `pnpm start`; one 1200×630 card per published page, rendered from the live pages | when a page's title/description/section changes (or `CARD_TEMPLATE_VERSION` bumps) — never at build time; both artifacts are committed | `check-design-system.mjs` `og-cards-in-sync` (runs in `prebuild` and again in `postbuild`, where the built HTML is guaranteed fresh): every published page has a card, no draft has one, and each card's fingerprint matches the built page. `--force` re-renders existing cards. |
+| `public/og.png` (1200×630) | the pre-generator card; committed, referenced by no metadata | never (kept so old shares keep their image) | `curl -I /og.png` |
 
 Never commit the gitignored generated files: they are rebuilt per build, and a
 stale committed copy is exactly the drift the generators exist to prevent.
