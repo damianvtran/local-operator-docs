@@ -22,11 +22,14 @@ describe("nav registry x content", () => {
 		expect(items.some((item) => item.slug === "surfaces/mobile-relay")).toBe(
 			false,
 		);
-		expect(items.some((item) => item.slug === "surfaces/desktop")).toBe(false);
+		expect(items.some((item) => item.slug === "capabilities/agent-mesh")).toBe(
+			false,
+		);
 		// ... while the real pages are in.
 		expect(items.some((item) => item.slug === "getting-started/install")).toBe(
 			true,
 		);
+		expect(items.some((item) => item.slug === "surfaces/desktop")).toBe(true);
 		expect(items.some((item) => item.slug === "tui/quickstart")).toBe(true);
 	});
 
