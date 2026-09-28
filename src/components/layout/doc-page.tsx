@@ -21,7 +21,7 @@ export function DocPage({ page }: { page: LoadedPage }) {
 	return (
 		<div className="mx-auto flex w-full max-w-[calc(58rem_+_14rem_+_2.5rem)] justify-center gap-10">
 			<article className="docs-article min-w-0 flex-1 pb-4">
-				<div className="lo-bleed flex flex-wrap items-center justify-between gap-3 border-b border-hairline pb-5">
+				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline pb-5">
 					<Breadcrumbs group={crumb.group} title={crumb.title ?? page.title} />
 					<CopyPageButton slug={page.slug} />
 				</div>

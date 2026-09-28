@@ -6,14 +6,16 @@ import { describe, expect, it } from "vitest";
 import { markdocComponents, transformDoc } from "@/lib/markdoc-config";
 
 /**
- * Figures stay in the article's CONTENT track.
+ * Content components stay in the article's ONE measure.
  *
- * The alignment rule lives in the components, not in CSS: `.docs-article > *`
- * is placed in the 46rem content track by default and only a `lo-bleed` child
- * takes the wider 58rem track. A figure that regains that class silently
- * renders 6rem wider than every paragraph beside it — the defect this file
- * pins — so the guard is on the rendered markup, through the same Markdoc
- * pipeline the content pages use.
+ * The alignment rule lives in the components, not in CSS: every direct child
+ * of `.docs-article` renders in the single `var(--container-measure)` reading
+ * column, and the layout deliberately has no wider track to opt into. The old
+ * five-track grid's `lo-bleed` escape hatch let code blocks, callouts, steps,
+ * tabs and tables render 6rem wider than the prose on each side
+ * (fix/content-measure); a component that regains a wider placement silently
+ * breaks the page's alignment, so the guard is on the rendered markup,
+ * through the same Markdoc pipeline the content pages use.
  */
 
 function renderSource(source: string): string {
@@ -46,6 +48,56 @@ describe("figure alignment", () => {
 			'{% diagram name="SurfaceMap" caption="One runtime, many ways in." /%}',
 		);
 		expect(markup).toContain("<figure");
+		expect(markup).not.toContain("lo-bleed");
+	});
+});
+
+describe("content measure", () => {
+	it("renders a fenced code block in the measure", async () => {
+		// A fence renders an async server component, which renderToStaticMarkup
+		// cannot invoke inside the tree; calling it directly renders the same
+		// component the pipeline mounts.
+		const { CodeBlock } = await import("@/components/ui/code-block");
+		const markup = renderToStaticMarkup(
+			await CodeBlock({ code: "pip install local-operator", language: "bash" }),
+		);
+		expect(markup).toContain("lo-codeblock");
+		expect(markup).not.toContain("lo-bleed");
+	});
+
+	it("keeps a callout in the measure", () => {
+		const markup = renderSource(
+			'{% callout type="note" %}Runtime needs Python 3.12.{% /callout %}',
+		);
+		expect(markup).toContain("Runtime needs Python 3.12.");
+		expect(markup).not.toContain("lo-bleed");
+	});
+
+	it("keeps a table and its scroll region in the measure", () => {
+		const markup = renderSource(
+			"| Flag | Meaning |\n| --- | --- |\n| `--resume` | Resume a session. |\n",
+		);
+		expect(markup).toContain("<table");
+		expect(markup).toContain("overflow-x-auto");
+		expect(markup).not.toContain("lo-bleed");
+	});
+
+	it("keeps steps in the measure", () => {
+		const markup = renderSource(
+			'{% steps %}\n{% step title="Install" %}Run the installer.{% /step %}\n{% /steps %}',
+		);
+		expect(markup).toContain("lo-steps");
+		expect(markup).not.toContain("lo-bleed");
+	});
+
+	it("keeps tab panels in the measure", () => {
+		// Radix renders the strip in static markup and the panel bodies only
+		// after hydration, so the strip is what this can pin — it is also the
+		// element that carried the wider track.
+		const markup = renderSource(
+			'{% tabs %}\n{% tab label="macOS" %}brew install local-operator{% /tab %}\n{% /tabs %}',
+		);
+		expect(markup).toContain('role="tablist"');
 		expect(markup).not.toContain("lo-bleed");
 	});
 });

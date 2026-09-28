@@ -22,6 +22,12 @@ import { cn } from "@/lib/utils";
  * themselves `ink-dim` or `ink-muted` — a cap at `ink-muted` outranks the
  * thing it explains. `rounded-xs` and `border-hairline` are the system's
  * control-scale radius and edge, stated once here.
+ *
+ * `INLINE-BLOCK` IS LOAD-BEARING, not a style choice: an inline <kbd>'s box
+ * takes the font's content height (~16px at 12px type) instead of its 17.4px
+ * line box, so the SAME cap measured 22.00px tall in the 404 page's prose
+ * against 23.39px in the top bar's flex row (design round 3, D2).
+ * Inline-block makes the box line-height-derived in every context.
  */
 export function Kbd({
 	children,
@@ -33,7 +39,7 @@ export function Kbd({
 	return (
 		<kbd
 			className={cn(
-				"rounded-xs border border-hairline bg-surface px-2 py-0.5 font-mono text-mono-sm tracking-[0.08em] text-ink-dim",
+				"inline-block rounded-xs border border-hairline bg-surface px-2 py-0.5 font-mono text-mono-sm tracking-[0.08em] text-ink-dim",
 				className,
 			)}
 		>

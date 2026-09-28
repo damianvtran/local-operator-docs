@@ -8,9 +8,10 @@ import { ScrollRegion } from "./scroll-region";
  * The Markdown element set.
  *
  * Every content route is a Markdoc render of one .md file, so THIS FILE is
- * the styling surface for the whole docs property. Elements are assigned to
- * the article grid's tracks by class (`content` by default, `lo-bleed` for
- * wide objects), never by wrapper divs — see `.docs-article` in globals.css.
+ * the styling surface for the whole docs property. Elements sit in the
+ * article's single reading column — no component may introduce a second
+ * measure; overflow scrolls inside the column (`ScrollRegion`) — see
+ * `.docs-article` in globals.css.
  *
  * Colours are roles (`text-ink-muted`), never hexes; the design-system check
  * enforces that boundary.

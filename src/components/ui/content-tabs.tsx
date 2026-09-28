@@ -44,7 +44,7 @@ export function ContentTabs({
 	}
 
 	return (
-		<Tabs value={value} onValueChange={change} className="lo-bleed">
+		<Tabs value={value} onValueChange={change}>
 			<TabsList aria-label="Options">
 				{labels.map((label) => (
 					<TabsTrigger key={label} value={label}>

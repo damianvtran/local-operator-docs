@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
  * not fake one.
  */
 export function Steps({ children }: { children: ReactNode }) {
-	return <ol className="lo-steps lo-bleed space-y-6">{children}</ol>;
+	return <ol className="lo-steps space-y-6">{children}</ol>;
 }
 
 export function Step({
