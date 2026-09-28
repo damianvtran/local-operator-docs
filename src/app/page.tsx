@@ -3,8 +3,14 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Figure } from "@/components/ui/figure";
+import { JsonLd } from "@/components/ui/json-ld";
+import { buildVersions } from "@/lib/built-versions";
 import { getResolvedNav, type ResolvedItem } from "@/lib/content";
 import { SITE } from "@/lib/site";
+import {
+	softwareApplicationSchema,
+	websiteSchema,
+} from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 
 /**
@@ -120,8 +126,17 @@ function Tile({ entry, big = false }: { entry: ResolvedItem; big?: boolean }) {
 }
 
 export default function HomePage() {
+	/*
+	 * Structured data: the site entity plus the application these docs are
+	 * about, versioned from the same build-time resolution the top-bar chip
+	 * reads (`versions.ts`) so the two cannot disagree.
+	 */
+	const versions = buildVersions();
+
 	return (
 		<div>
+			<JsonLd data={websiteSchema()} />
+			<JsonLd data={softwareApplicationSchema(versions.backend)} />
 			<section className="border-b border-hairline">
 				<div className="mx-auto w-full max-w-[96rem] px-4 py-16 sm:py-20">
 					<p className="flex items-center gap-2 font-mono text-mono-sm uppercase tracking-wider text-accent">

@@ -1,5 +1,5 @@
 ---
-description: Sessions that start their own turns — scheduled wakes that fire with every terminal closed, the supervisor that runs them, notifications, and Aida, the built-in chief of staff.
+description: Sessions that start their own turns — scheduled wakes that fire with every terminal closed, the supervisor that runs them, and Aida, the built-in chief of staff.
 section: capabilities
 order: 2
 ---

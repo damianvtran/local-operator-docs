@@ -1,5 +1,5 @@
 ---
-description: Embed an agent runtime behind a Server-Sent Events stream — the endpoint shape, event taxonomy, resume with Last-Event-ID, keepalives, and working server and client examples.
+description: Embed an agent runtime behind a Server-Sent Events stream — endpoint shape, event taxonomy, resuming with Last-Event-ID, keepalives, and working examples.
 section: build
 order: 3
 ---

@@ -22,6 +22,18 @@ export const SITE = {
 	marketing: "https://local-operator.com",
 	downloads: "https://local-operator.com/download",
 
+	/**
+	 * The default social card, rendered once into `public/og.png` (1200x630).
+	 * Referenced by the root metadata and by every docs page, so a shared link
+	 * never falls back to no image at all.
+	 */
+	ogImage: {
+		path: "/og.png",
+		width: 1200,
+		height: 630,
+		alt: "Local Operator Docs — run agents where your work lives.",
+	},
+
 	/** The canonical terminal install; the hero chip copies exactly this. */
 	installCommand: "pip install local-operator",
 

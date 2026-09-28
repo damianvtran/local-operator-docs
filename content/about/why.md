@@ -1,5 +1,5 @@
 ---
-description: What Local Operator does differently — running on your machine, one runtime every surface, teams and projects, a mesh for your own computers, work that continues without you — and when a different tool fits better.
+description: What Local Operator does differently — everything on your machine, one runtime for every surface, a mesh across your computers, and when a different tool fits better.
 section: about
 order: 1
 ---

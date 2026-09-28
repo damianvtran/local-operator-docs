@@ -27,17 +27,34 @@ export const metadata: Metadata = {
 		template: `%s · ${SITE.name} Docs`,
 	},
 	description: SITE.description,
+	/*
+	 * The home page's canonical. Content pages set their own (`(docs)`
+	 * `generateMetadata`), so nothing inherits a canonical that would point at
+	 * the wrong route - this is the one page that relies on the default.
+	 */
+	alternates: { canonical: "/" },
 	openGraph: {
 		title: SITE.title,
 		description: SITE.description,
 		url: SITE.url,
 		siteName: SITE.title,
 		type: "website",
+		images: [
+			{
+				url: SITE.ogImage.path,
+				width: SITE.ogImage.width,
+				height: SITE.ogImage.height,
+				alt: SITE.ogImage.alt,
+			},
+		],
 	},
 	twitter: {
-		card: "summary",
+		/* `summary_large_image` because there IS a 1200x630 card now; the
+		 * small `summary` card letterboxes it. */
+		card: "summary_large_image",
 		title: SITE.title,
 		description: SITE.description,
+		images: [SITE.ogImage.path],
 	},
 };
 
