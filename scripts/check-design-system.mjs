@@ -17,8 +17,11 @@
  * Rules 1 and 3 overlap on purpose: one catches rewritten CSS, the other
  * catches utility classes that never pass through a stylesheet.
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+
+import { CARD_TEMPLATE_VERSION } from "./lib/og-card-template.mjs";
 
 const ROOT = process.cwd();
 const SRC = path.join(ROOT, "src");
@@ -98,6 +101,225 @@ for (const file of walk(SRC)) {
 			}
 		}
 	});
+}
+
+// -- og-cards-in-sync --------------------------------------------------------
+// The share cards are PNGs of the pages, generated offline by
+// `scripts/generate-og-images.mjs` and committed. Nothing in the build renders
+// them, so nothing in the build would notice when a page moves on and its card
+// does not — and a card that answers `200 image/png` while depicting an older
+// page passes every check that asks "is there a card" rather than "is it a
+// card of THIS page". This rule asks the second question.
+//
+// The generator records, per page, a fingerprint of the strings the card was
+// rendered from (title, description, section chip, brand lockup, template
+// version). This recomputes that fingerprint from the prerendered HTML the
+// build just wrote, so a renamed page, reworded description or moved section
+// fails the build until `pnpm og` re-renders the card.
+//
+// The two halves fail differently on purpose, the same trade the marketing
+// site's `og-card-in-sync` documents:
+//
+//   - The file-exists half needs no build. A missing card is a hard failure:
+//     every unfurl of that page would have no image.
+//   - The fingerprint and coverage halves need `.next/`, so they are skipped
+//     (with a note) on a lint run before any build. That skip is why
+//     `package.json` runs this script again as `postbuild`: `.next` is
+//     guaranteed fresh at exactly that point, so the drift gate always
+//     actually runs on the path that ships.
+{
+	const ogProblems = [];
+	const ogModule = path.join(SRC, "data", "og-cards.ts");
+	const ogDir = path.join(ROOT, "public", "og");
+	const builtApp = path.join(ROOT, ".next", "server", "app");
+
+	// Entry shape is written by the generator: one keyed object per page with
+	// `file` / `alt` / `source`. `alt` may contain escaped quotes, hence the
+	// escape-aware alternative in the pattern.
+	const ENTRY =
+		/"([^"]+)":\s*\{\s*file:\s*"([^"]+)",\s*alt:\s*"((?:[^"\\]|\\.)*)",\s*source:\s*"([0-9a-f]+)",?\s*\}/g;
+	const entries = existsSync(ogModule)
+		? [...readFileSync(ogModule, "utf8").matchAll(ENTRY)].map((match) => ({
+				path: match[1],
+				file: match[2],
+				source: match[4],
+			}))
+		: [];
+
+	if (!existsSync(ogModule) || entries.length === 0) {
+		ogProblems.push(
+			"[og-cards-in-sync] src/data/og-cards.ts is missing or names no cards.\n" +
+				"    That file is generated; run `pnpm og` against a running `pnpm start` rather than editing it.",
+		);
+	}
+
+	for (const entry of entries) {
+		const name = entry.file.replace("/og/", "");
+		if (!existsSync(path.join(ogDir, name))) {
+			ogProblems.push(
+				`[og-cards-in-sync] src/data/og-cards.ts names ${entry.file}, which is not in public/og/.\n` +
+					"    Every og:image tag for that page points at it, so this ships a card that 404s on every unfurl. Run `pnpm og`.",
+			);
+		}
+	}
+
+	// The fingerprint halves need the built HTML. `index.html` is the marker:
+	// if the app router's output is there, so is everything else this reads.
+	if (!existsSync(path.join(builtApp, "index.html"))) {
+		console.log(
+			"check-design-system: og-cards-in-sync files present; fingerprint half skipped (no .next build)",
+		);
+	} else {
+		// Entities decode in the same order the site's check documents: `&amp;`
+		// is last, or `&amp;lt;` would decode twice. `textContent` is what the
+		// generator reads on the live page, and this is its static equivalent.
+		const decode = (value) =>
+			value
+				.replace(/&#x([0-9a-f]+);/gi, (_, hex) =>
+					String.fromCodePoint(Number.parseInt(hex, 16)),
+				)
+				.replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+				.replace(/&lt;/g, "<")
+				.replace(/&gt;/g, ">")
+				.replace(/&quot;/g, '"')
+				.replace(/&#39;/g, "'")
+				.replace(/&amp;/g, "&");
+
+		/** Inner HTML → the text `textContent` would yield. */
+		const text = (html) =>
+			decode(html.replace(/<[^>]*>/g, " "))
+				.replace(/\s+/g, " ")
+				.trim();
+
+		/** @type {(html: string) => string | null} */
+		const readPage = (html) => {
+			const h1 = html.match(/<h1(?=[\s>])[^>]*>([\s\S]*?)<\/h1>/i);
+			const meta = html.match(
+				/<meta\s+name="description"\s+content="([^"]*)"/i,
+			);
+			if (!h1 || !meta) return null;
+
+			// The chip: the breadcrumb's group item (five items: Docs / group /
+			// title) or, on the root page, the hero eyebrow the generator reads
+			// by id. Same contract as the generator, deliberately.
+			const eyebrow = html.match(
+				/<p(?=[\s>])[^>]*id="home-eyebrow"[^>]*>([\s\S]*?)<\/p>/i,
+			);
+			let chip = eyebrow ? text(eyebrow[1]) : "";
+			if (!eyebrow) {
+				const nav = html.match(
+					/<nav(?=[\s>])[^>]*aria-label="Breadcrumb"[^>]*>([\s\S]*?)<\/nav>/i,
+				);
+				if (nav) {
+					const items = [
+						...nav[1].matchAll(/<li(?=[\s>])[^>]*>([\s\S]*?)<\/li>/gi),
+					].map((match) => text(match[1]));
+					if (items.length === 5) chip = items[2];
+				}
+			}
+
+			// The brand lockup: the top bar's home link, whose two spans are the
+			// name and the product suffix (“Docs”).
+			const brand = html.match(
+				/<a(?=[\s>])[^>]*aria-label="Local Operator home"[^>]*>([\s\S]*?)<\/a>/i,
+			);
+			if (!brand) return null;
+			const spans = [
+				...brand[1].matchAll(/<span(?=[\s>])[^>]*>([\s\S]*?)<\/span>/gi),
+			].map((match) => text(match[1]));
+			if (spans.length < 2) return null;
+
+			return {
+				title: text(h1[1]),
+				description: decode(meta[1]),
+				chip,
+				brandName: spans[0],
+				brandSuffix: spans[1],
+			};
+		};
+
+		const fingerprint = (page) =>
+			createHash("sha256")
+				.update(
+					[
+						page.title,
+						page.description,
+						page.chip,
+						page.brandName,
+						page.brandSuffix,
+						String(CARD_TEMPLATE_VERSION),
+					].join("\n"),
+				)
+				.digest("hex")
+				.slice(0, 12);
+
+		// Coverage: every page the build published (its own sitemap) must have
+		// a card. Extra module entries without a published page are equally
+		// wrong — they are cards of nothing.
+		const sitemapBody = path.join(builtApp, "sitemap.xml.body");
+		if (!existsSync(sitemapBody)) {
+			ogProblems.push(
+				"[og-cards-in-sync] .next has no sitemap.xml.body, so card coverage cannot be checked.\n" +
+					"    The sitemap is what tells the generator which pages exist; without it `pnpm og` would generate nothing.",
+			);
+		} else {
+			const published = new Set(
+				[
+					...readFileSync(sitemapBody, "utf8").matchAll(/<loc>([^<]+)<\/loc>/g),
+				].map((match) => new URL(match[1]).pathname.replace(/\/$/, "") || "/"),
+			);
+			const covered = new Set(entries.map((entry) => entry.path));
+			for (const route of published) {
+				if (!covered.has(route)) {
+					ogProblems.push(
+						`[og-cards-in-sync] ${route} is published but has no card in src/data/og-cards.ts. Run \`pnpm og\`.`,
+					);
+				}
+			}
+			for (const route of covered) {
+				if (!published.has(route)) {
+					ogProblems.push(
+						`[og-cards-in-sync] ${route} has a card but is not a published page (draft, or renamed). Run \`pnpm og\` to drop it.`,
+					);
+				}
+			}
+		}
+
+		for (const entry of entries) {
+			const file = entry.path === "/" ? "index.html" : `${entry.path}.html`;
+			const htmlPath = path.join(builtApp, file);
+			if (!existsSync(htmlPath)) {
+				ogProblems.push(
+					`[og-cards-in-sync] no built HTML at .next/server/app/${file} for ${entry.path}, so its card cannot be verified.`,
+				);
+				continue;
+			}
+			const page = readPage(readFileSync(htmlPath, "utf8"));
+			if (!page) {
+				ogProblems.push(
+					`[og-cards-in-sync] could not read the title, description, chip or brand lockup out of ${file}.\n` +
+						"    The generator reads the same hooks off the live page, so it is about to fail as well. Fix the selectors in both places.",
+				);
+				continue;
+			}
+			const actual = fingerprint(page);
+			if (actual !== entry.source) {
+				ogProblems.push(
+					`[og-cards-in-sync] ${entry.path} has moved since its card was rendered.\n` +
+						`    card: "${entry.source}", page now: "${actual}" — title "${page.title}", description "${page.description.slice(0, 60)}…", chip "${page.chip}".\n` +
+						"    Run `pnpm og` against a running `pnpm start` and commit the new card.",
+				);
+			}
+		}
+
+		if (ogProblems.length === 0) {
+			console.log(
+				`check-design-system: og-cards-in-sync ${entries.length} cards, fingerprints match the built pages`,
+			);
+		}
+	}
+
+	problems.push(...ogProblems);
 }
 
 if (problems.length > 0) {

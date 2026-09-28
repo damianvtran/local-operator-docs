@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DocPage } from "@/components/layout/doc-page";
 import { JsonLd } from "@/components/ui/json-ld";
+import { OG_CARD_DEFAULT, OG_CARD_SIZE, OG_CARDS } from "@/data/og-cards";
 import { getAllPages, getBreadcrumb, getPage } from "@/lib/content";
 import { SITE } from "@/lib/site";
 import { articleSchema, breadcrumbSchema } from "@/lib/structured-data";
@@ -28,6 +29,15 @@ export async function generateMetadata({
 	const { slug } = await params;
 	const page = getPage(slug.join("/"));
 	if (!page) return {};
+	/*
+	 * The page's own card from the generated set; the root card is the
+	 * fallback so a page that predates its card (or a future one published
+	 * before `pnpm og` runs) still unfurls a card rather than none. The
+	 * drift check in `scripts/check-design-system.mjs` is what makes that
+	 * state impossible to ship: it fails the build when a page and its card
+	 * disagree.
+	 */
+	const card = OG_CARDS[page.href] ?? OG_CARD_DEFAULT;
 	return {
 		title: page.title,
 		description: page.description,
@@ -46,10 +56,10 @@ export async function generateMetadata({
 			type: "article",
 			images: [
 				{
-					url: SITE.ogImage.path,
-					width: SITE.ogImage.width,
-					height: SITE.ogImage.height,
-					alt: SITE.ogImage.alt,
+					url: card.file,
+					width: OG_CARD_SIZE.width,
+					height: OG_CARD_SIZE.height,
+					alt: card.alt,
 				},
 			],
 		},
@@ -57,7 +67,7 @@ export async function generateMetadata({
 			card: "summary_large_image",
 			title: page.title,
 			description: page.description,
-			images: [SITE.ogImage.path],
+			images: [card.file],
 		},
 	};
 }

@@ -28,9 +28,12 @@ export const SITE = {
 	downloads: "https://local-operator.com/download",
 
 	/**
-	 * The default social card, rendered once into `public/og.png` (1200x630).
-	 * Referenced by the root metadata and by every docs page, so a shared link
-	 * never falls back to no image at all.
+	 * LEGACY: the site's pre-generator card (`public/og.png`, 1200x630). Kept
+	 * for links shared while it was live — a share whose image 404s renders a
+	 * white box — but no metadata points at it any more: every page now names
+	 * its own card from `src/data/og-cards.ts` (written by `pnpm og`), with the
+	 * root card as the fallback. Old cards are never deleted; see the sweep's
+	 * contract in `scripts/generate-og-images.mjs`.
 	 */
 	ogImage: {
 		path: "/og.png",

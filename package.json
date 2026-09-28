@@ -20,7 +20,9 @@
 		"lint:fix": "biome check --write .",
 		"check-types": "tsc --noEmit",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"og": "node scripts/generate-og-images.mjs",
+		"postbuild": "node scripts/check-design-system.mjs"
 	},
 	"dependencies": {
 		"@markdoc/markdoc": "0.5.10",

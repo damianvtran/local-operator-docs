@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Footer } from "@/components/layout/footer";
 import { TopBar } from "@/components/layout/top-bar";
 import { SearchProvider } from "@/components/search/search-provider";
+import { OG_CARD_DEFAULT, OG_CARD_SIZE } from "@/data/og-cards";
 import { getResolvedNav, getSidebarNav } from "@/lib/content";
 import { SITE } from "@/lib/site";
 import { THEME_SCRIPT } from "@/lib/theme";
@@ -64,22 +65,28 @@ export const metadata: Metadata = {
 		url: SITE.url,
 		siteName: SITE.title,
 		type: "website",
+		/*
+		 * The root page's card from the generated set (one per published page,
+		 * written by `pnpm og`). Routes with their own metadata name their own
+		 * card; this one covers `/` and anything that never overrides images
+		 * (the 404 page included), so no unfurl ever falls back to no card.
+		 */
 		images: [
 			{
-				url: SITE.ogImage.path,
-				width: SITE.ogImage.width,
-				height: SITE.ogImage.height,
-				alt: SITE.ogImage.alt,
+				url: OG_CARD_DEFAULT.file,
+				width: OG_CARD_SIZE.width,
+				height: OG_CARD_SIZE.height,
+				alt: OG_CARD_DEFAULT.alt,
 			},
 		],
 	},
 	twitter: {
-		/* `summary_large_image` because there IS a 1200x630 card now; the
-		 * small `summary` card letterboxes it. */
+		/* `summary_large_image` because the card is 1200x630; the small
+		 * `summary` card letterboxes it. */
 		card: "summary_large_image",
 		title: SITE.title,
 		description: SITE.description,
-		images: [SITE.ogImage.path],
+		images: [OG_CARD_DEFAULT.file],
 	},
 };
 
