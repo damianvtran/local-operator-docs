@@ -1,0 +1,108 @@
+{
+ "theme": "localOperatorLight",
+ "info": {
+  "theme": "localOperatorLight",
+  "count": 10,
+  "rows": [
+   {
+    "tag": "nav-item-chat",
+    "label": "New chat",
+    "aria": "New chat (⌘N)",
+    "iconClass": "lucide lucide-message-square-plus shrink",
+    "y": 72,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "command-palette-trigger",
+    "label": "Search",
+    "aria": "Search (⌘K)",
+    "iconClass": "lucide lucide-search shrink-0",
+    "y": 104,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-aida",
+    "label": "Aida",
+    "aria": "",
+    "iconClass": "lucide lucide-chevrons-up shrink-0",
+    "y": 142,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-agents",
+    "label": "Agents",
+    "aria": "",
+    "iconClass": "lucide lucide-bot shrink-0",
+    "y": 174,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-projects",
+    "label": "Projects",
+    "aria": "",
+    "iconClass": "lucide lucide-folder-kanban shrink-0",
+    "y": 206,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-schedules",
+    "label": "Schedules",
+    "aria": "",
+    "iconClass": "lucide lucide-calendar-days shrink-0",
+    "y": 238,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-browser",
+    "label": "Browser",
+    "aria": "",
+    "iconClass": "lucide lucide-globe shrink-0",
+    "y": 270,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-agent-hub",
+    "label": "Agent hub",
+    "aria": "",
+    "iconClass": "lucide lucide-store shrink-0",
+    "y": 302,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-mesh",
+    "label": "Mesh",
+    "aria": "",
+    "iconClass": "lucide lucide-network shrink-0",
+    "y": 334,
+    "h": 30,
+    "w": 244
+   },
+   {
+    "tag": "nav-item-settings",
+    "label": "Settings",
+    "aria": "Settings",
+    "iconClass": "lucide lucide-settings",
+    "y": 856,
+    "h": 32,
+    "w": 32
+   }
+  ],
+  "navRect": null,
+  "overlayVisible": false
+ },
+ "logs": [
+  "[console.debug] [vite] connecting...",
+  "[console.debug] [vite] connected.",
+  "[console.info] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold",
+  "[console.warning] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.",
+  "[console.warning] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
+ ]
+}
