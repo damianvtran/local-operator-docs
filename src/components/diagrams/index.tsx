@@ -10,6 +10,7 @@ import { SchedulePipeline } from "./schedule-pipeline";
 import { SdkLifecycle } from "./sdk-lifecycle";
 import { SessionHandoff } from "./session-handoff";
 import { SseSequence } from "./sse-sequence";
+import { SupplyFlow } from "./supply-flow";
 import { SurfaceMap } from "./surface-map";
 
 /**
@@ -70,6 +71,12 @@ export const DIAGRAMS: Record<string, DiagramEntry> = {
 		description:
 			"Publishing an agent: your machine, moderation, then the Agent Hub registry — and a pull on another machine that needs no key.",
 		Component: HubPublishFlow,
+	},
+	SupplyFlow: {
+		title: "Supply flow",
+		description:
+			"The supply story: declare an agent and its prompt or a team and its briefs, share through the Agent Hub (public or --org), then attach the team, profile or agent by name from exec or the SDK.",
+		Component: SupplyFlow,
 	},
 	ExecPipeline: {
 		title: "Exec pipeline",

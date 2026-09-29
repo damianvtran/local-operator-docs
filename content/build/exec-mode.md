@@ -1,7 +1,7 @@
 ---
 description: Run Local Operator headless — one-shot prompts, JSON event streams, background jobs, goal loops, and CI usage.
 section: build
-order: 1
+order: 2
 ---
 
 # Exec mode
@@ -68,6 +68,25 @@ The full set from `lop exec --help` (common ones first):
 
 This is a bounded startup interface, not an alias for the TUI's slash commands:
 UI commands and configuration-mutating commands are not startup flags.
+
+## Teams, profiles and registered agents
+
+`--team`, `--profile`, `--agent` and `--agent-id` compose a run from parts
+supplied on the [Agents & teams](/build/agents-and-teams) page:
+
+```bash
+lop exec 'Review the change' --team release --background
+printf 'Inspect this report' | lop exec --profile reviewer
+lop exec "Draft the migration notes" --agent-id 3d0b0f0e-6a5c-4c96-9a5b-1a2b3c4d5e6f
+```
+
+- `--team <name>` attaches a saved team — its manager, roster and briefs — and
+  the run starts as that team's manager.
+- `--profile <name>` attaches a reusable role or specialist (the `/agent`
+  counterpart). `--agent` / `--agent-id` select a registered agent instead — by
+  name (created if missing) or by exact id.
+- Attachments are resolved against your configuration root before the run
+  starts, through the same helper the [Python SDK](/build/python-sdk) uses.
 
 ## The prompt, and where output goes
 

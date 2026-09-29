@@ -57,7 +57,7 @@ app's Agent hub page, or pull straight from the CLI:
 
 ```bash
 lop agents pull --id "agent_id"          # reading is public; no key needed
-lop credential update [redacted]
+lop credential update RADIENT_API_KEY
 lop agents push --name "My Agent"        # publishing needs an account
 ```
 

@@ -106,6 +106,11 @@ export const NAV: NavGroup[] = [
 		id: "build",
 		title: "Build & automate",
 		items: [
+			{
+				id: "agents-and-teams",
+				title: "Agents & teams",
+				slug: "build/agents-and-teams",
+			},
 			{ id: "exec-mode", title: "Exec mode", slug: "build/exec-mode" },
 			{ id: "python-sdk", title: "Python SDK", slug: "build/python-sdk" },
 			{
