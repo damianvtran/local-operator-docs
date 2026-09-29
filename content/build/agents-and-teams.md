@@ -23,12 +23,12 @@ lop agents create research
 ```
 
 ```console
-╭─ Created New Agent ──────────────────────────
+╭─ Created New Agent ───────────────────────────
 │ Name: research
 │ ID: c1c5d72b-c3a9-49d1-a876-d06dd8b74f8e
 │ Created: 2026-09-28 23:53:20.643935+00:00
 │ Version: 0.64.1
-╰───────────────────────────────────────────────
+╰──────────────────────────────────────────────────
 ```
 
 The registry lives under your configuration root as one directory per agent —
@@ -38,7 +38,7 @@ carries the hosted model and sampling settings (when set), description, tags
 and categories. `lop agents list` reads it back:
 
 ```console
-╭─ Agents ─────────────────────────────────────
+╭─ Agents ────────────────────────────────────
 │ └── Agent 1
 │     • Name: research
 │     • ID: c1c5d72b-c3a9-49d1-a876-d06dd8b74f8e
@@ -48,7 +48,7 @@ and categories. `lop agents list` reads it back:
 │     • Model: default
 │
 │ Page 1 of 1 (Total agents: 1)
-╰───────────────────────────────────────────────
+╰──────────────────────────────────────────────
 ```
 
 **Starters.** Packaged seed profiles — `aida`, `architect`, `coder`,
@@ -94,12 +94,16 @@ their security context explicitly.
 
 ## Declare a team
 
+```bash
+lop teams create feature-release --manager manager --member coder --member reviewer:2
+```
+
 ```console
 ╭─ Created New Team ───────────────────────────
 │ Name: feature-release
 │ Manager: manager
 │ Members: 3
-╰───────────────────────────────────────────────
+╰──────────────────────────────────────────────────
 ```
 
 `--member` is repeatable and takes `role` or `role:count`. A team is stored as
@@ -108,13 +112,13 @@ their security context explicitly.
 roster:
 
 ```console
-╭─ Team feature-release ───────────────────────
+╭─ Team feature-release ───────────────────────────
 │ Manager: manager
 │ Roster:
 │   - manager: manager (you, when this team is invoked)
 │   - coder
 │   - reviewer x2
-╰───────────────────────────────────────────────
+╰──────────────────────────────────────────────────
 ```
 
 A member slot can also be another team — prefix it with `team:` — which turns a
