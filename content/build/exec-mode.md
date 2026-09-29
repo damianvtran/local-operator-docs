@@ -48,6 +48,9 @@ The full set from `lop exec --help` (common ones first):
 | `--profile NAME` | Attach a reusable role or specialist (the `/agent` counterpart). |
 | `--tools NAMES` | Comma-separated tools this run may reach, and the only ones. Excluded tools are unreachable by name, not merely unapproved. |
 | `--effort LEVEL` | Reasoning effort, validated against the selected model. |
+| `--output-format FORMAT` | Enforce the format of the assistant's FINAL response for this run: `markdown`, `json`, `yaml` or `toml`. Bounded by contract: formats, optional schemas and a retry budget only — enforcement is validation plus bounded retry, never a re-encode, and the payload on stdout is the model's own validated bytes. Without this flag no enforcement happens and the run is byte-identical to before the flag existed. See [Final-response enforcement](#final-response-enforcement). |
+| `--output-schema PATH` | A JSON file the decoded payload must satisfy: a JSON Schema for `json`/`yaml`/`toml`, or `{"required_sections": ["<section>", ...]}` for `markdown`. Read and validated before the run starts (a bad file fails as `exec failed: …`, exit 1, with no session directory behind it). Requires `--output-format`. |
+| `--output-retries N` | Max retries after a rejected final response (0–5; default 2, so three attempts). Not persisted — each `--resume` invocation carries its own flags. Requires `--output-format`. |
 | `--name TEXT` | Set the persisted conversation name. |
 | `--goal TEXT` | Set a literal standing goal. Unlike the TUI's `/goal`, this does not also send the text as a message — pair it with a prompt or a loop. |
 | `--clear-goal` | Clear the resumed standing goal. |
@@ -198,6 +201,80 @@ stream:
 lop exec "audit deps" --json > events.jsonl
 jq -r 'select(.type == "agent_end") | .messages[-1].content[0].text' events.jsonl
 ```
+
+## Final-response enforcement
+
+`lop exec` can require the assistant's FINAL response to be a machine-readable
+payload and fail the run (exit 1) when it is not. The check runs at the one
+point a turn ends cleanly: a rejected response becomes one more model step
+**inside the same turn** (the retry notice is an ordinary, persisted user
+message, so a resumed transcript explains the continuation), and a run that
+exhausts its retries fails loudly rather than printing something wrong.
+
+```bash
+lop exec 'Extract the invoice as JSON' --output-format json
+lop exec 'Reply with YAML' --output-format yaml --output-retries 3
+lop exec 'Draft release notes' --output-format markdown --output-schema sections.json
+lop exec 'Parse the report' --output-format json \
+  --output-schema report.schema.json --background
+```
+
+**What is enforced, per format.** Tolerance is about *locating* the payload;
+content is strict.
+
+| format | decoder | strict about | tolerated / noted |
+| --- | --- | --- | --- |
+| `json` | `json.loads` | full strict JSON: no trailing commas, no single quotes, `NaN`/`Infinity` rejected | any JSON value (object/array/scalar) when the whole text or a fence is exact; a prose scan finds a bare `{`/`[`-anchored span |
+| `yaml` | PyYAML safe loader | one document only; the decoded value must be a mapping or sequence (a bare scalar is prose, not a payload) | PyYAML semantics: JSON is a subset, `yes`/`on` are booleans, duplicate keys last-wins, dates decode to dates |
+| `toml` | `tomllib` | TOML 1.0 as stdlib enforces it: duplicate keys rejected | trailing commas in arrays; the root is always a table, so the payload is always a mapping |
+| `markdown` | none — the text IS the payload | non-empty; balanced fenced code blocks | everything else; markdown has no formal well-formedness |
+
+**Where the payload is found (in this order, first decode that also satisfies
+the schema wins):** a fence labelled with the target format; an
+unlabelled/unknown-label fence; the whole text; and for `json` only, a bare
+`{`- or `[`-anchored span in prose. A fence labelled with a *different*
+recognised format is skipped — the label is an explicit claim, and the retry is
+the remedy.
+
+**Schemas.** For `json`/`yaml`/`toml`, `--output-schema` names a JSON Schema
+file (Draft 2020-12; meta-schema checked before the run). For `markdown` it is
+the one vocabulary markdown has: `{"required_sections": ["Summary", "Risks"]}`
+— each named section must appear as an ATX heading, case-insensitively, in the
+given order.
+
+**Failure semantics.** A rejected attempt logs one dim stderr line
+(`! output check failed (<format>, attempt <n>/<m>): <reason>`) and, when the
+budget is spent, the run ends with exit 1 and the two stderr lines
+`Error: final response did not satisfy the output contract (<format>) after N attempts: <reason>`
+and `exec failed: the turn did not complete` (the existing headless failure
+line, whose text comes from `exec_session`'s fallback unless a prior prompt
+failure recorded a more specific reason). **stdout carries
+nothing** for an exhausted turn — a wrong payload on stdout is worse than an
+empty one for `… | jq` consumers. On success, stdout is the VALIDATED payload
+span (the winning candidate, stripped): `lop exec --output-format json | jq .`
+works even when the payload arrived inside a fence or surrounded by prose.
+
+**Interactions.**
+
+- `--json` gains one `output_validation` event per checked attempt
+  (`ok`, `attempt`, `max_attempts`, `payload_text` on success); nothing else on
+  the event stream changes, and an unenforced run emits none.
+- `--loop` / `--loop-goal` enforce **every** turn; a turn that exhausts its
+  retries fails the run and stops the loop.
+- `--background` is the same request run elsewhere: the schema path is made
+  absolute before the spawn, the worker re-validates the file, and a failed run
+  reaches the ledger as `failed` (`lop exec --status JOB_ID`), with both stderr
+  lines in the job log.
+- `--resume` never persists enforcement: the flags of THIS invocation apply,
+  and a later resume without them is unrestricted (like `--tools`).
+- `--output-retries` counts retries **per turn** (default 2, so three attempts
+  per turn); the range is 0–5.
+
+The same contract is available programmatically in the
+[Python SDK](/build/python-sdk) — `SessionSpec.output_format`, with optional
+`output_schema` and `output_retries`. The local-operator repo's
+[`docs/EXEC.md`](https://github.com/damianvtran/local-operator/blob/main/docs/EXEC.md)
+is the exec reference.
 
 ## Exit codes
 

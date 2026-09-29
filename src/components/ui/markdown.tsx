@@ -245,12 +245,18 @@ export function MarkdownTableHead({ children }: { children: ReactNode }) {
 }
 
 export function MarkdownTableBody({ children }: { children: ReactNode }) {
+	// Cell code keeps its min-content floor: `overflow-wrap:anywhere` (set in
+	// MarkdownCode) is right in prose, but in a cell it let `json.loads` break
+	// mid-identifier (`json.load` / `s`) where plain text keeps word floors —
+	// design round 1, D2 on #7. `normal` restores the floor; a too-wide token
+	// widens its column and the ScrollRegion scrolls, like the key column.
 	return (
 		<tbody
 			className={cn(
 				"[&_tr]:border-b [&_tr]:border-hairline [&_tr:last-child]:border-0 [&_tr:hover]:bg-surface",
 				"[&_td]:px-3 [&_td]:py-2 [&_td]:align-top [&_td]:text-ink-muted",
 				"[&_td:first-child]:whitespace-nowrap",
+				"[&_td_code]:[overflow-wrap:normal]",
 				"[&_tr]:transition-colors [&_tr]:duration-fast",
 			)}
 		>

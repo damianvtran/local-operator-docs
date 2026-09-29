@@ -225,6 +225,68 @@ field-for-field to exec's session namespace.
 | `name`, `goal` | Conversation title and standing goal. |
 | `notifications` | A spawned runtime is silenced by default; `True` inherits the launcher's posture. |
 
+## Enforcing the final response contract
+
+`SessionSpec.output_format` (with optional `output_schema` and
+`output_retries`) makes the session's harness validate each turn's terminal
+assistant text, and retry inside the same turn when it does not conform — the
+same `Session.set_output_contract` method `lop exec --output-format` installs,
+through the same validator (`OutputContract`). `None` (the default) leaves
+every turn byte-identical to a session without it.
+The [exec mode](/build/exec-mode) docs own the per-format strictness table
+and the extraction rules; the schema spelling here is a TYPE or a MAPPING
+rather than a file path:
+
+```python
+from pydantic import BaseModel
+from local_operator.sdk import SessionSpec, SessionRoots, events, open_session
+
+
+class Invoice(BaseModel):
+    total: int
+    currency: str
+
+
+spec = SessionSpec(
+    hosting="openrouter",
+    model="deepseek/deepseek-v4.1-flash",
+    output_format="json",
+    output_schema=Invoice,    # model class, dataclass, TypedDict, raw JSON Schema, …
+    output_retries=1,         # 0-5; default 2 (three attempts per turn)
+)
+
+async with open_session(spec, roots=roots) as session:
+    stream = events(session)
+    await session.prompt("Extract the invoice")
+    async for event in stream:
+        if event.type == "output_validation" and event.ok:
+            invoice = Invoice.model_validate_json(event.payload_text)  # checked span
+        if event.type == "agent_end":
+            if event.error:  # exhaustion is a turn error, like any provider error
+                raise RuntimeError(event.error)
+            break
+```
+
+Failure semantics are the SDK's ordinary turn semantics: an exhausted budget
+ends the turn with `agent_end.error` of
+`final response did not satisfy the output contract (…) after N attempts: <reason>`
+and `session.last_turn_outcome == "error"` — `await session.prompt(...)` still
+resolves (a turn error is an event, not an exception, exactly as every provider
+error). A successful check is visible as an `output_validation` event with
+`ok=True` and `payload_text` (the exact span that validated);
+`local_operator.sdk.decode_output` re-decodes that span with the same rules if
+you only have the text.
+
+Refused rather than silently inert: `output_*` on an `attach` spec (the viewer
+cannot install owner state) and on `spawn_session` (post-open state has no
+channel to a new runtime child). The composition that works is the documented
+one: `open_session(..., mode="own")` → `dispose` → `spawn_session` the same
+id, or drive the session in-process.
+
+The local-operator repo's
+[`docs/SDK.md`](https://github.com/damianvtran/local-operator/blob/main/docs/SDK.md)
+is the SDK reference.
+
 ## Isolation is the default
 
 A programmatic session cannot "just happen" to target your real store:
