@@ -40,22 +40,22 @@ export function SupplyFlow({ title, description }: DiagramProps) {
 		},
 	];
 	return (
-		<DiagramSvg viewBox="0 0 720 400" title={title} description={description}>
-			<Txt x={123} y={104} anchor="middle" className="fill-ink-dim text-meta">
+		<DiagramSvg viewBox="0 0 720 363" title={title} description={description}>
+			<Txt x={123} y={67} anchor="middle" className="fill-ink-dim text-meta">
 				author once
 			</Txt>
-			<Txt x={359} y={104} anchor="middle" className="fill-ink-dim text-meta">
+			<Txt x={359} y={67} anchor="middle" className="fill-ink-dim text-meta">
 				teammates pull, sync
 			</Txt>
-			<Txt x={595} y={104} anchor="middle" className="fill-ink-dim text-meta">
+			<Txt x={595} y={67} anchor="middle" className="fill-ink-dim text-meta">
 				every surface
 			</Txt>
-			<Arrow from={[218, 190]} to={[264, 190]} />
-			<Arrow from={[454, 190]} to={[500, 190]} />
+			<Arrow from={[218, 153]} to={[264, 153]} />
+			<Arrow from={[454, 153]} to={[500, 153]} />
 
 			{stages.map((stage) => (
-				<Panel key={stage.title} x={stage.x} y={120} w={190} h={140}>
-					<Txt x={stage.x + 14} y={148} className="fill-ink text-body-sm">
+				<Panel key={stage.title} x={stage.x} y={83} w={190} h={140}>
+					<Txt x={stage.x + 14} y={111} className="fill-ink text-body-sm">
 						{stage.title}
 					</Txt>
 					{stage.lines.map((line, index) => (
@@ -63,7 +63,7 @@ export function SupplyFlow({ title, description }: DiagramProps) {
 							// Rows are fixed slots; index is the slot number, not identity.
 							key={line}
 							x={stage.x + 14}
-							y={172 + index * 22}
+							y={135 + index * 22}
 							className={
 								index === 0
 									? "fill-ink-muted text-meta"
@@ -78,14 +78,14 @@ export function SupplyFlow({ title, description }: DiagramProps) {
 
 			<Panel
 				x={28}
-				y={296}
+				y={259}
 				w={664}
 				h={44}
 				className="fill-surface stroke-hairline"
 			>
 				<Txt
 					x={360}
-					y={322}
+					y={285}
 					anchor="middle"
 					className="fill-ink-muted text-meta"
 				>

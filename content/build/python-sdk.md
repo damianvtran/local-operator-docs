@@ -151,7 +151,7 @@ Points that matter in that script:
 ## Teams, profiles and agents
 
 `SessionSpec` carries the same supply attachments `lop exec` takes — resolved
-against the spec's `roots` through the same helper exec uses, and attached
+against the `roots` you pass, through the same helper exec uses, and attached
 through the same session methods:
 
 ```python
