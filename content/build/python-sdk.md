@@ -226,8 +226,8 @@ spec = SessionSpec(
     hosting="openrouter",
     model="deepseek/deepseek-v4.1-flash",
     output_format="json",
-    output_schema=Invoice,          # model class, dataclass, TypedDict, raw JSON Schema, …
-    output_retries=1,               # 0-5; default 2 (three attempts per turn)
+    output_schema=Invoice,    # model class, dataclass, TypedDict, raw JSON Schema, …
+    output_retries=1,         # 0-5; default 2 (three attempts per turn)
 )
 
 async with open_session(spec, roots=roots) as session:
@@ -235,7 +235,7 @@ async with open_session(spec, roots=roots) as session:
     await session.prompt("Extract the invoice")
     async for event in stream:
         if event.type == "output_validation" and event.ok:
-            invoice = Invoice.model_validate_json(event.payload_text)  # the validated span
+            invoice = Invoice.model_validate_json(event.payload_text)  # checked span
         if event.type == "agent_end":
             if event.error:  # exhaustion is a turn error, like any provider error
                 raise RuntimeError(event.error)

@@ -196,7 +196,8 @@ exhausts its retries fails loudly rather than printing something wrong.
 lop exec 'Extract the invoice as JSON' --output-format json
 lop exec 'Reply with YAML' --output-format yaml --output-retries 3
 lop exec 'Draft release notes' --output-format markdown --output-schema sections.json
-lop exec 'Parse the report' --output-format json --output-schema report.schema.json --background
+lop exec 'Parse the report' --output-format json \
+  --output-schema report.schema.json --background
 ```
 
 **What is enforced, per format.** Tolerance is about *locating* the payload;
