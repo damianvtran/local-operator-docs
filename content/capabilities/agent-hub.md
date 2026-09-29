@@ -32,15 +32,18 @@ lop agents pull --id "<agent_id>"
 ```
 
 No key needed: pulling is public. The agent lands in your Local Operator
-setup, ready to use in a session or to be added to a team.
+setup, ready to use in a session or to be added to a team. Pulled agents keep
+a link home: `lop agents sync` brings hub-pulled agents (and installed
+starters) up to their latest published text — `lop agents sync --name <name>`
+for one, `--force` to also replace a copy you edited locally.
 
 ## Publish an agent
 
-Publishing needs a [Radient account](https://console.radienthq.com) (sign-up
-is free). One credential does it:
+Publishing needs a [Radient account](https://console.radienthq.com/signup)
+(sign-up is free). One credential does it:
 
 ```bash
-lop credential update [redacted]   # masked prompt
+lop credential update RADIENT_API_KEY   # masked prompt
 lop agents push --name "My Agent"
 ```
 
@@ -58,27 +61,43 @@ else. Org content is **visibility: org**: visible to members of that
 organization, never listed on the public hub, and not fetchable by id from
 outside.
 
-- Sign in first: `lop login radient`. Org calls act as *you* (your signed-in
-  account), not as a machine key.
-- Publish and pull with the org target: `lop agents push --name "My Agent"
-  --org <tenant_id>` and `lop agents pull --id "<agent_id>" --org
-  <tenant_id>`. Teams travel the same way: `lop teams push --org <tenant_id>
-  <team>` and `lop teams pull --org <tenant_id> <team_id>`.
+- **Sign in first:** `lop login radient`. Org calls act as *you* (your
+  signed-in account), not as a machine key.
+- **`--org` takes the organization's tenant id.** Not sure of it? Run the
+  command once without `--org`: it prints your memberships — name, tenant id,
+  role and plan — and returns, so no default org is ever guessed for you. The
+  [Radient console](https://console.radienthq.com)'s Team page shows the same
+  membership.
+- **Publish and pull with the org target:**
+
+  ```bash
+  lop agents push --name "My Agent" --org <tenant_id>
+  lop agents pull --id "<agent_id>" --org <tenant_id>
+  lop teams push <team> --org <tenant_id>
+  lop teams pull --org <tenant_id> <team_id>
+  ```
+
+  Pushes print the id to share — `Team ID: …` for a team, `Agent ID: …` for
+  an agent; that id is what a teammate pulls with.
+- **Teammates pull the same way.** They sign in (`lop login radient`), need
+  membership in the organization — an owner or admin invites them from the
+  console's Team page — and then pull by id with `--org <tenant_id>`. A pulled
+  team arrives with its roster and both briefs, ready to run with `/team <name>
+  <request>` (see [Agents & teams](/build/agents-and-teams)).
 - Roles are `owner` / `admin` / `member`, and refusals are explicit —
   `not_a_member`, `insufficient_role`, and `team_plan_required` each name the
   next step (invite, ask an admin, activate the plan) instead of failing
   silently.
 
-If your `lop` build doesn't recognise `--org` yet, the desktop app's Agent
-hub carries org browsing, team pulls and org-targeted publishing today.
+The desktop app's Agent hub page carries the same org browsing, team pulls and
+org-targeted publishing when you would rather click than type.
 
 ## The Radient side: plan and billing
 
-Org sharing sits behind the Radient **Team plan**, and the
-[Radient console](https://console.radienthq.com) is where that lives: the
-console's Team page manages the plan, members, invites and billing. Billing
-is handled in the console — nothing about the plan is billed through Local
-Operator itself.
+Org sharing sits behind the Radient **Team plan** — sign up or activate it at
+[console.radienthq.com](https://console.radienthq.com), whose Team page manages
+the plan, members, invites and billing. Billing is handled in the console —
+nothing about the plan is billed through Local Operator itself.
 
 {% callout type="tip" %}
 You do not need a Radient account to use Local Operator, and you do not need

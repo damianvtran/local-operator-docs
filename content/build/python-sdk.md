@@ -1,7 +1,7 @@
 ---
 description: Drive sessions from Python — open or spawn one, deliver prompts, stream typed events, and collect results, with explicit roots and an approval policy.
 section: build
-order: 2
+order: 3
 ---
 
 # Python SDK
@@ -147,6 +147,31 @@ Points that matter in that script:
 - `agent_end` carries the turn's messages; the last one is the assistant's
   reply. Events are typed objects — `event.type` is the discriminator — so
   your loop matches cases rather than parsing text.
+
+## Teams, profiles and agents
+
+`SessionSpec` carries the same supply attachments `lop exec` takes — resolved
+against the spec's `roots` through the same helper exec uses, and attached
+through the same session methods:
+
+```python
+spec = SessionSpec(
+    hosting="deepseek",
+    model="deepseek-flash",
+    team="release",        # a saved team: manager, roster and briefs
+    profile="reviewer",    # a reusable role or specialist instead
+    # agent_name="research", agent_id="3d0b0f0e-…",   # a registered agent
+    name="episode task_001",
+)
+```
+
+- `team=` and `profile=` are post-open attachments; `agent_name` / `agent_id`
+  select a registered agent — the pair `exec --agent` / `--agent-id` names.
+- Spawned runtimes are composed from their environment, so these fields have no
+  channel to a *new* child — see the caveat below for the composition that
+  works (open in-process, attach, dispose, then spawn).
+- The supply side — registering agents, writing instructions, declaring teams —
+  is [Agents & teams](/build/agents-and-teams).
 
 ## What the surface does not carry
 

@@ -25,6 +25,7 @@ const FROZEN_NAMES = [
 	"SdkLifecycle",
 	"SessionHandoff",
 	"SseSequence",
+	"SupplyFlow",
 	"SurfaceMap",
 ];
 
@@ -40,7 +41,7 @@ function appears(markup: string, text: string): boolean {
 }
 
 describe("diagram registry", () => {
-	it("registers exactly the frozen eleven names", () => {
+	it("registers exactly the frozen twelve names", () => {
 		expect(Object.keys(DIAGRAMS).sort()).toEqual(FROZEN_NAMES);
 	});
 
