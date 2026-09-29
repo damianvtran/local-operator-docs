@@ -1,0 +1,10 @@
+/// link + URL checks (curl -L)
+
+$ curl -s -o /dev/null -w '%{http_code}' -L https://console.radienthq.com
+200 https://console.radienthq.com
+$ curl … https://console.radienthq.com/signup
+200 https://console.radienthq.com/signup
+$ curl … https://console.radienthq.com/team
+404 https://console.radienthq.com/team (not linked; checked)
+$ curl … https://github.com/damianvtran/local-operator/blob/main/docs/SDK.md
+200 https://github.com/damianvtran/local-operator/blob/main/docs/SDK.md

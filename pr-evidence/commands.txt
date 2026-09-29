@@ -1,0 +1,172 @@
+# Supply verification suite — isolated HOME (/Users/damian/.local-operator/sessions/de57608d768d/scratchpad/automation-supply/evidence-iso), synthetic names only
+# lop v0.64.1
+# Every 'rc=0' is the command's own exit code.
+
+$ agents create demo-writer
+
+[1;32m╭─ Created New Agent ───────────────────────────[0m
+[1;32m│ Name: demo-writer[0m
+[1;32m│ ID: 443d5a4c-99cc-4042-a909-7848f3c3b700[0m
+[1;32m│ Created: 2026-09-29 00:04:33.560634+00:00[0m
+[1;32m│ Version: 0.64.1[0m
+[1;32m╰──────────────────────────────────────────────────[0m
+
+rc=0
+
+$ agents list
+
+[1;32m╭─ Agents ────────────────────────────────────[0m
+[1;32m│ └── Agent 1[0m
+[1;32m│     • Name: demo-writer[0m
+[1;32m│     • ID: 443d5a4c-99cc-4042-a909-7848f3c3b700[0m
+[1;32m│     • Created: 2026-09-29 00:04:33.560634+00:00[0m
+[1;32m│     • Version: 0.64.1[0m
+[1;32m│     • Hosting: default[0m
+[1;32m│     • Model: default[0m
+[1;32m│[0m
+[1;32m│ Page 1 of 1 (Total agents: 1)[0m
+[1;32m╰──────────────────────────────────────────────[0m
+rc=0
+
+$ teams create demo-squad --manager manager --member coder --member reviewer:2 --description Docs verification squad
+
+[1;32m╭─ Created New Team ───────────────────────────[0m
+[1;32m│ Name: demo-squad[0m
+[1;32m│ Manager: manager[0m
+[1;32m│ Members: 3[0m
+[1;32m╰──────────────────────────────────────────────────[0m
+
+rc=0
+
+$ teams list
+
+[1;32m╭─ Teams ─────────────────────────────────────[0m
+[1;32m│ └── demo-squad[0m
+[1;32m│     • Manager: manager[0m
+[1;32m│     • Members: 3[0m
+[1;32m│     • Description: Docs verification squad[0m
+[1;32m╰──────────────────────────────────────────────[0m
+rc=0
+
+$ teams show demo-squad
+
+[1;32m╭─ Team demo-squad ───────────────────────────[0m
+[1;32m│ Manager: manager[0m
+[1;32m│ Description: Docs verification squad[0m
+[1;32m│ Roster:[0m
+[1;32m│   - manager: manager (you, when this team is invoked)[0m
+[1;32m│   - coder[0m
+[1;32m│   - reviewer x2[0m
+[1;32m╰──────────────────────────────────────────────────[0m
+
+rc=0
+
+$ teams create pod-alpha --member coder
+
+[1;32m╭─ Created New Team ───────────────────────────[0m
+[1;32m│ Name: pod-alpha[0m
+[1;32m│ Manager: manager[0m
+[1;32m│ Members: 1[0m
+[1;32m╰──────────────────────────────────────────────────[0m
+
+rc=0
+
+$ teams create org-beta --manager manager --member team:pod-alpha --member team:pod-alpha:2
+
+[1;32m╭─ Created New Team ───────────────────────────[0m
+[1;32m│ Name: org-beta[0m
+[1;32m│ Manager: manager[0m
+[1;32m│ Members: 3[0m
+[1;32m╰──────────────────────────────────────────────────[0m
+
+rc=0
+
+$ teams show org-beta
+
+[1;32m╭─ Team org-beta ───────────────────────────[0m
+[1;32m│ Manager: manager[0m
+[1;32m│ Roster:[0m
+[1;32m│   - manager: manager (you, when this team is invoked)[0m
+[1;32m│   - pod-alpha (team) x3[0m
+[1;32m╰──────────────────────────────────────────────────[0m
+
+rc=0
+
+$ agents sync
+
+nothing to sync: no installed seed or hub-pulled profiles.
+rc=0
+
+$ agents push --name demo-writer
+
+[1;31mError: RADIENT_API_KEY is required to push to Radient[0m
+rc=1
+
+$ teams push demo-squad --org demo-org
+
+[1;31mError: organization operations need a signed-in Radient account. Run `lop login radient`.[0m
+rc=1
+
+$ teams pull --org demo-org demo-team-id
+
+[1;31mError: organization operations need a signed-in Radient account. Run `lop login radient`.[0m
+rc=1
+
+$ agents pull --id demo-agent-id --org demo-org
+
+[1;31mError: organization operations need a signed-in Radient account. Run `lop login radient`.[0m
+rc=1
+
+## Store layout (files the pages describe)
+$ ls "$CONFIG/agents/<id>/"
+agent.yml
+conversation.jsonl
+execution_history.jsonl
+learnings.jsonl
+schedules.jsonl
+$ ls "$CONFIG/teams/<id>/"
+$HOME/.local-operator/teams/27a1d2f9-5a2d-4f99-addf-4dd416bb55df/:
+instructions.md
+project.md
+team.yml
+
+$HOME/.local-operator/teams/7ddfbd7a-7a97-441a-88ba-3b177d94de96/:
+instructions.md
+project.md
+team.yml
+
+$HOME/.local-operator/teams/ab6b69ed-09fd-41c4-8933-dec00dfaa010/:
+instructions.md
+project.md
+team.yml
+$ cat "$CONFIG/teams/<id>/team.yml"
+id: 27a1d2f9-5a2d-4f99-addf-4dd416bb55df
+name: pod-alpha
+created_date: '2026-09-29T00:05:01.861681Z'
+description: ''
+manager: manager
+members:
+- role: coder
+  count: 1
+  kind: agent
+id: 7ddfbd7a-7a97-441a-88ba-3b177d94de96
+name: org-beta
+created_date: '2026-09-29T00:05:04.723630Z'
+description: ''
+manager: manager
+members:
+- role: pod-alpha
+  count: 3
+  kind: team
+id: ab6b69ed-09fd-41c4-8933-dec00dfaa010
+name: demo-squad
+created_date: '2026-09-29T00:04:45.664279Z'
+description: Docs verification squad
+manager: manager
+members:
+- role: coder
+  count: 1
+  kind: agent
+- role: reviewer
+  count: 2
+  kind: agent

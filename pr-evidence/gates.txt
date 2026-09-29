@@ -1,0 +1,105 @@
+# Gates — automation-supply round 1 head
+
+===== pnpm lint =====
+$ pnpm lint
+$ biome check . && pnpm check-design-system
+Checked 117 files in 228ms. No fixes applied.
+$ node scripts/check-design-system.mjs
+check-design-system: og-cards-in-sync 18 cards, fingerprints match the built pages
+check-design-system: 89 files, all rules pass
+exit=0
+
+===== pnpm check-types =====
+$ pnpm check-types
+$ tsc --noEmit
+exit=0
+
+===== pnpm test =====
+$ vitest run
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.2 /Users/damian/local-operator-docs-worktrees/automation-supply
+
+ ✓ tests/snippets.test.ts (8 tests) 21ms
+ ✓ tests/tokenizer.test.ts (11 tests) 27ms
+ ✓ tests/frontmatter.test.ts (5 tests) 211ms
+ ✓ tests/structured-data.test.ts (5 tests) 9ms
+ ✓ tests/versions.test.ts (16 tests) 120ms
+ ✓ tests/semantic-structure.test.ts (41 tests) 140ms
+ ✓ tests/llms-full.test.ts (4 tests) 15ms
+ ✓ tests/nav.test.ts (6 tests) 1398ms
+   ✓ nav registry x content (5)
+     ✓ validates cleanly today 1078ms
+   ✓ search index completeness (1)
+     ✓ indexes every content file, every section, and the home page 314ms
+ ✓ tests/diagrams.test.ts (18 tests) 836ms
+ ✓ tests/search.test.ts (11 tests) 2109ms
+   ✓ engine (7)
+     ✓ finds the install page first for 'install' against the real index 794ms
+     ✓ finds a typo against the real index 370ms
+     ✓ finds 'lop exec' somewhere real 387ms
+ ✓ tests/palette-actions.test.ts (7 tests) 1957ms
+   ✓ tokenizeQuery for natural questions (2)
+     ✓ drops auxiliary verbs and possessive pronouns 326ms
+   ✓ engine against the real index (2)
+     ✓ ranks Mobile relay first for 'phone' 1351ms
+ ✓ tests/diagram-tag.test.ts (2 tests) 220ms
+ ✓ tests/figure-alignment.test.ts (8 tests) 817ms
+   ✓ content measure (5)
+     ✓ renders a fenced code block in the measure 523ms
+
+ Test Files  13 passed (13)
+      Tests  142 passed (142)
+   Start at  20:22:25
+   Duration  16.94s (transform 41%, import 40%, tests 18%, worker 1%)
+
+  Transform  transforming modules took 18.09s · 41% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             on CI this only helps when the cache directory is persisted between runs
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+test rc=0
+
+===== pnpm build =====
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/48) ...
+   Generating static pages (12/48) 
+   Generating static pages (24/48) 
+   Generating static pages (36/48) 
+ ✓ Generating static pages (48/48)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    1.46 kB         118 kB
+├ ○ /_not-found                            138 B         103 kB
+├ ● /[...slug]                           3.72 kB         128 kB
+├   ├ /about/faq
+├   ├ /about/why
+├   ├ /build/agents-and-teams
+├   └ [+17 more paths]
+├ ○ /llms-full.txt                         138 B         103 kB
+├ ○ /llms.txt                              138 B         103 kB
+├ ● /raw/[...slug]                         138 B         103 kB
+├   ├ /raw/about/faq
+├   ├ /raw/about/why
+├   ├ /raw/build/agents-and-teams
+├   └ [+17 more paths]
+├ ○ /robots.txt                            138 B         103 kB
+└ ○ /sitemap.xml                           138 B         103 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/602a57ae-ac477c2757cb0862.js  54.2 kB
+  ├ chunks/857-fa8a30735eba58c8.js       46.5 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+$ node scripts/check-design-system.mjs
+check-design-system: og-cards-in-sync 18 cards, fingerprints match the built pages
+check-design-system: 89 files, all rules pass
+build4 rc=0

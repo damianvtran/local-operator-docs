@@ -1,0 +1,19 @@
+# served-build crawl: 18 pages, 18 distinct og:image, 0 problems
+/ -> https://docs.local-operator.com/og/home.b5846004.png
+/getting-started/what-is-local-operator -> https://docs.local-operator.com/og/getting-started-what-is-local-operator.a7bcdfbf.png
+/getting-started/install -> https://docs.local-operator.com/og/getting-started-install.033e618c.png
+/getting-started/quickstart -> https://docs.local-operator.com/og/getting-started-quickstart.497d8030.png
+/getting-started/choose-your-surface -> https://docs.local-operator.com/og/getting-started-choose-your-surface.e81f74fb.png
+/getting-started/updating -> https://docs.local-operator.com/og/getting-started-updating.2d66036b.png
+/tui/quickstart -> https://docs.local-operator.com/og/tui-quickstart.ec4e39d4.png
+/surfaces/desktop -> https://docs.local-operator.com/og/surfaces-desktop.bf0c07e2.png
+/surfaces/browser-extension -> https://docs.local-operator.com/og/surfaces-browser-extension.082c7f58.png
+/capabilities/always-on -> https://docs.local-operator.com/og/capabilities-always-on.de2078fb.png
+/capabilities/agent-hub -> https://docs.local-operator.com/og/capabilities-agent-hub.d24d2ef2.png
+/build/agents-and-teams -> https://docs.local-operator.com/og/build-agents-and-teams.a12d5cc9.png
+/build/exec-mode -> https://docs.local-operator.com/og/build-exec-mode.8ae47a0b.png
+/build/python-sdk -> https://docs.local-operator.com/og/build-python-sdk.350828a7.png
+/build/sse-streaming -> https://docs.local-operator.com/og/build-sse-streaming.8c7bd95b.png
+/ecosystem -> https://docs.local-operator.com/og/ecosystem.040c5df2.png
+/about/why -> https://docs.local-operator.com/og/about-why.f41fd30d.png
+/about/faq -> https://docs.local-operator.com/og/about-faq.e229afc1.png
