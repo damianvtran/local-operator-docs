@@ -44,6 +44,9 @@ front ends onto one local runtime:
   see it in the phone's session list.
 - Hand one task to `lop exec` from a script, then open the same session and
   read the full transcript.
+- Inside a session, an agent manages other sessions with the `sessions` tool:
+  list what is running, spawn a listed workstream, or peek at a transcript —
+  the CLI (`lop sessions`, `lop exec`) stays the human path.
 - Move between machines later without moving your configuration — it is all
   the same `~/.local-operator/` layout wherever it runs.
 
