@@ -18,7 +18,7 @@ see — and hand work to — sessions on another machine: the always-on box at
 home, the workstation at the office, a teammate's machine with the right
 access.
 
-{% figure src="/shots/tui/mesh-empty.png" alt="The mesh panel on a fresh device: no identity yet, no networks, no peers, relay not running, and the next command named for each." caption="A fresh device: the mesh panel names the next command at every step." /%}
+{% figure src="/shots/tui/mesh-empty.png" alt="The mesh panel on a fresh device: no identity yet, no networks, no peers, relay not running, and the next command named wherever there is one." caption="A fresh device: the mesh panel names the next command wherever there is one." /%}
 
 ## Pairing
 
