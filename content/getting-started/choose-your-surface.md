@@ -29,6 +29,11 @@ The surfaces are not separate products with separate state:
   configuration the TUI reads.
 - `lop exec` runs one task headless and exits — ideal for scripts, and the
   same runtime underneath.
+- Agents inside a session work with tools, not the shell: the `sessions` tool
+  lists, inspects, spawns, resumes and stops other sessions, and a spawned run
+  is a listed workstream by default. The CLI forms (`lop sessions`,
+  `lop exec --workstream`) stay the human path — and the fallback where the
+  tool is absent.
 
 {% cards %}
 {% card title="Quickstart" href="/getting-started/quickstart" icon="rocket" %}

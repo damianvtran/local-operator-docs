@@ -25,7 +25,9 @@ ship today; the guide will cover each one end to end.
   auto-delivers its result when the session is idle. `jobs` peeks at new
   output since your last look.
 - **`lop exec --background`** detaches a whole task with a log file and exits
-  immediately — the building block for cron jobs and CI steps.
+  immediately — the building block for cron jobs and CI steps. An agent asked
+  for separate parallel work opens the same kind of run with the `sessions`
+  tool (`op=spawn`), as a listed workstream by default.
 
 A nightly loop, a build watcher, a research sweep that reports in the
 morning: all of them are the same three primitives arranged differently.

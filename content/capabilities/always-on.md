@@ -136,7 +136,7 @@ All of Aida's settings live in `/settings` → **Aida** (or `lop config`):
 
 {% cards %}
 {% card title="Workflow automations" href="/capabilities/workflow-automations" icon="calendar-clock" %}
-Wakes, background jobs, and `lop exec --background` — the scheduling primitives.
+Wakes, background jobs, and `lop exec --background` — the scheduling primitives; agents spawn parallel runs with the `sessions` tool.
 {% /card %}
 {% card title="Agent Mesh" href="/capabilities/agent-mesh" icon="network" %}
 Wake an always-on machine at home — or move the session onto it.

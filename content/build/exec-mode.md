@@ -16,6 +16,14 @@ exit code that means what it says.
 lop exec "summarize the failures in ./test.log"
 ```
 
+{% callout type="note" %}
+**From inside a session, reach for the `sessions` tool first.** A run an agent
+opens for parallel work is spawned with `op=spawn` — a listed workstream by
+default, so it shows in your sidebar, `/resume` and phone list. `lop exec`
+remains the human CLI, the script interface, and the fallback where the tool is
+absent.
+{% /callout %}
+
 ## What each shape is for
 
 - **One-shot tasks** — a prompt in, a result out: *summarize this*, *review
