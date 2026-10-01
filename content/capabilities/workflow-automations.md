@@ -39,6 +39,9 @@ page in the desktop app:
 
 {% figure src="/shots/ui/schedules-light.webp" alt="The desktop app's Schedules page: each task with its next run, cadence and run count." caption="The same schedules in the desktop app, with run history." /%}
 
+Aida, the built-in chief of staff, is the same machinery on a daily cadence
+— see [Always-on & proactive agents](/capabilities/always-on).
+
 ## Output modes
 
 When a run's result feeds another system, prose is a parsing problem. `lop
@@ -107,6 +110,3 @@ spec = SessionSpec(
 
 The checked span arrives as an `output_validation` event (`payload_text` on
 success) — the same event a `--json` run emits for each checked attempt.
-
-Aida, the built-in chief of staff, is the same machinery on a daily cadence
-— see [Always-on & proactive agents](/capabilities/always-on).
