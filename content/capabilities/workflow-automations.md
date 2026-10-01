@@ -39,5 +39,74 @@ page in the desktop app:
 
 {% figure src="/shots/ui/schedules-light.webp" alt="The desktop app's Schedules page: each task with its next run, cadence and run count." caption="The same schedules in the desktop app, with run history." /%}
 
+## Output modes
+
+When a run's result feeds another system, prose is a parsing problem. `lop
+exec` can enforce the assistant's final response as a machine-readable
+payload — JSON, YAML, TOML or markdown, with an optional schema — and retry
+inside the same turn when the response does not conform. It is **off by
+default**: without a flag, nothing about a run changes.
+
+A schema is a plain JSON file the decoded payload must satisfy:
+
+```json
+{
+  "type": "object",
+  "required": ["status", "items"],
+  "properties": {
+    "status": { "type": "string" },
+    "items": { "type": "array", "items": { "type": "string" } }
+  }
+}
+```
+
+Point a run at it, and consume the result directly:
+
+```bash
+lop exec "Check the nightly build; reply as JSON" \
+  --output-format json \
+  --output-schema build-check.schema.json \
+  --output-retries 2 | jq -r '.items[]'
+```
+
+- On success, stdout is the validated payload span — stripped of any fence or
+  prose around it, in the model's own bytes.
+- A rejected attempt logs one stderr line — `! output check failed (json,
+  attempt 1/3): …` — and the reason is fed back for the retry, inside the
+  same turn.
+- When the retry budget is spent (default 2 retries, so three attempts), the
+  run exits 1 and stdout stays empty: a wrong payload is worse than an empty
+  one for `… | jq` consumers.
+
+The other formats are one flag away — `--output-format yaml` and
+`--output-format toml` — and markdown takes
+`{"required_sections": ["Summary", "Risks"]}` as its schema: each named
+section must appear as a heading, in order. The [exec
+mode](/build/exec-mode#final-response-enforcement) page owns the per-format
+strictness table and the extraction rules.
+
+The same contract is available to scripted automations through the
+[Python SDK](/build/python-sdk):
+
+```python
+from pydantic import BaseModel
+from local_operator.sdk import SessionSpec
+
+
+class Invoice(BaseModel):
+    total: int
+    currency: str
+
+
+spec = SessionSpec(
+    output_format="json",   # enforce the final response, every turn
+    output_schema=Invoice,  # model class, dataclass, TypedDict or JSON Schema
+    output_retries=1,       # 0-5; default 2 (three attempts per turn)
+)
+```
+
+The checked span arrives as an `output_validation` event (`payload_text` on
+success) — the same event a `--json` run emits for each checked attempt.
+
 Aida, the built-in chief of staff, is the same machinery on a daily cadence
 — see [Always-on & proactive agents](/capabilities/always-on).

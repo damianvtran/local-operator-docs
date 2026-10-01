@@ -320,6 +320,10 @@ failures as exit codes, and read the machine-readable stream.
 - For long jobs, run in the background and poll `lop exec --status` — a CI
   timeout then leaves a resumable conversation behind.
 
+For the wider automations picture — schedules, background jobs and where
+final-response enforcement fits in a pipeline — see
+[Workflow automations](/capabilities/workflow-automations) (preview).
+
 {% cards %}
 {% card title="Python SDK" href="/build/python-sdk" icon="code" %}
 The typed surface for scripts: open or spawn sessions, deliver prompts, stream events.
