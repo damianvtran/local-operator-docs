@@ -25,6 +25,8 @@ lives.
 
 {% figure src="/shots/mobile-app/welcome-light.png" alt="The app's first-launch screen: 'Your agent runs on your computer.' above a Sign in with Radient button, with Set up your own tunnel beneath it." caption="First launch: sign in with Radient, or set up your own tunnel." /%}
 
+The captures on this page come from the app's own fixture corpus — every frame is the app driven against its mock relay — the conversations, session names and model labels in them are placeholders, not anyone's real sessions.
+
 ## Getting connected
 
 The computer side is the mobile relay that ships with Local Operator
