@@ -1,7 +1,7 @@
 ---
 description: Give the agent the browser you are already signed into — install from the Chrome Web Store, pair the bridge, and know exactly what it can and cannot do.
 section: surfaces
-order: 4
+order: 5
 ---
 
 # Browser extension

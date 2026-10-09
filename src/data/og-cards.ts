@@ -66,6 +66,11 @@ export const OG_CARDS: Record<string, OgCard> = {
 		alt: "Local Operator Docs. Desktop app. Install the desktop app, sign in, and learn the window — chat with run details, the tool trace, projects, schedules, themes, and the Agent hub inside the app.",
 		source: "bf0c07e21a77",
 	},
+	"/surfaces/mobile-app": {
+		file: "/og/surfaces-mobile-app.b7e74e1d.png",
+		alt: "Local Operator Docs. Mobile app. The open-source native iOS and Android client for Local Operator — follow, steer and approve your computer's sessions from a phone.",
+		source: "b7e74e1db9a6",
+	},
 	"/surfaces/browser-extension": {
 		file: "/og/surfaces-browser-extension.082c7f58.png",
 		alt: "Local Operator Docs. Browser extension. Give the agent the browser you are already signed into — install from the Chrome Web Store, pair the bridge, and know exactly what it can and cannot do.",

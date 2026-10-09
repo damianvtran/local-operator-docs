@@ -36,3 +36,7 @@ The relay is loopback-only by design: for access away from home, put a
 tunnel in front of it (a Cloudflare Tunnel with Access, or Tailscale) and
 leave the daemon bound to `127.0.0.1`. The full guide will cover the tunnel
 setup, the security model, and the phone UI surface by surface.
+
+A native client for this relay, [Local Operator Mobile](/surfaces/mobile-app),
+is in development — platform sign-in, and a layout built for a phone rather
+than adapted to one.

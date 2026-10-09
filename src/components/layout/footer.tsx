@@ -35,6 +35,7 @@ const COLUMNS: Array<{
 			{ label: "Terminal (TUI)", href: "/tui/quickstart" },
 			{ label: "Desktop app", href: "/surfaces/desktop" },
 			{ label: "Mobile relay", href: "/surfaces/mobile-relay" },
+			{ label: "Mobile app", href: "/surfaces/mobile-app" },
 			{
 				label: "Browser extension",
 				href: "/surfaces/browser-extension",
