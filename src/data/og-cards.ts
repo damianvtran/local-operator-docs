@@ -86,6 +86,11 @@ export const OG_CARDS: Record<string, OgCard> = {
 		alt: "Local Operator Docs. Agent Hub. Browse Radient's community registry of agents, pull one into your setup, publish your own, and share privately with a team.",
 		source: "d24d2ef26738",
 	},
+	"/capabilities/code-review": {
+		file: "/og/capabilities-code-review.c0f60a48.png",
+		alt: "Local Operator Docs. Code review. See every pull request and merge request a session opened or mentioned, with CI and review-round progress, in the Code review tab — and ask for it with the code_requests tool.",
+		source: "c0f60a48b1f9",
+	},
 	"/build/agents-and-teams": {
 		file: "/og/build-agents-and-teams.a12d5cc9.png",
 		alt: "Local Operator Docs. Supply teams, agents & system prompts. Register reusable agents and teams, write their instructions and system prompts, share them through the Agent Hub, and name a team, profile or agent when you run.",

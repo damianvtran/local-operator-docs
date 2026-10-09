@@ -105,6 +105,11 @@ export const NAV: NavGroup[] = [
 				slug: "capabilities/agent-mesh",
 			},
 			{ id: "agent-hub", title: "Agent Hub", slug: "capabilities/agent-hub" },
+			{
+				id: "code-review",
+				title: "Code review",
+				slug: "capabilities/code-review",
+			},
 		],
 	},
 	{
