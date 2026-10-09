@@ -72,6 +72,11 @@ recent conversations with titles and ages. In a terminal multiplexer (tmux,
 wezterm, cmux), `lop` also publishes a per-pane crash-restore binding, so a
 killed terminal does not take the session with it.
 
+Subagent and background-session transcripts are cleaned up automatically
+after 48 hours of inactivity (configurable from 2 hours to 30 days in
+Settings > Delegated work); your own conversations are never removed unless
+you turn that on. A one-time notice tells you when this first happens.
+
 {% figure src="/shots/tui/resume-picker.png" alt="The resume picker listing recent conversations with titles and ages" caption="`/resume` — recent conversations with titles and ages; type to filter." /%}
 
 ## Themes
