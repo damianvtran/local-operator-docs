@@ -74,6 +74,11 @@ export const NAV: NavGroup[] = [
 				slug: "surfaces/mobile-relay",
 			},
 			{
+				id: "mobile-app",
+				title: "Mobile app",
+				slug: "surfaces/mobile-app",
+			},
+			{
 				id: "browser-extension",
 				title: "Browser extension",
 				slug: "surfaces/browser-extension",
