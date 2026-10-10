@@ -73,6 +73,11 @@ the other lanes: **Design review**, **QA report** and **UX review**, each with
 its own `… remediation` reply. The lanes are labelled **Code** (the agent
 review), **Design**, **QA** and **UX** in the tab.
 
+The verdict comes from a `Verdict:` line or a `Verdict` heading. A long review
+that closes with its verdict is read to the end, so it reports that verdict
+rather than "not stated"; quoted text (a blockquote or code fence) is never
+mistaken for the comment's own verdict.
+
 For each lane you get the **current round**, a **state**, and a **freshness**:
 
 | State | Reads as |
@@ -99,10 +104,10 @@ carried unrelated fixes; whether a stale review still stands is your call.
 ## The Code review tab
 
 In the desktop app, **Code review** is a tab on the right-hand rail, listed
-beside the run, browser, console and canvas tabs. It is there whenever you are
-in a session, including when there is nothing to show yet — an empty tab says
-so — and a dot marks it when an opened request has findings
-open or failing checks.
+beside the run, asks, browser, console and canvas tabs — last, so adding it
+moves none of the others. It is there whenever you are in a session, including
+when there is nothing to show yet — an empty tab says so — and a dot marks it
+when an opened request has findings open or failing checks.
 
 Each row shows:
 
@@ -118,13 +123,14 @@ Each row shows:
 Click a row to open the request in your system browser. The tab's refresh
 button re-reads the session's requests on demand.
 
-A **count chip** in the composer's status row, beside the other status chips,
-shows how many code requests the session has (`3 code requests`). It appears
-once there is at least one visible request, its tooltip splits the count into
-opened and mentioned, and clicking it reveals the tab.
+A **count chip** in the composer's status row, after the other count chips
+(subagents, jobs, wakes and monitors), shows how many code requests the session
+has (`3 code requests`). It appears once there is at least one visible request,
+its tooltip splits the count into opened and mentioned, and clicking it reveals
+the tab; it never closes it.
 
 When a read goes wrong the tab says so in place and keeps the last known data:
-a row that could not refresh reads `Couldn't refresh —` followed by the
+a row that could not refresh reads `Couldn't refresh:` followed by the
 reason, and a host that is rate-limiting you shows `GitHub rate-limited until
 14:05.` Nothing is lost; the session's own record is unchanged.
 
