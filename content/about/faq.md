@@ -98,9 +98,11 @@ current conversation or language prefix.
 
 ## Where can I change account routing?
 
-On a runtime that exposes `retry.accountSelectionPolicy`, search for that key
-in terminal settings or the desktop app's backend settings. Choose Reset
-soonest, Most headroom or Fair spread. Connected phone controls change the
+On a runtime that exposes `retry.accountSelectionPolicy`, open `/settings` in
+the terminal, navigate to **Failover and retry**, then **Account selection
+policy**. In the desktop app's backend settings, search for
+`retry.accountSelectionPolicy`. Choose Reset soonest, Most headroom or Fair
+spread. Connected phone controls change the
 **selected computer**, not a phone-local preference; an older relay that lacks
 the setting cannot confirm a save and must be updated.
 
