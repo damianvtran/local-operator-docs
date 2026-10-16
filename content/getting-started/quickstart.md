@@ -21,6 +21,14 @@ lop login anthropic    # or openai, kimi, xai-oauth, zai-oauth, ...
 picks a default model, so the very next `lop` just works. Skip this step and
 an interactive `lop` opens in a setup state that walks you through `/login`
 instead.
+
+For providers that distinguish sign-in identities, signing in with a different
+account adds it to that provider's pool.
+Eligible siblings default to Reset soonest, while a compatible successful cache
+lease keeps a warm account preferred until expiry. This does not change the
+provider/model fallback order or activate paid credits. See
+[account routing and its settings](/about/faq#how-does-it-choose-between-accounts)
+for Reset soonest, Most headroom, Fair spread and legacy configurations.
 {% /step %}
 
 {% step title="Launch the terminal UI" %}
