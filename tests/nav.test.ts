@@ -18,14 +18,14 @@ describe("nav registry x content", () => {
 		const items = groups.flatMap((group) => group.items);
 		expect(items.length).toBeGreaterThan(0);
 		expect(items.every((item) => item.status === "published")).toBe(true);
-		// Drafts and planned pages stay out of the rendered sidebar ...
+		// The promoted guides are published, so they are in the sidebar ...
 		expect(items.some((item) => item.slug === "surfaces/mobile-relay")).toBe(
-			false,
+			true,
 		);
 		expect(items.some((item) => item.slug === "capabilities/agent-mesh")).toBe(
-			false,
+			true,
 		);
-		// ... while the real pages are in.
+		// ... alongside the rest of the published tree.
 		expect(items.some((item) => item.slug === "getting-started/install")).toBe(
 			true,
 		);

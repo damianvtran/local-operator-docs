@@ -322,7 +322,7 @@ failures as exit codes, and read the machine-readable stream.
 
 For the wider automations picture — schedules, background jobs and where
 final-response enforcement fits in a pipeline — see
-[Workflow automations](/capabilities/workflow-automations) (preview).
+[Workflow automations](/capabilities/workflow-automations).
 
 {% cards %}
 {% card title="Python SDK" href="/build/python-sdk" icon="code" %}

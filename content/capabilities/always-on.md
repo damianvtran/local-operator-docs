@@ -28,7 +28,7 @@ outside a session:
 ```bash
 lop wake list     # every scheduled wake on this machine, soonest first
 lop wake status   # is the supervisor installed, what fires next, what is owed
-lop wake create <session> "in 2h" "re-run the deploy smoke tests" --every 1d --until 2026-10-10
+lop wake create <session> "in 2h" "re-run the deploy smoke tests" --every 1d --until "in 7d"
 ```
 
 Caps keep wakes sane: a 60-second minimum recurrence, up to 16 schedules per
