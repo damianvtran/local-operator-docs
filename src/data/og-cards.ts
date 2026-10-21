@@ -66,6 +66,11 @@ export const OG_CARDS: Record<string, OgCard> = {
 		alt: "Local Operator Docs. Desktop app. Install the desktop app, sign in, and learn the window — chat with run details, the tool trace, projects, schedules, themes, and the Agent hub inside the app.",
 		source: "bf0c07e21a77",
 	},
+	"/surfaces/mobile-relay": {
+		file: "/og/surfaces-mobile-relay.bb6ff878.png",
+		alt: "Local Operator Docs. Mobile relay. Check on, steer, and start sessions from your phone — how the relay reaches your computer, how to set it up, and what the phone can do.",
+		source: "bb6ff8784d29",
+	},
 	"/surfaces/mobile-app": {
 		file: "/og/surfaces-mobile-app.b7e74e1d.png",
 		alt: "Local Operator Docs. Mobile app. The open-source native iOS and Android client for Local Operator — follow, steer and approve your computer's sessions from a phone.",
@@ -76,10 +81,20 @@ export const OG_CARDS: Record<string, OgCard> = {
 		alt: "Local Operator Docs. Browser extension. Give the agent the browser you are already signed into — install from the Chrome Web Store, pair the bridge, and know exactly what it can and cannot do.",
 		source: "082c7f58a5f5",
 	},
+	"/capabilities/workflow-automations": {
+		file: "/og/capabilities-workflow-automations.6a7ffcf9.png",
+		alt: "Local Operator Docs. Workflow automations. Schedule future turns, watch for changes, and run work in the background — the wake, monitor and job primitives, plus machine-readable output.",
+		source: "6a7ffcf9de44",
+	},
 	"/capabilities/always-on": {
 		file: "/og/capabilities-always-on.de2078fb.png",
 		alt: "Local Operator Docs. Always-on & proactive agents. Sessions that start their own turns — scheduled wakes that fire with every terminal closed, the supervisor that runs them, and Aida, the built-in chief of staff.",
 		source: "de2078fbe08f",
+	},
+	"/capabilities/agent-mesh": {
+		file: "/og/capabilities-agent-mesh.63d46fce.png",
+		alt: "Local Operator Docs. Agent Mesh. Pair your machines into one network so sessions can reach agents on other devices — roles, grants, onboarding, and incident controls.",
+		source: "63d46fce2f1a",
 	},
 	"/capabilities/agent-hub": {
 		file: "/og/capabilities-agent-hub.d24d2ef2.png",
