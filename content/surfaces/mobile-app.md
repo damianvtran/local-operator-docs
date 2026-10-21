@@ -38,17 +38,16 @@ interface.
 Install the relay:
 
 ```bash
-lop mobile install    # macOS: a supervised service that starts at login
+lop mobile install    # a supervised service: launchd, systemd --user, or Task Scheduler
 ```
 
 Then give the phone a way to reach it:
 
 - **A Radient personal tunnel (recommended).** `lop login radient` once, then
-  create and install the tunnel (`lop tunnel create`, `lop tunnel install`).
-  The tunnel carries the authentication, so there is no relay password to
-  copy. The runtime's
-  [tunnel docs](https://github.com/damianvtran/local-operator/blob/main/docs/tunnels.md)
-  walk through it.
+  `lop tunnel setup --json` for a read-only plan, and `lop tunnel setup apply
+  --credential-id <id>` when it tells you to. The tunnel carries the
+  authentication, so there is no relay password to copy. The
+  [mobile relay guide](/surfaces/mobile-relay) walks through it.
 - **Any tunnel or URL you run yourself.** Put it in front of the relay's
   loopback port and set the relay password with `lop mobile password`.
 {% /step %}
