@@ -25,8 +25,13 @@ On the first device:
 lop network init <name>
 ```
 
-That binds `0.0.0.0:4097` by default. A device that should only dial out
-passes `--listen-address 127.0.0.1` and is reachable only where it connects.
+It creates this device's identity and member row and starts the relay under a
+user service supervisor — launchd on macOS, `systemd --user` on Linux.
+`--no-start` leaves the relay stopped; a host with no user supervisor runs
+`lop network serve` in the foreground.
+
+By default it binds `0.0.0.0:4097`; a device that should only dial out passes
+`--listen-address 127.0.0.1` and is reachable only where it connects.
 
 ```bash
 lop network invite --role read --expires 30m
@@ -57,6 +62,10 @@ Before admission, a credential share list names what the new device will be
 given: each credential reads `will be served` or `not offered`. The owner may
 only remove rows from that list, and the joined receipt names the final set.
 
+After pairing, `lop network credential share <name> --with <device>` lends one
+credential to one device, and `lop network credential revoke <name> --from
+<device>` takes it back.
+
 {% figure src="/shots/tui/mesh-panel.png" alt="The mesh panel after pairing: this device, two networks with roles and member counts, peers with reachability, and a running relay." caption="Paired: networks with their roles, peer reachability, and relay health in one panel." /%}
 
 ## Roles and grants
@@ -67,8 +76,8 @@ A role decides what a member may do on your device:
 - `drive` adds the controls: list, view, prompt, steer, stop and slash.
 - `admin` holds the full vocabulary, including membership changes.
 
-Moving, deleting and starting unattended work are **per-member grants**, not
-role-exclusive:
+Three capabilities can also be granted to a non-admin member one at a time —
+`move`, `delete` and `unattended`:
 
 ```bash
 lop network member grant <network> <device-id> move
@@ -76,10 +85,9 @@ lop network member grant <network> <device-id> delete
 lop network member grant <network> <device-id> unattended
 ```
 
-`admin` carries these by construction; the grants are how a non-admin member
-gets one of them without the whole role. `lop network member revoke <network>
-<device-id> <capability>` takes a grant back. `unattended` is what lets a
-session start with no approval card at all.
+`lop network member revoke <network> <device-id> <capability>` takes a grant
+back. `unattended` is what lets a peer start sessions on this device without
+approval prompts.
 
 ## Onboarding another machine
 
@@ -115,8 +123,8 @@ Readiness is a separate question from membership:
 lop network ready --peer <device> --json
 ```
 
-Do not offload work on a `FAIL`. A `warn` marks equipment that is reported
-without holding the verdict — missing, but not required for onboarding.
+Do not offload work on a `FAIL`. A `warn` marks equipment that is named but
+does not hold the verdict.
 
 ## Across devices
 

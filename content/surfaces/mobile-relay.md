@@ -49,8 +49,8 @@ lop tunnel setup --json
 ```
 
 This is a read-only plan: it observes and changes nothing. It checks the
-selected account and its billing as they stand, that a new enrollment has
-positive credit, that `cloudflared` is at least 2025.4.0, and that this
+selected account and its billing as they stand, that a new enrollment would
+have positive credit, that `cloudflared` is at least 2025.4.0, and that this
 computer runs a user supervisor the relay supports. Follow whatever blockers
 it names — one common one is an explicit `lop mobile install` for the phone
 origin.
@@ -65,14 +65,13 @@ lop tunnel setup apply --credential-id <id>
 Add `--accept-monthly-price <amount>` only for the exact quote you accepted —
 never a guess. The CLI shows you the price; this page does not quote one.
 {% /step %}
-{% step title="Or connect a console-created tunnel" %}
-If the tunnel was created in the Radient console instead, connect it:
+{% /steps %}
+
+If the tunnel already exists in the Radient console, connect it instead:
 
 ```bash
 lop tunnel connect <id> --credential-id <id>
 ```
-{% /step %}
-{% /steps %}
 
 Setup is finished when all of these hold: the mobile health check passes, the
 auth gate is closed, the connector is running, the gateway answers, and the
@@ -89,6 +88,9 @@ Install the daemon and set the password it will ask for:
 lop mobile install
 lop mobile password
 ```
+
+On a host with no user service supervisor (some containers), run
+`lop mobile serve` instead.
 
 Then put an identity gate in front of the loopback daemon — the tunnel's own
 access policy, or a reverse proxy that authenticates. Never widen the daemon's
@@ -107,8 +109,9 @@ bind address, and never expose it through an anonymous quick tunnel.
 | `lop mobile serve --port 4098` | Run the daemon in the foreground |
 
 `lop mobile devices revoke <device-id>` and `unrevoke <device-id>` are the
-human path: revoking stops pushes to that phone until it registers again. A
-device marked `expired` is cleared by registering again, not by unrevoking it.
+human path: `revoke` blocks that installation until you `unrevoke` it —
+registering again does not clear a revoke. A device marked `expired` is
+cleared by registering again, not by unrevoking it.
 
 ## What the phone can do
 
@@ -143,6 +146,6 @@ away from the desk: create one, add or complete a milestone.
 ## The native app
 
 A native client for this relay, [Local Operator Mobile](/surfaces/mobile-app),
-is genuinely still in development: there is no App Store, TestFlight or
-Google Play build, and no GitHub Release. It speaks the same relay described
+is still in development: there is no App Store, TestFlight or Google Play
+build, and no GitHub Release. It speaks the same relay described
 here, so the computer side of this page is what it connects to.
