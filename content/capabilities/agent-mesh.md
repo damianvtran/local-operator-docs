@@ -61,6 +61,9 @@ the interlock, not a gap.
 Before admission, a credential share list names what the new device will be
 given: each credential reads `will be served` or `not offered`. The owner may
 only remove rows from that list, and the joined receipt names the final set.
+The list appears only when both builds are new enough; an older build on
+either side shows no list at all, and an absent list does not mean there is
+nothing to share.
 
 After pairing, `lop network credential share <name> --with <device>` lends one
 credential to one device, and `lop network credential revoke <name> --from
@@ -76,8 +79,9 @@ A role decides what a member may do on your device:
 - `drive` adds the controls: list, view, prompt, steer, stop and slash.
 - `admin` holds the full vocabulary, including membership changes.
 
-Three capabilities can also be granted to a non-admin member one at a time —
-`move`, `delete` and `unattended`:
+Beyond the role, `lop network member grant` adds capabilities to a member
+one at a time — for example `move`, `delete`, `unattended` or
+`broker_credential`:
 
 ```bash
 lop network member grant <network> <device-id> move

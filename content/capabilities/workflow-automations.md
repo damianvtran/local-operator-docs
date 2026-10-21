@@ -29,10 +29,11 @@ lop wake create <session> "in 2h" "re-run the deploy smoke tests" --every 1d --u
 ```
 
 `lop wake status` reports whether a supervisor is installed, what it would
-fire next, and what is owed. It names the supervisor's state — running,
-stopped, not loaded, not installed, unverifiable, unsupported — and says what
-comes next. `lop wake install` repairs or rolls out the supervisor now;
-`lop wake serve --once` runs one pass in the foreground.
+fire next, and what is owed. It names the supervisor's state — running, loaded
+but not running, not loaded, not installed, unverifiable for this store, or
+with no installer for this platform — and says what comes next.
+`lop wake install` repairs or rolls out the supervisor now; `lop wake serve
+--once` runs one pass in the foreground.
 
 `lop wake create` takes the session id, when to fire (a duration such as
 `"in 2h"` or a clock time such as `"at 09:30"`), and the message it delivers.
