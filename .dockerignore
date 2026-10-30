@@ -1,0 +1,21 @@
+# The image installs its own dependency tree and produces its own build output
+# (`.next/` from `next build`), so a developer's local copies would only bloat
+# the context and could shadow what the image build writes. `public/versions.json`
+# is deliberately NOT ignored: the prebuild rewrites it from GitHub Releases and
+# PyPI, with the committed constants as its offline fallback.
+node_modules
+.next
+out
+coverage
+
+# Version control and local-only files. No build step reads git history: the
+# version manifest is fetched over the network, the search index is built from
+# the tracked content, and fetch failures fall back instead of failing the build.
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.dockerignore
