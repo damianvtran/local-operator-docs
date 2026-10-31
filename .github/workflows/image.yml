@@ -11,7 +11,16 @@
 # private repositories". So these steps are a copy for one public repository,
 # not a second rail: `radient-ml/radient-infra`'s `.github/workflows/build-image.yml`
 # (job `build-call`) is the SOURCE OF TRUTH. When its steps change, change this
-# file with it; the differences are the ones named in the comments below.
+# file with it. The intentional differences, so a diff can be read quickly:
+#   * no `Validate inputs` / `Resolve repository` -- there are no inputs, and the
+#     service is this repository by construction;
+#   * no rail checkout and no build-time secret -- both are dispatch-path and
+#     `user-console`-only steps;
+#   * no public-value ARG check -- the rail's required-key table is empty for this
+#     service and the recipe declares no ARG (see the build step);
+#   * no `push` input / `--load` and no `concurrency` -- a merge always pushes,
+#     and a push cannot repeat a SHA, so ECR's immutability guard is the collision
+#     check.
 #
 # The identity is still the rail's: the job assumes
 # `radient-github-image-builder`, whose trust lists exactly
