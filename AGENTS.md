@@ -182,6 +182,19 @@ build warns and falls back — that is normal, not broken.)
 
 ## Deployment
 
+- **Build**: every push to `main` builds and pushes
+  `951603962783.dkr.ecr.ca-central-1.amazonaws.com/radient/local-operator-docs:<sha>`
+  from `.github/workflows/image.yml`, which assumes the image-builder role over
+  GitHub OIDC. That file is a copy of the rail's `build-image.yml` rather than a
+  call to it: the reusable workflow lives in a private repository and GitHub does
+  not let a public repository call one. `radient-infra` stays the source of truth
+  it copies, and still builds the other services by dispatch.
+- **Promotion is unchanged**: `deploy-prod` in `radient-infra` → the `newTag`
+  commit in `radient-environments` → Argo CD syncs it. The image build deploys
+  nothing.
+- **Railway is retired.** No service, variable or DNS record remains and no
+  release path reads `railway`; the three bullets after this one are history
+  from the previous host.
 - **Railway**, service **`local-operator-docs`**, auto-deploys on every push
   to `main`. Build via `nixpacks.toml`: Node 22.13.1,
   `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm start`. The

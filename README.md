@@ -124,6 +124,8 @@ pages):
 
 ## Deployment
 
-Railway builds with `nixpacks.toml` (Node 22.13.1, `pnpm install
---frozen-lockfile`, `pnpm build`, `pnpm start`). CI runs lint, typecheck,
-tests and a production build on every push.
+Every push to `main` builds and pushes the image from
+`.github/workflows/image.yml`, tagged with the commit SHA; it deploys nothing.
+Promotion is a `newTag` commit in `radient-environments` that Argo CD syncs —
+see `AGENTS.md` → Deployment. CI runs lint, typecheck, tests and a production
+build on every push.
