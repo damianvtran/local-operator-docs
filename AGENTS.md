@@ -182,17 +182,28 @@ build warns and falls back — that is normal, not broken.)
 
 ## Deployment
 
-- **Railway**, service **`local-operator-docs`**, auto-deploys on every push
-  to `main`. Build via `nixpacks.toml`: Node 22.13.1,
-  `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm start`. The
-  `--frozen-lockfile` means a lockfile that disagrees with `package.json` fails
-  the deploy rather than silently resolving something new.
-- **CLI**: `railway status` (project/service/link state), `railway logs`
-  (build + runtime). Link a checkout once with `railway link` if the CLI asks.
-- **Domain**: `docs.local-operator.com` is a proxied Cloudflare CNAME pointing
-  at the Railway service; TLS terminates at Cloudflare. DNS changes belong in
-  Cloudflare, deploy changes in Railway.
+- **Build**: every push to `main` builds and pushes
+  `951603962783.dkr.ecr.ca-central-1.amazonaws.com/radient/local-operator-docs:<sha>`
+  from `.github/workflows/image.yml`, which assumes the image-builder role over
+  GitHub OIDC. It is a copy of the rail's `build-image.yml` rather than a call to
+  it: the reusable workflow lives in a private repository and GitHub does not let
+  a public repository call one. `agent-server`, `user-console`, `radient-site` and
+  `radient-docs` call that rail from their own `image.yml` on merge; only
+  `local-operator-site` is dispatch-built, because its private repository's
+  Actions jobs do not start.
+- **Run**: the Deployment `local-operator-docs` in namespace `radient` on
+  `radient-prod-eks`, owned by Argo CD from `radient-environments`
+  (`apps/local-operator-docs`). Its Ingress there publishes
+  `docs.local-operator.com` through the shared prod ALB, which terminates TLS
+  with the ACM certificates the overlay names.
+- **Promotion**: a `deploy-prod` dispatch in `radient-infra` writes the `newTag`
+  commit in `radient-environments`
+  (`apps/local-operator-docs/overlays/prod/kustomization.yaml`), and Argo CD
+  syncs it. That commit is the release; the image build deploys nothing.
 - **Merge order**: CI (GitHub Actions) must be green before `main` moves.
+
+The service ran on Railway before the AWS move. No Railway service, variable or
+DNS record remains, and nothing in this repository reads one.
 
 ## Conventions
 

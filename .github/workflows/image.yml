@@ -1,0 +1,120 @@
+# Build and publish this service's image on every merge to `main`, and stop at
+# the registry: deploying is a separate, deliberate step (AGENTS.md -> Deployment).
+#
+# WHY THIS DUPLICATES THE RAIL. The estate's one build path is `build-image.yml`
+# in `radient-ml/radient-infra`, and this repository used to call it. It cannot:
+# that workflow lives in a PRIVATE repository, and GitHub only lets a public
+# caller use reusable workflows stored in a public repository -- "Reusing
+# workflow configurations", "Access to reusable workflows": caller `public` ->
+# accessible `public`. The callee's own Actions access policy is `organization`
+# as well, and that setting is documented as "Access is allowed only from
+# private repositories". So these steps are a copy for one public repository,
+# not a second rail: `radient-ml/radient-infra`'s `.github/workflows/build-image.yml`
+# (job `build-call`) is the SOURCE OF TRUTH. When its steps change, change this
+# file with it. The intentional differences, so a diff can be read quickly:
+#   * no `Validate inputs` / `Resolve repository` -- there are no inputs, and the
+#     service is this repository by construction;
+#   * no rail checkout and no build-time secret -- both are dispatch-path and
+#     `user-console`-only steps;
+#   * no public-value ARG check -- the rail's required-key table is empty for this
+#     service and the recipe declares no ARG (see the build step);
+#   * no `push` input / `--load` and no `concurrency` -- a merge always pushes,
+#     and a push cannot repeat a SHA, so ECR's immutability guard is the collision
+#     check.
+#
+# The identity is still the rail's: the job assumes
+# `radient-github-image-builder`, whose trust lists exactly
+# `repo:damianvtran/local-operator-docs:ref:refs/heads/main` (see
+# `pulumi/radient_infra/ci.py`), so a branch or a pull request cannot assume it
+# and cannot push.
+name: image
+
+on:
+  push:
+    branches: [main]
+
+# The build reads this repository and assumes a role through GitHub's OIDC
+# token. It writes nothing back to GitHub, so those are the whole permissions --
+# and there is no secret or PAT to hold: the role, not a stored credential, is
+# the grant.
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SERVICE: local-operator-docs
+      # Pinned rather than read from a repository variable: it is the only role
+      # a build of this service may assume, and the rail's validate step refuses
+      # anything but this account's image-builder ARNs. A variable would let a
+      # settings change silently point the build at another identity.
+      ROLE_ARN: arn:aws:iam::951603962783:role/radient-github-image-builder
+      AWS_REGION: ca-central-1
+    steps:
+      # Same order as the rail's `build-call` job: credentials and ECR login
+      # before the checkout, so a role that cannot be assumed fails before a
+      # repository is fetched. Done so a reader can diff the two files step by
+      # step.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Check out this repository
+        uses: actions/checkout@v4
+        with:
+          # Same layout as the rail's call path: the Docker context is the
+          # checkout at `src/`, because `docker buildx build .` is what makes
+          # `COPY package.json` / `COPY . .` in the recipe resolve.
+          path: src
+          # The build runs this branch's own `pnpm build`: a persisted git
+          # credential would be readable by it and exfiltratable by whoever
+          # wrote the ref. The build itself needs no git credential.
+          persist-credentials: false
+
+      - name: Build and push
+        # No public build values, and no check to copy for them: the rail's
+        # required-key table has an empty entry for `local-operator-docs`, and
+        # `infra/docker/Dockerfile` declares no `ARG` lines at all, so its
+        # public-value check passes vacuously here. If an ARG is ever added to
+        # that recipe, bring the rail's `Check public build values and build`
+        # step with it -- an unset ARG compiles "" and the run stays green.
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          # `--push` is the difference between "built" and "available to the
+          # cluster". ECR's immutability guard refuses a tag that already
+          # exists, which is the guard working, not a broken build.
+          docker buildx build \
+            --platform linux/amd64 \
+            --provenance=false \
+            -f "${GITHUB_WORKSPACE}/src/infra/docker/Dockerfile" \
+            -t "${{ steps.ecr.outputs.registry }}/radient/${SERVICE}:${GITHUB_SHA}" \
+            --push \
+            .
+
+      - name: Report
+        # The summary is what a reader checks instead of the log, so it names
+        # only what this run established: the tag exists in ECR. Nothing was
+        # deployed, and saying "release" here would be the one claim this file
+        # cannot make.
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "${SERVICE} image ${{ steps.ecr.outputs.registry }}/radient/${SERVICE}:${GITHUB_SHA} is in ECR"
+          {
+            echo "### image pushed, nothing deployed"
+            echo ""
+            echo "\`${{ steps.ecr.outputs.registry }}/radient/${SERVICE}:${GITHUB_SHA}\`"
+            echo ""
+            echo "A release is a commit of this tag to \`radient-environments\`"
+            echo "(\`apps/${SERVICE}/overlays/prod/kustomization.yaml\`), which Argo CD syncs."
+          } >>"$GITHUB_STEP_SUMMARY"
