@@ -110,6 +110,11 @@ export const NAV: NavGroup[] = [
 				title: "Code review",
 				slug: "capabilities/code-review",
 			},
+			{
+				id: "team-bridge",
+				title: "Agent messages",
+				slug: "capabilities/team-bridge",
+			},
 		],
 	},
 	{
