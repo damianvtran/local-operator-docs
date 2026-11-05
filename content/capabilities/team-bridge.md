@@ -71,18 +71,21 @@ On Linux, a user service may stop after you log out unless your host is configur
 
 ### Troubleshoot delivery
 
-| Status or result | What to do |
-| --- | --- |
-| `running` / `loaded` | The service manager holds the receiver. If delivery is quiet, inspect logs and check whether your chief of staff is waiting for approval. |
-| `installed, but not running` / `installed` | Run `receiver install` to start it again. If it stops again, inspect logs. |
-| `not installed` / `missing` | Complete setup in the desktop app, then run `receiver install`. |
-| `no_supervisor` | This host has no supported service manager. Use a host with launchd, systemd user services, or Task Scheduler, or arrange foreground process management. |
-| `no_user_manager` | systemd exists but no user service session is reachable. Ask your host administrator about user services and lingering. |
-| `isolated` | You are using a non-default configuration folder. The shared receiver deliberately does not install there. |
-| `consent_ui_required`, `enable_in_app_required`, `designation_missing` | Finish the corresponding consent, enablement, or chief-of-staff step in the desktop app. |
-| `not_wanted` | Messages are off or setup is incomplete. Check the app rather than forcing installation. |
-| `source_checkout`, `not_addressable` | Use the installed `lop` from your normal user shell, not a development checkout or a redirected home folder. |
-| `failed`, `unknown`, `not_ready` | Read the detail and logs. `not_ready` can wrap a more specific service error; resolve that cause before retrying. |
+- **Running** (`loaded`): The service manager holds the receiver. If delivery is quiet, inspect logs and check whether your chief of staff is waiting for approval.
+- **Installed, but not running** (`installed`): Run `receiver install` to start it again. If it stops again, inspect logs.
+- **Not installed** (`missing`): Complete setup in the desktop app, then run `receiver install`.
+- **No supported service manager** (`no_supervisor`): Use a host with launchd, systemd user services, or Task Scheduler, or arrange foreground process management.
+- **No systemd user session** (`no_user_manager`): systemd exists but no user service session is reachable. Ask your host administrator about user services and lingering.
+- **Separate configuration folder** (`isolated`): You are using a non-default configuration folder. The shared receiver deliberately does not install there.
+- **Consent needed** (`consent_ui_required`): Review and grant consent in the desktop app.
+- **Messages not enabled** (`enable_in_app_required`): Enable Agent messages in the desktop app.
+- **No chief of staff selected** (`designation_missing`): Choose your chief of staff in the desktop app.
+- **Messages off or setup incomplete** (`not_wanted`): Check the app rather than forcing installation.
+- **Development checkout** (`source_checkout`): Use the installed `lop`, not a development checkout.
+- **Redirected home folder** (`not_addressable`): Run the installed `lop` from your normal user shell.
+- **Service manager refused** (`failed`): Read the detail and logs to find out why the service manager refused the operation.
+- **Configuration unreadable** (`unknown`): Check the configuration error before retrying; the receiver has not changed anything.
+- **Service not ready** (`not_ready`): Read the detail and logs. This result can wrap a more specific service error; resolve that cause before retrying.
 
 Only one receiver can hold the account's receiver lock on a machine. Starting another copy is not a way to speed up delivery.
 
