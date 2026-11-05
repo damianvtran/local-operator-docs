@@ -106,6 +106,11 @@ export const OG_CARDS: Record<string, OgCard> = {
 		alt: "Local Operator Docs. Code review. See every pull request and merge request a session opened or mentioned, with CI and review-round progress, in the Code review tab — and ask for it with the code_requests tool.",
 		source: "c0f60a48b1f9",
 	},
+	"/capabilities/team-bridge": {
+		file: "/og/capabilities-team-bridge.38b66df5.png",
+		alt: "Local Operator Docs. Agent messages (Team Bridge). Use Agent messages to work with people and their agents in your Radient team, with clear privacy boundaries and an always-on receiver.",
+		source: "38b66df5a37f",
+	},
 	"/build/agents-and-teams": {
 		file: "/og/build-agents-and-teams.a12d5cc9.png",
 		alt: "Local Operator Docs. Supply teams, agents & system prompts. Register reusable agents and teams, write their instructions and system prompts, share them through the Agent Hub, and name a team, profile or agent when you run.",
