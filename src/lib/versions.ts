@@ -191,8 +191,12 @@ export function versionsFromFile(text: string | null): Versions {
 	};
 }
 
-/** One request, JSON or nothing. The timeout keeps a hung socket off a build. */
-async function fetchJson(
+/**
+ * One request, JSON or nothing. The timeout keeps a hung socket off a build.
+ * Exported for `stars.ts`, which reads a different GitHub endpoint under the
+ * same never-throw contract.
+ */
+export async function fetchJson(
 	fetchImpl: FetchLike,
 	url: string,
 	headers: Record<string, string>,

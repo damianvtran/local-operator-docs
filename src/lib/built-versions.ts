@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { starsFromFile } from "./stars";
 import { versionsFromFile } from "./versions";
 
 /**
@@ -17,18 +18,33 @@ import { versionsFromFile } from "./versions";
  * import the resolved initial value as a prop, never this module.
  */
 let cached: ReturnType<typeof versionsFromFile> | null = null;
+let cachedStars: number | null = null;
 
-export function buildVersions(): ReturnType<typeof versionsFromFile> {
-	if (cached) return cached;
-	let text: string | null = null;
+function readVersionsFile(): string | null {
 	try {
-		text = fs.readFileSync(
+		return fs.readFileSync(
 			path.join(process.cwd(), "public", "versions.json"),
 			"utf8",
 		);
 	} catch {
-		text = null;
+		return null;
 	}
-	cached = versionsFromFile(text);
+}
+
+export function buildVersions(): ReturnType<typeof versionsFromFile> {
+	if (cached) return cached;
+	cached = versionsFromFile(readVersionsFile());
 	return cached;
+}
+
+/**
+ * The GitHub star count this build resolved (the `stars` field the same
+ * prebuild step writes), or the committed fallback — same first-paint
+ * contract as the version chip: the header link is never rendered without a
+ * number.
+ */
+export function buildStars(): number {
+	if (cachedStars !== null) return cachedStars;
+	cachedStars = starsFromFile(readVersionsFile());
+	return cachedStars;
 }

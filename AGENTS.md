@@ -25,6 +25,7 @@ gates run. Read it before changing anything structural.
 | `src/lib/site.ts` | The facts every surface shares: name, URL, GitHub links, install command, social-card path, fallback versions. |
 | `src/lib/structured-data.ts` | The JSON-LD builders (WebSite / SoftwareApplication / TechArticle / BreadcrumbList). |
 | `src/lib/versions.ts`, `src/lib/built-versions.ts`, `src/lib/use-version-refresh.ts` | The version pipeline (see "Versions" below). |
+| `src/lib/stars.ts`, `src/lib/use-star-count.ts` | The top bar's GitHub star count — same pipeline as versions (see "Versions"). |
 | `src/lib/llms-full.ts` | The `/llms-full.txt` document builder. |
 | `src/lib/search/` | The search engine: tokenizer, scorer, snippets, synonyms. |
 | `src/app/` | App Router routes: `(docs)/[...slug]` content pages, `page.tsx` home, `llms.txt` + `llms-full.txt` + `raw/[...slug]` route handlers, `sitemap.ts`, `robots.ts`, `layout.tsx` (shell, metadata, pre-paint theme script). |
@@ -77,7 +78,7 @@ before any H3); keep descriptions unique across pages.
 | Artifact | Produced by | When | How to verify |
 | --- | --- | --- | --- |
 | `public/search-index.json` | `pnpm generate-search-index` (`src/lib/search/index-gen.ts`) | `predev` + `prebuild` | `pnpm test` (completeness test); the script fails loudly on an empty index |
-| `public/versions.json` | `pnpm generate-versions` (`scripts/generate-versions.ts`) | `prebuild` | printed at build; `curl localhost:3000/versions.json` on a built site |
+| `public/versions.json` (versions + GitHub `stars`) | `pnpm generate-versions` (`scripts/generate-versions.ts`) | `prebuild` | printed at build; `curl localhost:3000/versions.json` on a built site |
 | `/llms.txt` | `src/app/llms.txt/route.ts` (nav × content, published only) | build (static) | `curl` it on a built site |
 | `/llms-full.txt` | `src/lib/llms-full.ts` via its route (full bodies, nav order) | build (static) | `tests/llms-full.test.ts` (every published page once; no drafts) |
 | `/raw/<slug>` | `src/app/raw/[...slug]/route.ts` (the page's markdown source) | build (static) | "Copy page" button; `curl /raw/getting-started/install` |
@@ -169,12 +170,23 @@ automatically — **there is no release sweep and no manual bump**:
    with a 6-hour TTL, one request per document) and moves the chip **only
    forward**, to a newer semver. Failures are console warnings, never UI.
 
+**The GitHub star count** beside the top bar's GitHub mark rides the same
+three steps (`src/lib/stars.ts`): the build writes `stars` into
+`public/versions.json` (GitHub `/repos/damianvtran/local-operator` →
+`SITE.githubStars`), the server renders it (`buildStars()`), and
+`src/lib/use-star-count.ts` refreshes it once per document from GitHub
+(4s timeout, `sessionStorage`, 1-hour TTL). A count may go down, so the live
+value replaces the built one as long as it is a valid non-negative integer;
+any failure keeps the number on screen. Below `sm` the link is icon-only (the
+accessible name still carries the count).
+
 Checking the live values:
 
 ```bash
 curl -s https://api.github.com/repos/damianvtran/local-operator/releases/latest | jq -r .tag_name
 curl -s https://pypi.org/pypi/local-operator/json | jq -r .info.version
 curl -s https://docs.local-operator.com/versions.json
+curl -s https://api.github.com/repos/damianvtran/local-operator | jq .stargazers_count
 ```
 
 (GitHub's unauthenticated limit is 60 requests/hour per IP; a rate-limited

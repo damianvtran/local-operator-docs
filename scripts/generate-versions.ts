@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { resolveStars } from "../src/lib/stars";
 import { resolveVersions } from "../src/lib/versions";
 
 /**
@@ -33,11 +34,21 @@ async function main(): Promise<void> {
 		fetchImpl: fetch,
 		warn: (message) => console.warn(`[versions] ${message}`),
 	});
+	// The header's GitHub star count rides in the same file rather than a
+	// second artifact: one prebuild step, one gitignored output, one server
+	// read for the first paint (see `src/lib/stars.ts`).
+	const stars = await resolveStars({
+		fetchImpl: fetch,
+		warn: (message) => console.warn(`[versions] ${message}`),
+	});
 
 	fs.mkdirSync(path.dirname(OUT), { recursive: true });
-	fs.writeFileSync(OUT, `${JSON.stringify(versions, null, "\t")}\n`);
+	fs.writeFileSync(
+		OUT,
+		`${JSON.stringify({ ...versions, stars }, null, "\t")}\n`,
+	);
 	console.log(
-		`versions: backend v${versions.backend}, ui v${versions.ui} -> public/versions.json`,
+		`versions: backend v${versions.backend}, ui v${versions.ui}, stars ${stars} -> public/versions.json`,
 	);
 }
 
