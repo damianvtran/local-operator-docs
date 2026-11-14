@@ -60,6 +60,14 @@ export const SITE = {
 	 * chain (GitHub Releases → this constant; the app is not on PyPI).
 	 */
 	uiVersion: "0.31.13",
+
+	/**
+	 * The runtime repo's last-known GitHub star count — the `stars` fallback
+	 * when the build cannot reach GitHub (offline, rate-limited). The shown
+	 * value comes from `public/versions.json` and the client refresh; see
+	 * `src/lib/stars.ts`. Like the versions above, nobody needs to bump it.
+	 */
+	githubStars: 229,
 } as const;
 
 /** Route for a content slug, e.g. `getting-started/install` -> `/getting-started/install`. */
