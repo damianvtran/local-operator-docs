@@ -37,6 +37,89 @@ model. A Radient account only comes in if you want to publish to the
 
 Switch provider or model mid-conversation from the model picker.
 
+## How does it choose between accounts?
+
+Accounts rotate **within the same provider and credential tier**, before the
+model fallback chain moves to another provider. An exhausted, revoked or
+cooling-down account is not made eligible just because its reset is near.
+Every relevant measured shared or model-family allowance still has to permit
+use.
+
+`retry.accountSelectionPolicy` chooses the preference among eligible siblings:
+
+- **`reset-soonest`** is the default when neither the canonical policy nor an
+  explicit legacy override is stored. Prefer the nearest useful weekly refill,
+  so included allowance is less likely to go unused before it resets.
+- **`headroom`** prefers the cached quota with the most remaining capacity.
+- **`fair`** spreads sessions stably without ranking reset times or headroom.
+
+Reset-soonest uses fresh cached reports, not a new blocking quota probe. Weekly
+resets within **60 seconds, inclusive**, of the earliest reset in a bucket use
+the five-hour reset as the next preference; five-hour ties use the same inclusive
+60-second rule, then stable spreading. Buckets are measured from their earliest
+reset, not a chain of neighbouring times. If several weekly allowances apply,
+the earliest future refill is useful for preference, but every applicable cap
+still gates eligibility.
+
+Unknown weekly timing stays neutral rather than receiving a made-up deadline.
+Without comparable weekly evidence, comparable five-hour resets can be used;
+without comparable resets, use stable session spreading. Calls without a
+session keep the existing round-robin behavior. Reports older than 30 minutes,
+past or malformed reset dates, future-dated reports and unsupported windows do
+not supply a reset preference. Missing evidence is not proof of an outage or
+permission to spend paid credits.
+
+The preference does **not** reorder your provider/model fallback chain, activate
+credits, promote a paid credential tier or change the existing reserve and
+recovery rules. `/accounts` shows the signed-in pool; `/usage` shows cached plan
+windows and account spend.
+
+## Why does a conversation stay on one account?
+
+All three policies first honor a compatible, eligible **account lease from a
+successful request**. That keeps a potentially warm provider cache preferred;
+it is not an indefinite pointer created just by selecting an account. A failed
+or cancelled request, an empty stream, inspecting an account or opening settings
+does not renew it. Hard depletion or an incompatible model/cache prefix can
+still rule the account out.
+
+The lease starts when the successful request was sent and expires according to
+that request's actual cache mode. Anthropic cache markers supply five-minute or
+one-hour lifetimes. Supported public OpenAI modes use their documented request
+setting/default where known; Codex and legacy chat modes use a bounded
+five-minute local heuristic. Unsupported adapters have zero lifetime and create
+no affinity lease. **None of these hints guarantees a provider cache hit.**
+
+Expiry re-enters the chosen policy even in an old conversation. Resuming on the
+same computer keeps the original expiry, not a new lease; copying a transcript
+to another computer does not carry the machine-local account binding with it.
+The lease never supplies a previously built request body in place of the
+current conversation or language prefix.
+
+## Where can I change account routing?
+
+On a runtime that exposes `retry.accountSelectionPolicy`, open `/settings` in
+the terminal, navigate to **Failover and retry**, then **Account selection
+policy**. In the desktop app's backend settings, search for
+`retry.accountSelectionPolicy`. Choose Reset soonest, Most headroom or Fair
+spread. Connected phone controls change the
+**selected computer**, not a phone-local preference; an older relay that lacks
+the setting cannot confirm a save and must be updated.
+
+A policy save applies to the next unanchored request or expired lease. It does
+not evict an already-valid warm lease, reset model/effort fallback pins or clear
+unrelated session state. A changed preference therefore need not move the very
+next request if it still has a valid lease.
+
+For older configurations only, an explicitly stored strict boolean
+`retry.usageAwareAccountPick: true` selects headroom and `false` selects fair,
+**only when the canonical policy is absent**. An explicit canonical policy wins
+if both exist. New configurations emit the canonical enum; resetting its
+settings row clears the legacy override and restores Reset soonest.
+
+The [packaged failover guide](https://github.com/damianvtran/local-operator/blob/main/local_operator/guides/failover/GUIDE.md)
+contains the full eligibility, reserve, cache-lifetime and recovery contract.
+
 ## What does it cost?
 
 Local Operator itself is free and open source (MIT). Model use is billed by
