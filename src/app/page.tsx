@@ -210,12 +210,12 @@ export default function HomePage() {
 
 					<div className="mt-10">
 						<Figure
-							src="/shots/ui/team-run-hero-light.webp"
-							darkSrc="/shots/ui/team-run-hero-dark.webp"
-							width={1280}
-							height={900}
-							alt="Local Operator desktop with agents and teams in the left sidebar. The selected Product team’s manager splits checkout recovery into three tasks; Run details shows coder, designer, and UX reviewer subagents working in parallel."
-							caption="Staged demo: the Product team’s manager coordinates UX review, design, and coding in parallel."
+							src="/shots/ui/team-run-hero-2x-light.webp"
+							darkSrc="/shots/ui/team-run-hero-2x-dark.webp"
+							width={2560}
+							height={1800}
+							alt="Local Operator shows agents and teams in the left sidebar, a checkout recovery conversation and composer in the center, and three active subagents in Run details on the right."
+							caption="Staged demo: the Product team’s manager splits checkout recovery into parallel tasks for a UX reviewer, designer, and coder."
 						/>
 					</div>
 				</div>
