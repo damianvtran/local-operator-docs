@@ -43,7 +43,7 @@ Then the window opens on an empty chat. The rail on the left is the map:
 - **Agent hub** — community agents you can pull into your own setup
 - **Mesh** — the devices you have paired
 
-{% figure src="/shots/ui/app-shell-chat-light.webp" alt="The desktop app: the sidebar's navigation (New chat, Search, Aida, Agents, Projects, Schedules, Browser, Agent hub, Mesh) above its agents, teams and recent chats; the chat shows a request, its tool receipts and the reply; a follow-up is drafted in the composer; run details lists two running subagents and the session's to-dos." caption="A working session: the conversation with its tool receipts, a drafted follow-up in the composer, and run details with the subagents and to-dos alongside." /%}
+{% figure src="/shots/ui/app-shell-chat-light.webp" alt="Desktop app with left navigation, Release checklist and Launch notes tabs in the title bar, a three-step release checklist in chat, and an inset composer below." caption="Local Operator v0.64.8 with a sample conversation." /%}
 
 ## Chat and run details
 

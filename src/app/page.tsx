@@ -212,10 +212,10 @@ export default function HomePage() {
 						<Figure
 							src="/shots/ui/app-shell-chat-light.webp"
 							darkSrc="/shots/ui/app-shell-chat-dark.webp"
-							width={1280}
-							height={900}
-							alt="The desktop app running a session: the sidebar's agents, teams and recent chats, the conversation with its tool receipts, a drafted follow-up in the composer, and run details listing two running subagents and the session's to-dos."
-							caption="A working session in the desktop app: tool receipts in the conversation, a follow-up drafted in the composer, and two subagents running beside the to-dos."
+							width={1656}
+							height={1080}
+							alt="Desktop app with left navigation, Release checklist and Launch notes tabs in the title bar, a three-step release checklist in chat, and an inset composer below."
+							caption="Local Operator v0.64.8 with a sample conversation."
 						/>
 					</div>
 				</div>
