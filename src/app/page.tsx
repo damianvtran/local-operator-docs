@@ -1,8 +1,8 @@
 import { ArrowRight, Download, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { TeamRunIllustration } from "@/components/docs/team-run-illustration";
 import { buttonVariants } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
-import { Figure } from "@/components/ui/figure";
 import { JsonLd } from "@/components/ui/json-ld";
 import { buildVersions } from "@/lib/built-versions";
 import { getResolvedNav, type ResolvedItem } from "@/lib/content";
@@ -209,14 +209,7 @@ export default function HomePage() {
 					</div>
 
 					<div className="mt-10">
-						<Figure
-							src="/shots/ui/app-shell-chat-light.webp"
-							darkSrc="/shots/ui/app-shell-chat-dark.webp"
-							width={1656}
-							height={1080}
-							alt="Desktop app with left navigation, Release checklist and Launch notes tabs in the title bar, a three-step release checklist in chat, and an inset composer below."
-							caption="Local Operator v0.64.8 with a sample conversation."
-						/>
+						<TeamRunIllustration />
 					</div>
 				</div>
 			</section>

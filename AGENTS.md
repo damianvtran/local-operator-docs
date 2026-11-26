@@ -143,11 +143,11 @@ previous deployment stays live.
   (`scripts/capture-evidence.mjs`; `--use-mock-keychain`, throwaway profile),
   or the headless-Electron driver (`docs/agent-driver.md` there). Never a
   hand-drawn mock — if a scene does not exist as a story, add one there first.
-- **The home hero** is captured at 1280×900 CSS pixels with a 2× device scale
-  factor → a 2560×1800 WebP pair (light + dark). If the aspect changes, update
-  the `Figure` `width`/`height` reservations on the home page in the same
-  commit — they exist so the above-the-fold image does not shift the page on
-  load.
+- **The home hero** is a labeled illustration (`TeamRunIllustration`), not a
+  release screenshot. Keep the conversation and subagent jobs as real text so
+  they can reflow at narrow widths; the surrounding app chrome is illustrative,
+  not an interactive demo. Product screenshots in the guides still come from
+  the real components as described above.
 - Captures must leave nothing running and nothing on screen (headless, reaped);
   temp profiles belong outside the repo.
 
