@@ -210,12 +210,12 @@ export default function HomePage() {
 
 					<div className="mt-10">
 						<Figure
-							src="/shots/ui/app-shell-chat-light.webp"
-							darkSrc="/shots/ui/app-shell-chat-dark.webp"
-							width={1656}
-							height={1080}
-							alt="Desktop app with left navigation, Release checklist and Launch notes tabs in the title bar, a three-step release checklist in chat, and an inset composer below."
-							caption="Local Operator v0.64.8 with a sample conversation."
+							src="/shots/ui/team-run-hero-light.webp"
+							darkSrc="/shots/ui/team-run-hero-dark.webp"
+							width={1280}
+							height={900}
+							alt="Local Operator desktop with agents and teams in the left sidebar. The selected Product team’s manager splits checkout recovery into three tasks; Run details shows coder, designer, and UX reviewer subagents working in parallel."
+							caption="Staged demo: the Product team’s manager coordinates UX review, design, and coding in parallel."
 						/>
 					</div>
 				</div>
